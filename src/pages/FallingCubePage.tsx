@@ -18,7 +18,7 @@ function FallingCubePage(){
         <FallingCubePageContainer>
             <Canvas dpr={[1,2]} shadows camera={{position:[-5,5,5], fov: 50}}>
                 <ambientLight />
-                <spotLight angle={0.25} penumbra={0.5} position={[10, 10, 5]} castShadow/>
+                <spotLight position={[10,10,10]} angle={0.25} penumbra={1} decay={0} intensity={Math.PI} castShadow/>
                 <Physics>
                     <Plane/>
                     <Cube position={[0, 5, 0]} />

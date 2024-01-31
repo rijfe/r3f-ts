@@ -4,6 +4,8 @@ import { Mesh } from 'three'
 
 interface BoxProps{
     position?: [number, number, number];
+    num: number;
+    setNum: React.Dispatch<React.SetStateAction<number>>;
 }
 
 function Box(props:BoxProps){
@@ -16,10 +18,10 @@ function Box(props:BoxProps){
 
     return(
         <mesh
-            {...props}
+            position={props.position}
             ref={ref}
-            scale={clicked ? 1.5 : 1}
-            onClick={(e)=>{setClicked(!clicked);}}
+            scale={props.num}
+            onClick={(e)=>{props.setNum(props.num+0.5);}}
             onPointerOver={(e)=>(e.stopPropagation(), setHovered(true))}
             onPointerOut={(e)=>{setHovered(false);}}
         >
