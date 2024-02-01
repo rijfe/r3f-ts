@@ -14,7 +14,7 @@ function Box(props:BoxProps){
     const [hoverd, setHovered] = useState<boolean>(false);
     const [clicked, setClicked] = useState<boolean>(false);
 
-    useFrame((state, delta)=>(ref.current.rotation.x += delta));
+    useFrame((state, delta)=>(ref.current.rotation.y += delta, ref.current.rotation.x -= delta, ref.current.rotation.z += delta));
 
     return(
         <mesh

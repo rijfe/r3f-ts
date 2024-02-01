@@ -11,11 +11,12 @@ import Cube from "../components/Cube";
 function FallingCubePage(){
     const navigate = useNavigate();
     const [ready, setReady] = useState<boolean>(false);
+    const [state, setState] = useState<number>(1);
 
     useEffect(()=>{
         const timeout = setTimeout(()=> setReady(true), 1000);
         return () => clearTimeout(timeout);
-    },[]);
+    },[state]);
 
     return(
         <FallingCubePageContainer>
@@ -27,7 +28,12 @@ function FallingCubePage(){
                 >
                     Back
                 </PageMoveBtn>
-
+                <RestartBtn onClick={()=>{
+                    setState(state+1);
+                    setReady(false);
+                }}>
+                    ReStart
+                </RestartBtn>
                 <PageMoveBtn
                     onClick={()=>{
                         navigate("/load");
@@ -41,9 +47,9 @@ function FallingCubePage(){
                 <spotLight position={[10,10,10]} angle={0.25} penumbra={1} decay={0} intensity={Math.PI} castShadow/>
                 <Physics>
                     <Plane/>
-                    <Cube position={[0, 5, 0]} />
-                    <Cube position={[0.45, 7, -0.25]} />
-                    <Cube position={[-0.45, 9, 0.25]} />
+                    {ready && <Cube position={[0, 5, 0]} />}
+                    {ready && <Cube position={[0.45, 7, -0.25]} />}
+                    {ready && <Cube position={[-0.45, 9, 0.25]} />}
                     {ready && <Cube position={[-0.45, 10, 0.25]} />}
                 </Physics>
                 <OrbitControls/>
@@ -80,4 +86,14 @@ const PageMoveBtn = styled.div`
         border-color:red;
         font-weight: 900;
     }
+`;
+
+const RestartBtn = styled.div`
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    width: 10rem;
+    height: 5rem;
+    border: 1px solid;
+    font-size:2rem;
 `;

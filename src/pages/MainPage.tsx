@@ -88,4 +88,10 @@ const ResetBtn = styled.div`
     height: 5rem;
     border: 1px solid;
     font-size:1.5rem;
+
+    &:hover{
+        font-weight: 900;
+        border-color:skyblue;
+        border-width:1rem;
+    }
 `
