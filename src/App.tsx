@@ -5,6 +5,7 @@ import reset from "styled-reset";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import FallingCubePage from "./pages/FallingCubePage";
+import STLLoadPage from "./pages/STLLoadPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/login" element={<LoginPage/>}/>
           <Route path="/main" element={<MainPage/>}/>
           <Route path="/falling" element={<FallingCubePage/>}/>
+          <Route path="/load" element={<STLLoadPage/>}/>
         </Routes>
       </Router>
     </Container>
