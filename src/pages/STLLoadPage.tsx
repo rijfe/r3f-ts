@@ -2,16 +2,20 @@ import styled from "styled-components";
 import { useState, useRef,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Canvas, ThreeEvent, useThree } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, Outlines, PivotControls, TransformControls,Loader } from "@react-three/drei";
 import { BufferGeometry } from "three";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from "three";
+import { pointState, getPointState } from "../store/pointState";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 function STLLoadPage(){
     const meshRef = useRef<THREE.Mesh>(null!);
 
     const [isEnter, setIsEnter] = useState<boolean>(false);
     const [isDrop, setIsDrop] = useState<boolean>(false);
+
+    const point = useRecoilValue(getPointState);
 
     const [geometry, setGeometry] = useState<BufferGeometry>();
 
@@ -20,7 +24,6 @@ function STLLoadPage(){
     const handleDrop = (event : React.DragEvent) =>{
         event.preventDefault();
         const file = event.dataTransfer.files[0];
-        console.log(file);
 
         loading(file);
     }
@@ -44,14 +47,7 @@ function STLLoadPage(){
         }
         
     };
-    // const {camera} = useThree();
-    // const boundingBox = new Box3().setFromObject(meshRef.current);
-    // const center = boundingBox.getCenter(new Vector3());
 
-    // camera.position.copy(center);
-    // camera.position.z += boundingBox.getSize(new Vector3()).length(); 
-    // camera.position.y += boundingBox.getSize(new Vector3()).length();
-    // camera.lookAt(center);
     return(
         <Container>
             <HeadContainer>
@@ -62,10 +58,10 @@ function STLLoadPage(){
                 >
                     Back
                 </PageMoveBtn>
-
+                {`x=${point[0]} y=${point[1]} z=${point[2]}`}
                 <PageMoveBtn
                     onClick={()=>{
-                        // navigate("/load");
+                        // navigate("/scroll");
                     }}
                 >
                     Next
@@ -74,27 +70,30 @@ function STLLoadPage(){
 
             <Bodycontainer>
                 {isDrop ? 
-                <Canvas camera={{position:[0,0,20]}}
-                    onDragEnter={(event)=>{
-                        event.preventDefault();
-                    }}
-                    onDragLeave={(event)=>{
-                        event.preventDefault();
-                    }}
-                    onDragOver={(event)=>{
-                        event.preventDefault();
-                    }}
-                    onDrop={handleDrop}
-                >
-                    <directionalLight intensity={0.5} position={[0,1,0]}/>
-                    <directionalLight intensity={0.5} position={[0,-1,0]}/>
-                    <directionalLight intensity={0.5} position={[1,0,0]}/>
-                    <directionalLight intensity={0.5} position={[-1,0,0]}/>
-                    <directionalLight intensity={0.5} position={[0,0,1]}/>
-                    <directionalLight intensity={0.5} position={[0,0,-1]}/>
-                    <OrbitControls/>
-                    <LoadMesh geometry={geometry}/>
-                </Canvas>
+                <>
+                    <Canvas
+                        onDragEnter={(event:React.DragEvent)=>{
+                            event.preventDefault();
+                        }}
+                        onDragLeave={(event:React.DragEvent)=>{
+                            event.preventDefault();
+                        }}
+                        onDragOver={(event:React.DragEvent)=>{
+                            event.preventDefault();
+                        }}
+                        onDrop={handleDrop}
+                    >
+                        <directionalLight intensity={0.5} position={[0,1,0]}/>
+                        <directionalLight intensity={0.5} position={[0,-1,0]}/>
+                        <directionalLight intensity={0.5} position={[1,0,0]}/>
+                        <directionalLight intensity={0.5} position={[-1,0,0]}/>
+                        <directionalLight intensity={0.5} position={[0,0,1]}/>
+                        <directionalLight intensity={0.5} position={[0,0,-1]}/>
+                        <LoadMesh geometry={geometry}/>
+                        <OrbitControls/>
+                    </Canvas>
+                    <Loader/>
+                </>
                 :<FileUploadBox 
                     onDragEnter={(event)=>{
                         event.preventDefault();
@@ -111,7 +110,7 @@ function STLLoadPage(){
                     style={{borderColor:`${isEnter ? 'red' : 'black'}`}}
                 >
                     <FileInput type="file" onChange={handleUpload}/>
-                    <BoxText>클릭 혹은 파일 드롭하세요.</BoxText>
+                    <BoxText>클릭 혹은 파일을 드롭하세요.</BoxText>
                 </FileUploadBox>}
             </Bodycontainer>
             
@@ -122,6 +121,8 @@ function STLLoadPage(){
 const LoadMesh = ({ geometry } : any) => {
     const meshRef = useRef<THREE.Mesh>(null!);
     const { camera, raycaster } = useThree();
+    const [point, setPoint] = useRecoilState(pointState);
+    const [cp, setCp] = useState<THREE.Vector3Tuple[]>([]);
 
     useEffect(() => {
         if (!geometry || !meshRef.current) return;
@@ -130,6 +131,7 @@ const LoadMesh = ({ geometry } : any) => {
         const center = boundingBox.getCenter(new THREE.Vector3());
 
         camera.position.copy(center);
+        camera.position.x += boundingBox.getSize(new THREE.Vector3()).length(); 
         camera.position.z += boundingBox.getSize(new THREE.Vector3()).length(); 
         camera.position.y += boundingBox.getSize(new THREE.Vector3()).length();
         camera.lookAt(center);
@@ -137,20 +139,28 @@ const LoadMesh = ({ geometry } : any) => {
 
     const handleMeshClick = (event: ThreeEvent<MouseEvent>) => {
         const x = (event.clientX / window.innerWidth) * 2 - 1;
-        const y = -(event.clientY / window.innerHeight) * 2 + 1; // 올바른 y 좌표 계산
+        const y = -(event.clientY / window.innerHeight) * 2 + 1;
 
         raycaster.setFromCamera(new THREE.Vector2(x, y), camera);
 
         const intersects = raycaster.intersectObject(meshRef.current);
-        if (intersects.length > 0) console.log(intersects[0].point);
+        if (intersects.length > 0){
+            console.log(intersects[0].point.toArray());
+            let arr = intersects[0].point.toArray();
+            setPoint(arr);
+            setCp(pre=>[...pre, arr]);
+        }
     };
 
     return( 
+
         <mesh geometry={geometry} ref={meshRef}onClick={handleMeshClick}>
-            <meshStandardMaterial/>
+            <meshPhongMaterial/>
+            {/* <Outlines thickness={0.01}/> */}
         </mesh>
     );
 };
+
 
 export default STLLoadPage;
 

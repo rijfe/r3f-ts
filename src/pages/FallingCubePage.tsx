@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/cannon";
-import { OrbitControls } from "@react-three/drei";
+import { Loader, OrbitControls } from "@react-three/drei";
 import { useNavigate } from "react-router-dom";
 
 import Plane from "../components/Plane";
