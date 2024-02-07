@@ -2,18 +2,27 @@ import styled from "styled-components";
 import { useState, useRef,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Canvas, ThreeEvent, useThree } from "@react-three/fiber";
-import { OrbitControls, Outlines, PivotControls, TransformControls,Loader } from "@react-three/drei";
+import { OrbitControls, Outlines, CatmullRomLine,Loader, Environment } from "@react-three/drei";
 import { BufferGeometry } from "three";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from "three";
 import { pointState, getPointState } from "../store/pointState";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { Leva, useControls } from "leva";
+
+import { useLoader } from "@react-three/fiber";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 function STLLoadPage(){
     const meshRef = useRef<THREE.Mesh>(null!);
 
     const [isEnter, setIsEnter] = useState<boolean>(false);
     const [isDrop, setIsDrop] = useState<boolean>(false);
+    //const gltf = useLoader(GLTFLoader, "../img/baseball_01_4.gltf");
+
+    // const {scale} = useControls({
+    //     scale: {value:5, min:1, max:30, step:1}
+    // });
 
     const point = useRecoilValue(getPointState);
 
@@ -48,6 +57,8 @@ function STLLoadPage(){
         
     };
 
+
+
     return(
         <Container>
             <HeadContainer>
@@ -61,7 +72,7 @@ function STLLoadPage(){
                 {`x=${point[0]} y=${point[1]} z=${point[2]}`}
                 <PageMoveBtn
                     onClick={()=>{
-                        // navigate("/scroll");
+                        //navigate("/baseball");
                     }}
                 >
                     Next
@@ -89,7 +100,9 @@ function STLLoadPage(){
                         <directionalLight intensity={0.5} position={[-1,0,0]}/>
                         <directionalLight intensity={0.5} position={[0,0,1]}/>
                         <directionalLight intensity={0.5} position={[0,0,-1]}/>
+                        {/* <Environment preset="forest" background/> */}
                         <LoadMesh geometry={geometry}/>
+                        <axesHelper scale={20}/>
                         <OrbitControls/>
                     </Canvas>
                     <Loader/>
@@ -120,7 +133,8 @@ function STLLoadPage(){
 
 const LoadMesh = ({ geometry } : any) => {
     const meshRef = useRef<THREE.Mesh>(null!);
-    const { camera, raycaster } = useThree();
+    const mateRef = useRef<THREE.MeshStandardMaterial>(null!);
+    const { camera, raycaster, scene } = useThree();
     const [point, setPoint] = useRecoilState(pointState);
     const [cp, setCp] = useState<THREE.Vector3Tuple[]>([]);
 
@@ -135,15 +149,21 @@ const LoadMesh = ({ geometry } : any) => {
         camera.position.z += boundingBox.getSize(new THREE.Vector3()).length(); 
         camera.position.y += boundingBox.getSize(new THREE.Vector3()).length();
         camera.lookAt(center);
+        setCp([]);
     }, [geometry]);
 
     const handleMeshClick = (event: ThreeEvent<MouseEvent>) => {
-        const x = (event.clientX / window.innerWidth) * 2 - 1;
-        const y = -(event.clientY / window.innerHeight) * 2 + 1;
+        event.stopPropagation();
+        let gapX = event.clientX - event.offsetX;
+        let gapY = event.clientY - event.offsetY;
 
+        console.log(event.screenX, event.screenY);
+
+        const x = ((event.clientX-gapX) / window.innerWidth) * 2 - 1;
+        const y = -((event.clientY-gapY) / window.innerHeight) * 2 + 1;
         raycaster.setFromCamera(new THREE.Vector2(x, y), camera);
 
-        const intersects = raycaster.intersectObject(meshRef.current);
+        const intersects : any = raycaster.intersectObject(meshRef.current);
         if (intersects.length > 0){
             console.log(intersects[0].point.toArray());
             let arr = intersects[0].point.toArray();
@@ -151,16 +171,49 @@ const LoadMesh = ({ geometry } : any) => {
             setCp(pre=>[...pre, arr]);
         }
     };
-
+    //const vector3Array: THREE.Vector3[] = cp.map(tuple => new THREE.Vector3().fromArray(tuple));
     return( 
 
-        <mesh geometry={geometry} ref={meshRef}onClick={handleMeshClick}>
-            <meshPhongMaterial/>
-            {/* <Outlines thickness={0.01}/> */}
-        </mesh>
+        <mesh 
+            geometry={geometry} 
+            ref={meshRef} 
+            onClick={handleMeshClick} 
+        >
+            <meshStandardMaterial ref={mateRef}/>
+            <Outlines thickness={0.01}/>
+            {cp.length > 3 ?<CatmullRomLine
+                points={cp}
+                color="red"
+                lineWidth={3}
+            />:null}
+            {/* {cp.map((point, index) => (
+                <points key={index} position={[point[0], point[1], point[2]]}>
+                    <sphereGeometry args={[4, 16, 16]} />
+                    <meshStandardMaterial color="red" />
+                </points>
+            ))} */}
+            {/* <CurveLine points={vector3Array}/> */}
+        </mesh> 
+
+        
     );
 };
 
+// function CurveLine({ points }: { points: THREE.Vector3[] }) {
+//     if (points.length < 2) return null;
+
+//     const curve = new THREE.CatmullRomCurve3(points);
+//     const tubeGeometry:any = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial( {
+//         color: 0x0000ff,
+//         opacity: 0.35
+//     } ));
+    
+//     return (
+//         <mesh geometry={tubeGeometry}>
+//             <meshPhongMaterial color="red" />
+//         </mesh>
+//     );
+// }
 
 export default STLLoadPage;
 
