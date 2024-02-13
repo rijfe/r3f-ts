@@ -11,6 +11,9 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { Leva, useControls } from "leva";
 import {ChromePicker, CirclePicker} from 'react-color';
 
+import logo from "../img/free-icon-file-and-folder-8291136.png"
+import HeadContainer from "../components/HeadContainer";
+
 import { useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
@@ -185,8 +188,9 @@ function STLLoadPage(){
                     onDrop={handleDrop}
                     style={{borderColor:`${isEnter ? 'red' : 'black'}`}}
                 >
+                    <FileImg src={logo}/>
                     <FileInput type="file" onChange={handleUpload}/>
-                    <BoxText>클릭 혹은 파일을 드롭하세요.</BoxText>
+                    <BoxText>Click or Drop a STL File.</BoxText>
                 </FileUploadBox>}
             </Bodycontainer>
             
@@ -228,13 +232,13 @@ const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr} : loadMe
 
     const handleMeshClick = (event: ThreeEvent<MouseEvent>) => {
         event.stopPropagation();
-        let gapX = event.clientX - event.offsetX;
-        let gapY = event.clientY - event.offsetY;
+        // let gapX = event.clientX - event.offsetX;
+        // let gapY = event.clientY - event.offsetY;
 
-        const x = ((event.clientX-gapX) / window.innerWidth) * 2 - 1;
-        const y = -((event.clientY-gapY) / window.innerHeight) * 2 + 1;
-        // const x = ((event.clientX) / window.innerWidth) * 2 - 1;
-        // const y = -((event.clientY) / window.innerHeight) * 2 + 1;
+        // const x = ((event.clientX-gapX) / window.innerWidth) * 2 - 1;
+        // const y = -((event.clientY-gapY) / window.innerHeight) * 2 + 1;
+        const x = (event.clientX / window.innerWidth) * 2 - 1;
+        const y = -(event.clientY / window.innerHeight) * 2 + 1;
         raycaster.setFromCamera(new THREE.Vector2(x, y), camera);
         const intersects : any = raycaster.intersectObject(meshRef.current,false);
         if (intersects.length > 0){
@@ -341,13 +345,6 @@ const Container = styled.div`
     flex-direction:column;
 `;
 
-const HeadContainer = styled.div`
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    border-bottom: 1px solid;
-`;
-
 const PageMoveBtn = styled.div`
     display:flex;
     justify-content: center;
@@ -421,6 +418,7 @@ const FileUploadBox = styled.label`
     border: 3px dashed;
     justify-content:center;
     align-items:center;
+    flex-direction: column;
 `;
 
 const BoxText = styled.h1`
@@ -428,8 +426,14 @@ const BoxText = styled.h1`
     font-weight: 900;
 `;
 
+const FileImg = styled.img`
+    width: 13rem;
+    height: 13rem;
+    margin-bottom:2rem;
+`;
+
 const FileInput = styled.input`
-    display:none
+    display:none;
 `;
 
 const ColorContainer = styled.div`

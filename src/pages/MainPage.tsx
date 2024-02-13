@@ -4,6 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import { useNavigate } from "react-router-dom";
 
 import Box from "../components/Box";
+import HeadContainer from "../components/HeadContainer";
 
 function MainPage(){
     const navigate = useNavigate();
@@ -56,12 +57,6 @@ const MainPageContainer = styled.div`
     flex-direction: column;
     width: 100%;
     height: 100%;
-`;
-
-const HeadContainer = styled.div`
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
 `;
 
 const PageMoveBtn = styled.div`

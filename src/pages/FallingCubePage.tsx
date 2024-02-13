@@ -8,6 +8,7 @@ import { ChromePicker } from "react-color";
 
 import Plane from "../components/Plane";
 import Cube from "../components/Cube";
+import HeadContainer from "../components/HeadContainer";
 
 function FallingCubePage(){
     const navigate = useNavigate();
@@ -66,12 +67,6 @@ const FallingCubePageContainer = styled.div`
     width: 100%;
     height: 100%;
     flex-direction: column;
-`;
-
-const HeadContainer = styled.div`
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
 `;
 
 const PageMoveBtn = styled.div`

@@ -7,7 +7,7 @@ function LoginPage(){
 
     const [id, setId] = useState<string>("");
     const [pwd, setPwd] = useState<string>("");
-    
+
     return(
         <LoginPageContainer>
             <LoginBox>
@@ -24,8 +24,9 @@ function LoginPage(){
                 </InputBoxContainer>
                 <LogintBtnContainer>
                     <LoginBtn onClick={()=>{
-                        if(id === "김영우" && pwd === "123") navigate("/main");
-                        else window.alert("ID와 비밀번호를 확인해주세요.");
+                        // if(id === "김영우" && pwd === "123") navigate("/main");
+                        // else window.alert("ID와 비밀번호를 확인해주세요.");
+                        navigate("/main");
                     }}>LOGIN</LoginBtn>
                     @ 아름덴티스트리
                 </LogintBtnContainer>
