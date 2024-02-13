@@ -123,11 +123,10 @@ function STLLoadPage(){
                         {`x=${point[0]} y=${point[1]} z=${point[2]}`}
                     </PointContainer>
                     <LineBtn onClick={()=>{
-                        setState(!state);
-                        if(!state){
+                        if(state){
                             saveLine();
-                            console.log(cpArr);
                         }
+                        setState(!state);
                     }}>
                         {state ? "Done" : "+"}
                     </LineBtn>
@@ -294,7 +293,7 @@ const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr} : loadMe
                 color={`${color}`}
                 lineWidth={5}
             />:null):cpArr.length > 0 ? cpArr?.map((points:any, idx:number)=>(
-                points.length > 0  ? <CatmullRomLine
+                points.length > 0 ? <CatmullRomLine
                     points={points}
                     color={`${color}`}
                     lineWidth={5}
