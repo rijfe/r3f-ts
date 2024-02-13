@@ -2,13 +2,14 @@ import styled from "styled-components";
 import { useState, useRef,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Canvas, ThreeEvent, useThree } from "@react-three/fiber";
-import { OrbitControls, Outlines, CatmullRomLine,Loader, Environment } from "@react-three/drei";
+import { OrbitControls, Outlines, CatmullRomLine,Loader, Environment, Line } from "@react-three/drei";
 import { BufferGeometry } from "three";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from "three";
 import { pointState, getPointState } from "../store/pointState";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Leva, useControls } from "leva";
+import {ChromePicker} from 'react-color';
 
 import { useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
@@ -18,6 +19,12 @@ function STLLoadPage(){
 
     const [isEnter, setIsEnter] = useState<boolean>(false);
     const [isDrop, setIsDrop] = useState<boolean>(false);
+    const [state, setState] = useState<boolean>(false);
+    const [colorState, setColorState] = useState<boolean>(false);
+    const [color, setColor] = useState<string>('red');
+    const [cp, setCp] = useState<THREE.Vector3Tuple[]>([]);
+
+    const [cpArr, setCpArr] = useState<Array<any>>([]);
     //const gltf = useLoader(GLTFLoader, "../img/baseball_01_4.gltf");
 
     // const {scale} = useControls({
@@ -57,8 +64,15 @@ function STLLoadPage(){
         
     };
 
-
-
+    const saveLine = () => {
+        setCpArr(pre => [...pre, cp]);
+        console.log(cpArr);
+        setCp([]);
+    };
+    useEffect(()=>{
+        setCpArr([]);
+        setCp([]);
+    },[geometry]);
     return(
         <Container>
             <HeadContainer>
@@ -69,7 +83,6 @@ function STLLoadPage(){
                 >
                     Back
                 </PageMoveBtn>
-                {`x=${point[0]} y=${point[1]} z=${point[2]}`}
                 <PageMoveBtn
                     onClick={()=>{
                         //navigate("/baseball");
@@ -79,7 +92,7 @@ function STLLoadPage(){
                 </PageMoveBtn>
             </HeadContainer>
 
-            <Bodycontainer>
+            <Bodycontainer >
                 {isDrop ? 
                 <>
                     <Canvas
@@ -101,11 +114,45 @@ function STLLoadPage(){
                         <directionalLight intensity={0.5} position={[0,0,1]}/>
                         <directionalLight intensity={0.5} position={[0,0,-1]}/>
                         {/* <Environment preset="forest" background/> */}
-                        <LoadMesh geometry={geometry}/>
+                        <LoadMesh geometry={geometry} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr}/>
                         <axesHelper scale={20}/>
                         <OrbitControls/>
                     </Canvas>
                     <Loader/>
+                    <PointContainer>
+                        {`x=${point[0]} y=${point[1]} z=${point[2]}`}
+                    </PointContainer>
+                    <LineBtn onClick={()=>{
+                        setState(!state);
+                        if(!state){
+                            saveLine();
+                            console.log(cpArr);
+                        }
+                    }}>
+                        {state ? "Done" : "+"}
+                    </LineBtn>
+                    <ColorBtn onClick={()=>{setColorState(!colorState);}}>
+                        Color
+                    </ColorBtn>
+                    {colorState ? <ChromePicker styles={{
+                        default: {
+                            picker: {
+                                position: "absolute",
+                                left:'2rem',
+                                top:'14rem',
+                            },
+                            hue: {
+                                // 색상 선택기(Hue)의 스타일
+                                height: "10px", // 색상 선택기의 높이를 설정합니다.
+                            },
+                            saturation: {
+                                // 채도 선택기(Saturation)의 스타일
+                                width: "100%", // 채도 선택기의 너비를 설정합니다.
+                                height: "100px", // 채도 선택기의 높이를 설정합니다.
+                            },
+                        },
+                        // 필요한 경우 다른 스타일도 설정할 수 있습니다.
+                    }} onChange={(color)=>{setColor(color.hex);}}/> : null}
                 </>
                 :<FileUploadBox 
                     onDragEnter={(event)=>{
@@ -131,12 +178,23 @@ function STLLoadPage(){
     );
 }
 
-const LoadMesh = ({ geometry } : any) => {
+interface loadMesh{
+    geometry: any,
+    state : boolean,
+    setState :  React.Dispatch<React.SetStateAction<boolean>>,
+    color: string,
+    cp: THREE.Vector3Tuple[],
+    setCp : React.Dispatch<React.SetStateAction<THREE.Vector3Tuple[]>>,
+    cpArr : Array<any>
+}
+
+const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr} : loadMesh) => {
     const meshRef = useRef<THREE.Mesh>(null!);
     const mateRef = useRef<THREE.MeshStandardMaterial>(null!);
     const { camera, raycaster, scene } = useThree();
     const [point, setPoint] = useRecoilState(pointState);
-    const [cp, setCp] = useState<THREE.Vector3Tuple[]>([]);
+    const [pEnter, setPEnter] = useState<boolean>(false);
+    const [curPoint, setCurPoint] = useState<THREE.Vector3>();
 
     useEffect(() => {
         if (!geometry || !meshRef.current) return;
@@ -150,70 +208,113 @@ const LoadMesh = ({ geometry } : any) => {
         camera.position.y += boundingBox.getSize(new THREE.Vector3()).length();
         camera.lookAt(center);
         setCp([]);
-    }, [geometry]);
+    }, []);
 
     const handleMeshClick = (event: ThreeEvent<MouseEvent>) => {
         event.stopPropagation();
         let gapX = event.clientX - event.offsetX;
         let gapY = event.clientY - event.offsetY;
 
-        console.log(event.screenX, event.screenY);
-
         const x = ((event.clientX-gapX) / window.innerWidth) * 2 - 1;
         const y = -((event.clientY-gapY) / window.innerHeight) * 2 + 1;
+        // const x = ((event.clientX) / window.innerWidth) * 2 - 1;
+        // const y = -((event.clientY) / window.innerHeight) * 2 + 1;
         raycaster.setFromCamera(new THREE.Vector2(x, y), camera);
-
-        const intersects : any = raycaster.intersectObject(meshRef.current);
+        const intersects : any = raycaster.intersectObject(meshRef.current,false);
         if (intersects.length > 0){
-            console.log(intersects[0].point.toArray());
+            // console.log(intersects[0].point.toArray());
             let arr = intersects[0].point.toArray();
+            arr.map((ele:number,idx:number)=>{
+                arr[idx] = Math.round(ele*10)/10;
+            })
             setPoint(arr);
             setCp(pre=>[...pre, arr]);
+            setCurPoint(arr);
         }
     };
+    // useEffect(()=>{
+    //     if(!state)saveLine();
+    //     console.log(cpArr);
+    // },[state])
     //const vector3Array: THREE.Vector3[] = cp.map(tuple => new THREE.Vector3().fromArray(tuple));
+
     return( 
 
         <mesh 
             geometry={geometry} 
             ref={meshRef} 
-            onClick={handleMeshClick} 
+            onClick={handleMeshClick}
+            // onPointerEnter={(event)=>{
+            //     setPEnter(true);
+                
+            //     event.stopPropagation();
+            //     let gapX = event.clientX - event.offsetX;
+            //     let gapY = event.clientY - event.offsetY;
+
+            //     const x = ((event.clientX-gapX) / window.innerWidth) * 2 - 1;
+            //     const y = -((event.clientY-gapY) / window.innerHeight) * 2 + 1;
+            //     // const x = ((event.clientX) / window.innerWidth) * 2 - 1;
+            //     // const y = -((event.clientY) / window.innerHeight) * 2 + 1;
+            //     raycaster.setFromCamera(new THREE.Vector2(x, y), camera);
+
+            //     const intersects : any = raycaster.intersectObject(meshRef.current);
+            //     if (intersects.length > 0){
+            //         let arr = intersects[0].point.toArray();
+            //         // console.log(arr);
+            //         setCurPoint(arr);
+            //     }
+            // }}
+            // onPointerOut={()=>{
+
+            //     setPEnter(false);
+            //     setCurPoint(new  THREE.Vector3());
+            // }}
+            // onPointerMove={(event)=>{
+            //     event.stopPropagation();
+            //     let gapX = event.clientX - event.offsetX;
+            //     let gapY = event.clientY - event.offsetY;
+
+            //     const x = ((event.clientX-gapX) / window.innerWidth) * 2 - 1;
+            //     const y = -((event.clientY-gapY) / window.innerHeight) * 2 + 1;
+            //     // const x = ((event.clientX) / window.innerWidth) * 2 - 1;
+            //     // const y = -((event.clientY) / window.innerHeight) * 2 + 1;
+            //     raycaster.setFromCamera(new THREE.Vector2(x, y), camera);
+
+            //     const intersects : any = raycaster.intersectObject(meshRef.current);
+            //     if (intersects.length > 0){
+            //         let arr = intersects[0].point.toArray();
+            //         setCurPoint(arr);
+            //     }
+            // }}
         >
             <meshStandardMaterial ref={mateRef}/>
             <Outlines thickness={0.01}/>
-            {cp.length > 3 ?<CatmullRomLine
+            {state ? (cp.length > 3 ? <CatmullRomLine
                 points={cp}
-                color="red"
-                lineWidth={3}
-            />:null}
+                color={`${color}`}
+                lineWidth={5}
+            />:null):cpArr.length > 0 ? cpArr?.map((points:any, idx:number)=>(
+                points.length > 0  ? <CatmullRomLine
+                    points={points}
+                    color={`${color}`}
+                    lineWidth={5}
+                />: null
+            )) :null}
+           {pEnter ? <mesh position={curPoint}>
+                <sphereGeometry args={[0.2]}/>
+                <meshStandardMaterial color="red"/>
+            </mesh>:null}
             {/* {cp.map((point, index) => (
                 <points key={index} position={[point[0], point[1], point[2]]}>
                     <sphereGeometry args={[4, 16, 16]} />
                     <meshStandardMaterial color="red" />
                 </points>
             ))} */}
-            {/* <CurveLine points={vector3Array}/> */}
         </mesh> 
 
         
     );
 };
-
-// function CurveLine({ points }: { points: THREE.Vector3[] }) {
-//     if (points.length < 2) return null;
-
-//     const curve = new THREE.CatmullRomCurve3(points);
-//     const tubeGeometry:any = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial( {
-//         color: 0x0000ff,
-//         opacity: 0.35
-//     } ));
-    
-//     return (
-//         <mesh geometry={tubeGeometry}>
-//             <meshPhongMaterial color="red" />
-//         </mesh>
-//     );
-// }
 
 export default STLLoadPage;
 
@@ -228,6 +329,7 @@ const HeadContainer = styled.div`
     display: flex;
     width: 100%;
     justify-content: space-between;
+    border-bottom: 1px solid;
 `;
 
 const PageMoveBtn = styled.div`
@@ -236,11 +338,10 @@ const PageMoveBtn = styled.div`
     align-items: center;
     width: 10rem;
     height: 5rem;
-    border: 1px solid;
     font-size:2rem;
 
     &:hover{
-        border-color:red;
+        background-color:grey;
         font-weight: 900;
     }
 `;
@@ -250,6 +351,51 @@ const Bodycontainer = styled.div`
     justify-content: center;
     align-items: center;
     flex:1;
+`;
+
+const PointContainer = styled.div`
+    position: absolute;
+    right:2rem;
+    bottom:2rem;
+    font-size:1.5rem;
+`;
+
+const LineBtn = styled.div`
+    position:absolute;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border:1px solid;
+    border-radius: 12px;
+    width: 10rem;
+    height: 4rem;
+    right:2rem;
+    top:8rem;
+    font-size:1.5rem;
+
+    &:hover{
+        background-color:grey;
+        font-weight: 900;
+    }
+`;
+
+const ColorBtn = styled.div`
+    position:absolute;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border:1px solid;
+    border-radius: 12px;
+    width: 10rem;
+    height: 4rem;
+    left:2rem;
+    top:8rem;
+    font-size:1.5rem;
+
+    &:hover{
+        background-color:grey;
+        font-weight: 900;
+    }
 `;
 
 const FileUploadBox = styled.label`
