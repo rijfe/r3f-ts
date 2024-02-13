@@ -9,7 +9,7 @@ import * as THREE from "three";
 import { pointState, getPointState } from "../store/pointState";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Leva, useControls } from "leva";
-import {ChromePicker} from 'react-color';
+import {ChromePicker, CirclePicker} from 'react-color';
 
 import { useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
@@ -21,7 +21,7 @@ function STLLoadPage(){
     const [isDrop, setIsDrop] = useState<boolean>(false);
     const [state, setState] = useState<boolean>(false);
     const [colorState, setColorState] = useState<boolean>(false);
-    const [color, setColor] = useState<string>('red');
+    const [color, setColor] = useState<Array<string>>([]);
     const [cp, setCp] = useState<THREE.Vector3Tuple[]>([]);
 
     const [cpArr, setCpArr] = useState<Array<any>>([]);
@@ -133,25 +133,42 @@ function STLLoadPage(){
                     <ColorBtn onClick={()=>{setColorState(!colorState);}}>
                         Color
                     </ColorBtn>
-                    {colorState ? <ChromePicker styles={{
-                        default: {
-                            picker: {
-                                position: "absolute",
-                                left:'2rem',
-                                top:'14rem',
-                            },
-                            hue: {
-                                // 색상 선택기(Hue)의 스타일
-                                height: "10px", // 색상 선택기의 높이를 설정합니다.
-                            },
-                            saturation: {
-                                // 채도 선택기(Saturation)의 스타일
-                                width: "100%", // 채도 선택기의 너비를 설정합니다.
-                                height: "100px", // 채도 선택기의 높이를 설정합니다.
-                            },
-                        },
-                        // 필요한 경우 다른 스타일도 설정할 수 있습니다.
-                    }} onChange={(color)=>{setColor(color.hex);}}/> : null}
+                    {colorState ? 
+                    <ColorContainer>
+                        {/* <ChromePicker 
+                            // styles={{
+                            //     default: {
+                            //         picker: {
+                            //             position: "fixed",
+                            //         },
+                            //         hue: {
+                            //             // 색상 선택기(Hue)의 스타일
+                            //             height: "10px", // 색상 선택기의 높이를 설정합니다.
+                            //         },
+                            //         saturation: {
+                            //             // 채도 선택기(Saturation)의 스타일
+                            //             width: "100%", // 채도 선택기의 너비를 설정합니다.
+                            //             height: "100px", // 채도 선택기의 높이를 설정합니다.
+                            //         },
+                            //     },
+                            //     // 필요한 경우 다른 스타일도 설정할 수 있습니다.
+                            // }} 
+                            onChange={(color)=>{setColor(color.hex);}}
+                            onChangeComplete={()=>{}}
+                        />  */}
+                        <CirclePicker
+                            onChange={(c)=>{
+                                if(color.length <= cpArr.length){
+                                    setColor(pre=>[...pre, c.hex]);
+                                }
+                                else{
+                                    color[color.length-1] = c.hex;
+                                }
+                                
+                            }}
+                        />
+                    </ColorContainer>
+                    : null}
                 </>
                 :<FileUploadBox 
                     onDragEnter={(event)=>{
@@ -181,7 +198,7 @@ interface loadMesh{
     geometry: any,
     state : boolean,
     setState :  React.Dispatch<React.SetStateAction<boolean>>,
-    color: string,
+    color: Array<string>,
     cp: THREE.Vector3Tuple[],
     setCp : React.Dispatch<React.SetStateAction<THREE.Vector3Tuple[]>>,
     cpArr : Array<any>
@@ -242,7 +259,7 @@ const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr} : loadMe
         <mesh 
             geometry={geometry} 
             ref={meshRef} 
-            onClick={handleMeshClick}
+            onClick={state ? handleMeshClick : ()=>{}}
             // onPointerEnter={(event)=>{
             //     setPEnter(true);
                 
@@ -290,12 +307,12 @@ const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr} : loadMe
             <Outlines thickness={0.01}/>
             {state ? (cp.length > 3 ? <CatmullRomLine
                 points={cp}
-                color={`${color}`}
+                color="red"
                 lineWidth={5}
             />:null):cpArr.length > 0 ? cpArr?.map((points:any, idx:number)=>(
                 points.length > 0 ? <CatmullRomLine
                     points={points}
-                    color={`${color}`}
+                    color={`${color[idx]}`}
                     lineWidth={5}
                 />: null
             )) :null}
@@ -413,4 +430,10 @@ const BoxText = styled.h1`
 
 const FileInput = styled.input`
     display:none
+`;
+
+const ColorContainer = styled.div`
+    position: absolute;
+    left:2rem;
+    top:14rem;
 `;

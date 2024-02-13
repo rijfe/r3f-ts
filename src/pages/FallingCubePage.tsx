@@ -4,6 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/cannon";
 import { OrbitControls } from "@react-three/drei";
 import { useNavigate } from "react-router-dom";
+import { ChromePicker } from "react-color";
 
 import Plane from "../components/Plane";
 import Cube from "../components/Cube";
