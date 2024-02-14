@@ -1,8 +1,13 @@
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 function HeadContainer(props:any){
     const navigate = useNavigate();
+
+    useEffect(()=>{
+        
+    },[]);
 
     return(
     <Header>

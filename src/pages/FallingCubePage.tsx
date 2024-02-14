@@ -23,26 +23,6 @@ function FallingCubePage(){
     return(
         <FallingCubePageContainer>
             <HeadContainer>
-                <PageMoveBtn
-                    onClick={()=>{
-                        navigate("/main");
-                    }}
-                >
-                    Back
-                </PageMoveBtn>
-                <RestartBtn onClick={()=>{
-                    setState(state+1);
-                    setReady(false);
-                }}>
-                    ReStart
-                </RestartBtn>
-                <PageMoveBtn
-                    onClick={()=>{
-                        navigate("/load");
-                    }}
-                >
-                    Next
-                </PageMoveBtn>
             </HeadContainer>
             <Canvas dpr={[1,2]} shadows camera={{position:[-5,5,5], fov: 50}}>
                 <ambientLight />
@@ -56,6 +36,12 @@ function FallingCubePage(){
                 </Physics>
                 <OrbitControls/>
             </Canvas>
+            {/* <RestartBtn onClick={()=>{
+                    setState(state+1);
+                    setReady(false);
+                }}>
+                    ReStart
+            </RestartBtn> */}
         </FallingCubePageContainer>
     );
 }
@@ -67,21 +53,6 @@ const FallingCubePageContainer = styled.div`
     width: 100%;
     height: 100%;
     flex-direction: column;
-`;
-
-const PageMoveBtn = styled.div`
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    width: 10rem;
-    height: 5rem;
-    border: 1px solid;
-    font-size:2rem;
-
-    &:hover{
-        border-color:red;
-        font-weight: 900;
-    }
 `;
 
 const RestartBtn = styled.div`
