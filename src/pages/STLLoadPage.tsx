@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { useState, useRef,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Canvas, ThreeEvent, useThree } from "@react-three/fiber";
-import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera } from "@react-three/drei";
+import { Canvas, ThreeEvent, useThree, useFrame } from "@react-three/fiber";
+import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Cone } from "@react-three/drei";
 import { BufferGeometry } from "three";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from "three";
@@ -21,6 +21,7 @@ import ListItem from "../components/ListItem";
 
 function STLLoadPage(){
     const meshRef = useRef<THREE.Mesh>(null!);
+    const ref = useRef(null!);
 
     const [isEnter, setIsEnter] = useState<boolean>(false);
     const [isDrop, setIsDrop] = useState<boolean>(false);
@@ -28,12 +29,14 @@ function STLLoadPage(){
     const [colorState, setColorState] = useState<boolean>(false);
     const [color, setColor] = useState<Array<string>>([]);
     const [cp, setCp] = useState<THREE.Vector3Tuple[]>([]);
+    const [mousePosition, setMousePosition] = useState([0, 0]);
 
     const [cpArr, setCpArr] = useState<Array<any>>([]);
     
     const point = useRecoilValue(getPointState);
+    
 
-    const [geometry, setGeometry] = useState<BufferGeometry>();
+    const [geometry, setGeometry] = useState<Array<BufferGeometry>>([]);
 
     const navigate = useNavigate();
 
@@ -57,12 +60,13 @@ function STLLoadPage(){
         }
         else{
             loader.load(URL.createObjectURL(file), geo=>{
-                setGeometry(geo);
+                setGeometry(prev => [...prev, geo]);
             });
             setIsDrop(true);
         }
         
     };
+
 
     const saveLine = () => {
         setCpArr(pre => [...pre, cp]);
@@ -80,10 +84,13 @@ function STLLoadPage(){
 
             <Bodycontainer >
                 <ListItem/>
-                <LoadContainer>hi</LoadContainer>
-                {/* {isDrop ? 
+                {/* <LoadContainer>
+                    <LoadMesh geometry={geometry} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr}/>
+                </LoadContainer> */}
+                {isDrop ? 
                 <>
                     <Canvas
+                        ref={ref}
                         onDragEnter={(event:React.DragEvent)=>{
                             event.preventDefault();
                         }}
@@ -94,16 +101,19 @@ function STLLoadPage(){
                             event.preventDefault();
                         }}
                         onDrop={handleDrop}
-                    >    */}
-                        {/* <ambientLight intensity={0.5}/> */}
-                        {/* <directionalLight intensity={0.5} position={[0,1,0]}/>
+                    >   
+                        <ambientLight intensity={0.5}/>
+                        <directionalLight intensity={0.5} position={[0,1,0]}/>
                         <directionalLight intensity={0.5} position={[0,-1,0]}/>
                         <directionalLight intensity={0.5} position={[1,0,0]}/>
                         <directionalLight intensity={0.5} position={[-1,0,0]}/>
                         <directionalLight intensity={0.5} position={[0,0,1]}/>
-                        <directionalLight intensity={0.5} position={[0,0,-1]}/> */}
-                        {/* <Environment preset="forest" background/> */}
-                        {/* <LoadMesh geometry={geometry} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr}/>
+                        <directionalLight intensity={0.5} position={[0,0,-1]}/>
+                        {/* <Environment preset="forest" background/>*/}
+                        {geometry.map((geo, idx)=>(<LoadMesh geometry={geo} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr}/>))}
+                        {/* {isDrop && geometry && (
+                            <LoadMesh geometry={geometry} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr}/>
+                        )} */}
                         <mesh position={[19.5,-18.47,0]}>
                             <boxGeometry args={[14,18,12]}/>
                             <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
@@ -132,8 +142,8 @@ function STLLoadPage(){
 
                         <AxesHelper posioin={new THREE.Vector3(19.5,-27.47,0)} visible={false} size={5}/>
                         <OrbitControls/>
-                    </Canvas> */}
-                    {/* <Loader/>
+                    </Canvas>
+                    <Loader/>
                     <PointContainer>
                         {`x=${point[0]} y=${point[1]} z=${point[2]}`}
                     </PointContainer>
@@ -145,9 +155,9 @@ function STLLoadPage(){
                     }}>
                         {state ? <img src={checkLogo} style={{width:"4rem", height:"4rem"}} alt="Save Line" title="Save Line"/> : <img src={plusLogo} style={{width:"4rem", height:"4rem"}} alt="Add Line" title="Add Line"/>}
                     </LineBtn>
-                    <ColorBtn onClick={()=>{setColorState(!colorState);}}>
+                    {/* <ColorBtn onClick={()=>{setColorState(!colorState);}}>
                         <img src={colorlogo} style={{width:"4rem", height:"4rem"}} alt="Change Color" title="Change Color"/>
-                    </ColorBtn>
+                    </ColorBtn> */}
                     {colorState ? 
                     <ColorContainer>
                         <CirclePicker
@@ -164,28 +174,28 @@ function STLLoadPage(){
                     </ColorContainer>
                     : null}
                 </>
-                : */}
-                {/* // <FileUploadBox 
-                //     onDragEnter={(event)=>{
-                //         event.preventDefault();
-                //         setIsEnter(true);
-                //     }}
-                //     onDragLeave={(event)=>{
-                //         event.preventDefault();
-                //         setIsEnter(false);
-                //     }}
-                //     onDragOver={(event)=>{
-                //         event.preventDefault();
-                //     }}
-                //     onDrop={handleDrop}
-                //     style={{borderColor:`${isEnter ? 'red' : 'black'}`}}
-                // >
-                //     <FileImg src={logo}/>
-                //     <FileInput type="file" onChange={handleUpload}/>
-                //     <BoxText>Click or Drop a STL File.</BoxText>
-                // </FileUploadBox> */}
-                {/* // <></>
-                // } */}
+                :
+                <FileUploadBox 
+                    onDragEnter={(event)=>{
+                        event.preventDefault();
+                        setIsEnter(true);
+                    }}
+                    onDragLeave={(event)=>{
+                        event.preventDefault();
+                        setIsEnter(false);
+                    }}
+                    onDragOver={(event)=>{
+                        event.preventDefault();
+                    }}
+                    onDrop={handleDrop}
+                    style={{borderColor:`${isEnter ? 'red' : 'black'}`}}
+                >
+                    <FileImg src={logo}/>
+                    <FileInput type="file" onChange={handleUpload}/>
+                    <BoxText>Click or Drop a STL File.</BoxText>
+                </FileUploadBox>
+                
+                }
             </Bodycontainer>
             
         </Container>
@@ -205,10 +215,19 @@ interface loadMesh{
 const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr} : loadMesh) => {
     const meshRef = useRef<THREE.Mesh>(null!);
     const mateRef = useRef<THREE.MeshStandardMaterial>(null!);
+    const coneRef1 = useRef<THREE.Mesh>(null!);
+    const coneRef2 = useRef<THREE.Mesh>(null!);
+    const coneRef3 = useRef<THREE.Mesh>(null!);
+    const coneRef4 = useRef<THREE.Mesh>(null!);
+
     const { camera, raycaster, scene } = useThree();
     const [point, setPoint] = useRecoilState(pointState);
     const [pEnter, setPEnter] = useState<boolean>(false);
     const [curPoint, setCurPoint] = useState<THREE.Vector3>();
+    const [focus, setFocus] = useState<boolean>(false);
+    const [width, setWidth] = useState<Array<number>>([]);
+    const [height, setHeight] = useState<Array<number>>([]);
+    const [centerZ, setCenterZ] = useState<number>(0);
 
     useEffect(() => {
         if (!geometry || !meshRef.current) return;
@@ -217,11 +236,16 @@ const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr} : loadMe
         const center = boundingBox.getCenter(new THREE.Vector3());
 
         camera.position.copy(center);
+        console.log(center);
         camera.position.x += boundingBox.getSize(new THREE.Vector3()).length(); 
         camera.position.z += boundingBox.getSize(new THREE.Vector3()).length(); 
         camera.position.y += boundingBox.getSize(new THREE.Vector3()).length();
         camera.lookAt(center);
         setCp([]);
+        setWidth([boundingBox.max.x, boundingBox.min.x]);
+        setHeight([boundingBox.max.y, boundingBox.min.y]);
+        setCenterZ(center.z);
+        setFocus(false);
     }, []);
 
     const handleMeshClick = (event: ThreeEvent<MouseEvent>) => {
@@ -242,6 +266,7 @@ const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr} : loadMe
             setCurPoint(arr);
         }
     };
+
     // useEffect(()=>{
     //     if(!state)saveLine();
     //     console.log(cpArr);
@@ -263,8 +288,13 @@ const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr} : loadMe
                 geometry={geometry} 
                 ref={meshRef} 
                 onClick={state ? handleMeshClick : ()=>{}}
+                onDoubleClick={(event)=>{
+                    console.log(event.object);
+                    setFocus(!focus);
+                }}
+                
             >
-                <meshStandardMaterial ref={mateRef}/>
+                <meshStandardMaterial ref={mateRef} color={focus ? "#ff0000" : "#ffffff"}/>
                 {/* <Outlines thickness={0.01}/> */}
                 {state ? (cp.length > 0 ? <CatmullRomLine
                     points={cp}
@@ -289,7 +319,75 @@ const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr} : loadMe
                         <meshStandardMaterial color="red" />
                     </points>
                 ))} */}
-            </mesh> 
+            </mesh>
+            {focus ? 
+            <>
+                <Cone
+                    ref={coneRef1}
+                    args={[1, 2, 8]}
+                    position={[width[0] + 5, (height[0]+height[1])/2, centerZ]}
+                    rotation-z={-Math.PI / 2}
+                    onClick={(event)=>{
+                        meshRef.current.position.x += 1;
+                        event.object.position.x += 1;
+                        coneRef2.current.position.x += 1;
+                        coneRef3.current.position.x += 1;
+                        coneRef4.current.position.x += 1;
+                        setWidth([event.object.position.x-5, coneRef2.current.position.x+5]);
+                    }}
+                >
+                    <meshStandardMaterial color={"#ff0000"} />
+                </Cone>
+                <Cone
+                    ref={coneRef2}
+                    args={[1, 2, 8]}
+                    position={[width[1] - 5, (height[0]+height[1])/2, centerZ]}
+                    rotation-z={Math.PI / 2}
+                    onClick={(event)=>{
+                        meshRef.current.position.x -= 1;
+                        event.object.position.x -= 1;
+                        coneRef1.current.position.x -= 1;
+                        coneRef3.current.position.x -= 1;
+                        coneRef4.current.position.x -= 1;
+                        setWidth([coneRef1.current.position.x-5, event.object.position.x+5]);
+                    }}
+                >
+                        <meshStandardMaterial color={"#ff0000"} />
+                </Cone>
+                <Cone
+                    ref={coneRef3}
+                    args={[1, 2, 8]}
+                    position={[(width[0]+width[1])/2, height[0]+5, centerZ]}
+                    rotation-y={Math.PI / 2}
+                    onClick={(event)=>{
+                        meshRef.current.position.y += 1;
+                        event.object.position.y += 1;
+                        coneRef1.current.position.y += 1;
+                        coneRef2.current.position.y += 1;
+                        coneRef4.current.position.y += 1;
+                        setHeight([event.object.position.y-5, coneRef4.current.position.y+5]);
+                    }}
+                >
+                        <meshStandardMaterial color={"#ff0000"} />
+                </Cone>
+                <Cone
+                    ref={coneRef4}
+                    args={[1, 2, 8]}
+                    position={[(width[0]+width[1])/2, height[1]-5, centerZ]}
+                    rotation-z={-Math.PI}
+                    onClick={(event)=>{
+                        meshRef.current.position.y-= 1;
+                        event.object.position.y -= 1;
+                        coneRef1.current.position.y -= 1;
+                        coneRef2.current.position.y -= 1;
+                        coneRef3.current.position.y -= 1;
+                        setHeight([coneRef3.current.position.y-5, event.object.position.y+5]);
+                    }}
+                >
+                        <meshStandardMaterial color={"#ff0000"} />
+                </Cone>
+            </>
+            : null}
         </OrthographicCamera>
     );
 };
@@ -353,30 +451,30 @@ const ColorBtn = styled.div`
     }
 `;
 
-// const FileUploadBox = styled.label`
-//     display: flex;
-//     width:60rem;
-//     height: 40rem;
-//     border: 3px dashed;
-//     justify-content:center;
-//     align-items:center;
-//     flex-direction: column;
-// `;
+const FileUploadBox = styled.label`
+    display: flex;
+    width:60rem;
+    height: 40rem;
+    border: 3px dashed;
+    justify-content:center;
+    align-items:center;
+    flex-direction: column;
+`;
 
-// const BoxText = styled.h1`
-//     font-size: 3rem;
-//     font-weight: 900;
-// `;
+const BoxText = styled.h1`
+    font-size: 3rem;
+    font-weight: 900;
+`;
 
-// const FileImg = styled.img`
-//     width: 13rem;
-//     height: 13rem;
-//     margin-bottom:2rem;
-// `;
+const FileImg = styled.img`
+    width: 13rem;
+    height: 13rem;
+    margin-bottom:2rem;
+`;
 
-// const FileInput = styled.input`
-//     display:none;
-// `;
+const FileInput = styled.input`
+    display:none;
+`;
 
 const ColorContainer = styled.div`
     position: absolute;
