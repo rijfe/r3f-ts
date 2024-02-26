@@ -18,6 +18,7 @@ import checkLogo from "../img/free-icon-check-mark-66936.png";
 import AxesHelper from "../components/AxesHelper";
 import HeadContainer from "../components/HeadContainer";
 import ListItem from "../components/ListItem";
+import DetailList from "../components/DetailList";
 
 function STLLoadPage(){
     const meshRef = useRef<THREE.Mesh>(null!);
@@ -29,7 +30,7 @@ function STLLoadPage(){
     const [colorState, setColorState] = useState<boolean>(false);
     const [color, setColor] = useState<Array<string>>([]);
     const [cp, setCp] = useState<THREE.Vector3Tuple[]>([]);
-    const [mousePosition, setMousePosition] = useState([0, 0]);
+    const [open, setOpen] = useState<boolean>(false);
 
     const [cpArr, setCpArr] = useState<Array<any>>([]);
     
@@ -83,7 +84,8 @@ function STLLoadPage(){
             </HeadContainer>
 
             <Bodycontainer >
-                <ListItem/>
+                <ListItem handleUpload={handleUpload} isOpen={open} setIsOpen={setOpen}/>
+                <DetailList isOpen={open}/>
                 {/* <LoadContainer>
                     <LoadMesh geometry={geometry} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr}/>
                 </LoadContainer> */}
@@ -114,7 +116,7 @@ function STLLoadPage(){
                         {/* {isDrop && geometry && (
                             <LoadMesh geometry={geometry} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr}/>
                         )} */}
-                        <mesh position={[19.5,-18.47,0]}>
+                        {/* <mesh position={[19.5,-18.47,0]}>
                             <boxGeometry args={[14,18,12]}/>
                             <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
                         </mesh>
@@ -137,7 +139,7 @@ function STLLoadPage(){
                         <mesh position={[-20,18.47,0]}>
                             <boxGeometry args={[14,18,12]}/>
                             <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
-                        </mesh>
+                        </mesh> */}
                         <AxesHelper posioin={new THREE.Vector3(130,-50,0)} visible={true} size={20}/>
 
                         <AxesHelper posioin={new THREE.Vector3(19.5,-27.47,0)} visible={false} size={5}/>
@@ -191,8 +193,7 @@ function STLLoadPage(){
                     style={{borderColor:`${isEnter ? 'red' : 'black'}`}}
                 >
                     <FileImg src={logo}/>
-                    <FileInput type="file" onChange={handleUpload}/>
-                    <BoxText>Click or Drop a STL File.</BoxText>
+                    <BoxText>Drop a STL File.</BoxText>
                 </FileUploadBox>
                 
                 }
@@ -453,9 +454,8 @@ const ColorBtn = styled.div`
 
 const FileUploadBox = styled.label`
     display: flex;
-    width:60rem;
-    height: 40rem;
-    border: 3px dashed;
+    width:100%;
+    height: 100%;
     justify-content:center;
     align-items:center;
     flex-direction: column;
