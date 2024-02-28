@@ -16,6 +16,8 @@ import logo from "../img/free-icon-file-and-folder-8291136.png";
 import colorlogo from "../img/free-icon-color-palette-2561365.png";
 import plusLogo from "../img/free-icon-plus-sign-3114793.png";
 import checkLogo from "../img/free-icon-check-mark-66936.png";
+import visibleLogo from "../img/free-icon-eye-5368960.png";
+import inVisibleLogo from "../img/free-icon-invisible-symbol-84529.png";
 
 import AxesHelper from "../components/AxesHelper";
 import HeadContainer from "../components/HeadContainer";
@@ -35,6 +37,7 @@ function STLLoadPage(){
     const [open, setOpen] = useState<boolean>(false);
     const [visible, setVisible] = useState<boolean>(false);
     const [hovered, setHovered] = useState<boolean>(false);
+    const [jigVisible, setJigVisible] = useState<boolean>(true);
 
     const [cpArr, setCpArr] = useState<Array<any>>([]);
     
@@ -42,6 +45,8 @@ function STLLoadPage(){
     
 
     const [geometry, setGeometry] = useState<Array<BufferGeometry>>([]);
+    const [jigGeometry, setJigGeometry] = useState<BufferGeometry>(null!);
+    const [jigOpen, setJigOpen] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
@@ -82,7 +87,7 @@ function STLLoadPage(){
     useEffect(()=>{
         setCpArr([]);
         setCp([]);
-    },[geometry]);
+    },[geometry, jigGeometry]);
     return(
         <Container>
             <HeadContainer>
@@ -90,7 +95,7 @@ function STLLoadPage(){
 
             <Bodycontainer >
                 <ListItem handleUpload={handleUpload} isOpen={open} setIsOpen={setOpen}/>
-                <DetailList isOpen={open} setGeo={setGeometry} setIsDrop={setIsDrop}/>
+                <DetailList isOpen={open} setGeo={setJigGeometry} setJig={setJigOpen} setIsDrop={setIsDrop}/>
                 {/* <LoadContainer>
                     <LoadMesh geometry={geometry} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr}/>
                 </LoadContainer> */}
@@ -117,6 +122,11 @@ function STLLoadPage(){
                         <directionalLight intensity={0.5} position={[0,0,1]}/>
                         <directionalLight intensity={0.5} position={[0,0,-1]}/>
                         {/* <Environment preset="forest" background/>*/}
+                        {jigOpen ?
+                            <mesh geometry={jigGeometry} visible={jigVisible}>
+                                <meshStandardMaterial color={"#fff"}/>
+                            </mesh>
+                         :null}
                         {geometry.map((geo, idx)=>(<LoadMesh geometry={geo} setHoverd={setHovered} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr} visible={visible} setVisible={setVisible}/>))}
                         {/* {isDrop && geometry && (
                             <LoadMesh geometry={geometry} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr}/>
@@ -148,7 +158,7 @@ function STLLoadPage(){
                         {/* <AxesHelper posioin={new THREE.Vector3(130,-50,0)} visible={true} size={20}/>
 
                         <AxesHelper posioin={new THREE.Vector3(19.5,-27.47,0)} visible={false} size={5}/> */}
-                        <OrbitControls makeDefault/>
+                        <OrbitControls dampingFactor={0.01}/>
                         <OrthographicCamera               
                             zoom={0.1}
                             top={500}
@@ -166,12 +176,12 @@ function STLLoadPage(){
                         {`x=${point[0]} y=${point[1]} z=${point[2]}`}
                     </PointContainer>
                     <LineBtn onClick={()=>{
-                        if(state){
+                        if(jigVisible){
                             saveLine();
                         }
-                        setState(!state);
+                        setJigVisible(!jigVisible);
                     }}>
-                        {state ? <img src={checkLogo} style={{width:"4rem", height:"4rem"}} alt="Save Line" title="Save Line"/> : <img src={plusLogo} style={{width:"4rem", height:"4rem"}} alt="Add Line" title="Add Line"/>}
+                        {jigVisible ? <img src={inVisibleLogo} style={{width:"4rem", height:"4rem"}} alt="Save Line" title="Save Line"/> : <img src={visibleLogo} style={{width:"4rem", height:"4rem"}} alt="Add Line" title="Add Line"/>}
                     </LineBtn>
                     {/* <ColorBtn onClick={()=>{setColorState(!colorState);}}>
                         <img src={colorlogo} style={{width:"4rem", height:"4rem"}} alt="Change Color" title="Change Color"/>

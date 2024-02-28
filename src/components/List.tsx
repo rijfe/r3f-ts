@@ -14,11 +14,12 @@ interface ListProps{
     chapter: number,
     setChapter: React.Dispatch<React.SetStateAction<number>>,
     setMachine: React.Dispatch<React.SetStateAction<string>>,
-    setGeo: React.Dispatch<React.SetStateAction<BufferGeometry<THREE.NormalBufferAttributes>[]>>,
+    setGeo: React.Dispatch<React.SetStateAction<BufferGeometry<THREE.NormalBufferAttributes>>>,
     setIsDrop: React.Dispatch<React.SetStateAction<boolean>>,
+    setJig: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-function List({no,title,content, num, setNum, chapter, setChapter ,setMachine,setGeo, setIsDrop}:ListProps){
+function List({no,title,content, num, setNum, chapter, setChapter ,setMachine,setGeo, setIsDrop, setJig}:ListProps){
     return (
         <ListItemBox onDoubleClick={()=>{
                 if(chapter === num){
@@ -28,10 +29,12 @@ function List({no,title,content, num, setNum, chapter, setChapter ,setMachine,se
                 if(num === 2){
                     const loader = new STLLoader();
         
-                    loader.load("/models/JIGADRESS", geo=>{
-                        setGeo(pre=>[...pre, geo]);
+                    loader.load("/models/5X500L V2-CAD BLOCK JIG_형상추가.stl", geo=>{
+                        setGeo(geo);
                     });
+                    console.log("hi");
                     setIsDrop(true);
+                    setJig(true);
                 }
                 setNum(num+1);
             }}
