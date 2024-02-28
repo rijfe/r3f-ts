@@ -2,13 +2,15 @@ import styled from "styled-components";
 import { useState, useRef,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Canvas, ThreeEvent, useThree, useFrame } from "@react-three/fiber";
-import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Cone } from "@react-three/drei";
+import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Cone, TransformControls } from "@react-three/drei";
 import { BufferGeometry } from "three";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from "three";
 import { pointState, getPointState } from "../store/pointState";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { CirclePicker} from 'react-color';
+import { useControls } from "leva";
+import create from 'zustand';
 
 import logo from "../img/free-icon-file-and-folder-8291136.png";
 import colorlogo from "../img/free-icon-color-palette-2561365.png";
@@ -31,6 +33,8 @@ function STLLoadPage(){
     const [color, setColor] = useState<Array<string>>([]);
     const [cp, setCp] = useState<THREE.Vector3Tuple[]>([]);
     const [open, setOpen] = useState<boolean>(false);
+    const [visible, setVisible] = useState<boolean>(false);
+    const [hovered, setHovered] = useState<boolean>(false);
 
     const [cpArr, setCpArr] = useState<Array<any>>([]);
     
@@ -49,8 +53,7 @@ function STLLoadPage(){
     }
 
     const handleUpload = ({ target }:any) => {
-        const file = target.files[0];
-        console.log(file); // 코드 추가
+        const file = target.files[0]
         loading(file);
     };
 
@@ -68,18 +71,9 @@ function STLLoadPage(){
         
     };
 
-    const test = (file:string) =>{
-        const loader = new STLLoader();
-        
-        loader.load(file, geo=>{
-            console.log(geo);
-        });
-    };
-
-    useEffect(()=>{
-        test("/models/ADRESS");
-    },[]);
-
+    const { target, setTarget } = useStore();
+    // const { mode } = useControls({ mode: { value: "translate", options: ["translate", "rotate", "scale"] } });
+    // const mode = "rotate";
     const saveLine = () => {
         setCpArr(pre => [...pre, cp]);
         console.log(cpArr);
@@ -123,7 +117,7 @@ function STLLoadPage(){
                         <directionalLight intensity={0.5} position={[0,0,1]}/>
                         <directionalLight intensity={0.5} position={[0,0,-1]}/>
                         {/* <Environment preset="forest" background/>*/}
-                        {geometry.map((geo, idx)=>(<LoadMesh geometry={geo} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr}/>))}
+                        {geometry.map((geo, idx)=>(<LoadMesh geometry={geo} setHoverd={setHovered} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr} visible={visible} setVisible={setVisible}/>))}
                         {/* {isDrop && geometry && (
                             <LoadMesh geometry={geometry} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr}/>
                         )} */}
@@ -151,10 +145,10 @@ function STLLoadPage(){
                             <boxGeometry args={[14,18,12]}/>
                             <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
                         </mesh> */}
-                        <AxesHelper posioin={new THREE.Vector3(130,-50,0)} visible={true} size={20}/>
+                        {/* <AxesHelper posioin={new THREE.Vector3(130,-50,0)} visible={true} size={20}/>
 
-                        <AxesHelper posioin={new THREE.Vector3(19.5,-27.47,0)} visible={false} size={5}/>
-                        <OrbitControls/>
+                        <AxesHelper posioin={new THREE.Vector3(19.5,-27.47,0)} visible={false} size={5}/> */}
+                        <OrbitControls makeDefault/>
                         <OrthographicCamera               
                             zoom={0.1}
                             top={500}
@@ -165,6 +159,7 @@ function STLLoadPage(){
                             far={2000}
                             position={[0, 0, 0]}
                         ></OrthographicCamera>
+                        {target && visible &&<TransformControls object={target} position={[0,0,0]} mode={hovered ? "translate" : "rotate"} size={hovered ? 0.5 : 1.3}/>}
                     </Canvas>
                     <Loader/>
                     <PointContainer>
@@ -224,6 +219,8 @@ function STLLoadPage(){
     );
 }
 
+const useStore = create((set:any)=>({target: null, setTarget: (target : any)=>set({target}) }))
+
 interface loadMesh{
     geometry: any,
     state : boolean,
@@ -231,10 +228,13 @@ interface loadMesh{
     color: Array<string>,
     cp: THREE.Vector3Tuple[],
     setCp : React.Dispatch<React.SetStateAction<THREE.Vector3Tuple[]>>,
-    cpArr : Array<any>
+    cpArr : Array<any>,
+    visible : boolean,
+    setVisible :  React.Dispatch<React.SetStateAction<boolean>>,
+    setHoverd :  React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr} : loadMesh) => {
+const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr, visible, setVisible, setHoverd} : loadMesh) => {
     const meshRef = useRef<THREE.Mesh>(null!);
     const mateRef = useRef<THREE.MeshStandardMaterial>(null!);
     const coneRef1 = useRef<THREE.Mesh>(null!);
@@ -250,6 +250,8 @@ const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr} : loadMe
     const [width, setWidth] = useState<Array<number>>([]);
     const [height, setHeight] = useState<Array<number>>([]);
     const [centerZ, setCenterZ] = useState<number>(0);
+    const setting = useStore((state)=>state.setTarget);
+    // const { target, setTarget } = useStore()
 
     useEffect(() => {
         if (!geometry || !meshRef.current) return;
@@ -296,27 +298,34 @@ const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr} : loadMe
     //const vector3Array: THREE.Vector3[] = cp.map(tuple => new THREE.Vector3().fromArray(tuple));
 
     return( 
-        <OrthographicCamera               
-            zoom={0.1}
-            top={500}
-            bottom={-500}
-            left={500}
-            right={-500}
-            near={1}
-            far={2000}
-            position={[0, 0, 0]}
-        >
             <mesh 
                 geometry={geometry} 
                 ref={meshRef} 
-                onClick={state ? handleMeshClick : ()=>{}}
+                // onClick={state ? handleMeshClick : ()=>{}}
                 onDoubleClick={(event)=>{
-                    console.log(event.object);
+                    setting(event.object);
+                    setVisible(!visible);
                     setFocus(!focus);
                 }}
-                
+                onPointerOver={()=>{
+                    if(focus){
+                        setHoverd(true);
+                    }
+                    
+                }}
+                onPointerOut={()=>{
+                    if(focus){
+                        setHoverd(false);
+                    }
+                }}
+                // onClick={(e)=>{
+                //     e.stopPropagation();
+                //     if(focus){
+                //         setFocus(!focus);
+                //     }  
+                // }}
             >
-                <meshStandardMaterial ref={mateRef} color={focus ? "#ff0000" : "#ffffff"}/>
+                <meshStandardMaterial ref={mateRef} color={focus ? "#fcf000" : "#ffffff"}/>
                 {/* <Outlines thickness={0.01}/> */}
                 {state ? (cp.length > 0 ? <CatmullRomLine
                     points={cp}
@@ -341,8 +350,7 @@ const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr} : loadMe
                         <meshStandardMaterial color="red" />
                     </points>
                 ))} */}
-            </mesh>
-            {focus ? 
+                {/* {focus ? 
             <>
                 <Cone
                     ref={coneRef1}
@@ -409,8 +417,9 @@ const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr} : loadMe
                         <meshStandardMaterial color={"#ff0000"} />
                 </Cone>
             </>
-            : null}
-        </OrthographicCamera>
+            : null} */}
+            </mesh>
+            
     );
 };
 

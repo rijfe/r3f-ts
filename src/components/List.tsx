@@ -28,7 +28,7 @@ function List({no,title,content, num, setNum, chapter, setChapter ,setMachine,se
                 if(num === 2){
                     const loader = new STLLoader();
         
-                    loader.load("/models/ADRESS", geo=>{
+                    loader.load("/models/JIGADRESS", geo=>{
                         setGeo(pre=>[...pre, geo]);
                     });
                     setIsDrop(true);
@@ -51,7 +51,7 @@ export default List;
 
 const ListItemBox = styled.div`
     width:95%;
-    height: 6rem;
+    height: 8rem;
     margin-top:5px;
     display:flex;
     flex-direction: row;
