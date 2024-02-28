@@ -2,12 +2,15 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import ChapterBox from "./ChapterBox";
 import List from "./List";
+import { BufferGeometry } from "three";
 
 interface DetailListProps {
-    isOpen: boolean
+    isOpen: boolean,
+    setGeo: React.Dispatch<React.SetStateAction<BufferGeometry<THREE.NormalBufferAttributes>[]>>,
+    setIsDrop: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-function DetailList({isOpen}:DetailListProps){
+function DetailList({isOpen, setGeo,setIsDrop}:DetailListProps){
     const [chapter, setChapter] = useState<number>(1);
     const [num, setNum] = useState<number>(1);
     const [machine, setMachine] = useState<string>("");
@@ -236,7 +239,7 @@ function DetailList({isOpen}:DetailListProps){
             return(
                 <>
                     {machineData.map((ele,idx)=>(
-                        <List key={idx} no={0} title={ele} chapter={chapter} content="no" num={num} setNum={setNum} setMachine={setMachine} setChapter={setChapter}/>
+                        <List key={idx} no={0} title={ele} chapter={chapter} content="no" num={num} setNum={setNum} setMachine={setMachine} setChapter={setChapter} setGeo={setGeo} setIsDrop={setIsDrop}/>
                     ))}
                 </>
             )
@@ -245,7 +248,7 @@ function DetailList({isOpen}:DetailListProps){
             return (
                 <>
                     {machineJigData[machine].map((ele : any, idx:number)=>(
-                        <List key={idx} no={ele.no} title={ele.title} chapter={chapter} content={ele.content} num={num} setNum={setNum} setMachine={setMachine} setChapter={setChapter}/>
+                        <List key={idx} no={ele.no} title={ele.title} chapter={chapter} content={ele.content} num={num} setNum={setNum} setMachine={setMachine} setChapter={setChapter} setGeo={setGeo} setIsDrop={setIsDrop}/>
                     ))}
                 </>
                 

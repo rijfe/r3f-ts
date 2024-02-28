@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
+import { BufferGeometry } from "three";
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 
 import testLogo from "../img/free-icon-plus-sign-3114793.png";
 
@@ -11,17 +13,27 @@ interface ListProps{
     setNum: React.Dispatch<React.SetStateAction<number>>,
     chapter: number,
     setChapter: React.Dispatch<React.SetStateAction<number>>,
-    setMachine: React.Dispatch<React.SetStateAction<string>>
+    setMachine: React.Dispatch<React.SetStateAction<string>>,
+    setGeo: React.Dispatch<React.SetStateAction<BufferGeometry<THREE.NormalBufferAttributes>[]>>,
+    setIsDrop: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-function List({no,title,content, num, setNum, chapter, setChapter ,setMachine}:ListProps){
+function List({no,title,content, num, setNum, chapter, setChapter ,setMachine,setGeo, setIsDrop}:ListProps){
     return (
         <ListItemBox onDoubleClick={()=>{
                 if(chapter === num){
                     setChapter(num+1);
                 }
+                if(num === 1)setMachine(title);
+                if(num === 2){
+                    const loader = new STLLoader();
+        
+                    loader.load("/models/ADRESS", geo=>{
+                        setGeo(pre=>[...pre, geo]);
+                    });
+                    setIsDrop(true);
+                }
                 setNum(num+1);
-                setMachine(title);
             }}
         >
             <ItemImgBox>

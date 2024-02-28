@@ -68,6 +68,17 @@ function STLLoadPage(){
         
     };
 
+    const test = (file:string) =>{
+        const loader = new STLLoader();
+        
+        loader.load(file, geo=>{
+            console.log(geo);
+        });
+    };
+
+    useEffect(()=>{
+        test("/models/ADRESS");
+    },[]);
 
     const saveLine = () => {
         setCpArr(pre => [...pre, cp]);
@@ -85,7 +96,7 @@ function STLLoadPage(){
 
             <Bodycontainer >
                 <ListItem handleUpload={handleUpload} isOpen={open} setIsOpen={setOpen}/>
-                <DetailList isOpen={open}/>
+                <DetailList isOpen={open} setGeo={setGeometry} setIsDrop={setIsDrop}/>
                 {/* <LoadContainer>
                     <LoadMesh geometry={geometry} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr}/>
                 </LoadContainer> */}
@@ -144,6 +155,16 @@ function STLLoadPage(){
 
                         <AxesHelper posioin={new THREE.Vector3(19.5,-27.47,0)} visible={false} size={5}/>
                         <OrbitControls/>
+                        <OrthographicCamera               
+                            zoom={0.1}
+                            top={500}
+                            bottom={-500}
+                            left={500}
+                            right={-500}
+                            near={1}
+                            far={2000}
+                            position={[0, 0, 0]}
+                        ></OrthographicCamera>
                     </Canvas>
                     <Loader/>
                     <PointContainer>
