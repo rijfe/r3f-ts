@@ -29,10 +29,10 @@ function List({no,title,content, num, setNum, chapter, setChapter ,setMachine,se
                 if(num === 2){
                     const loader = new STLLoader();
         
-                    loader.load("/models/5X500L V2-CAD BLOCK JIG_형상추가.stl", geo=>{
+                    loader.load("/models/ADRESS", geo=>{
                         setGeo(geo);
                     });
-                    console.log("hi");
+                    
                     setIsDrop(true);
                     setJig(true);
                 }

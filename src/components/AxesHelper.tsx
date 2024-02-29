@@ -23,18 +23,18 @@ function AxesHelper(props:AxesHelperProps){
                 position={props.posioin}
             />
             <Line
-                points={[new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,props.size)]}
+                points={[new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,-props.size)]}
                 color="blue"
                 lineWidth={5}
                 position={props.posioin}
             />
-            <Text color="red" position={[153, -50, 0]} scale={5} visible={props.visible}>
+            <Text color="red" position={[123, -50, 0]} scale={5} visible={props.visible}>
                 X
             </Text>
-            <Text color="green" position={[130, -25, 0]} scale={5} visible={props.visible}>
+            <Text color="green" position={[100, -25, 0]} scale={5} visible={props.visible}>
                 Y
             </Text>
-            <Text color="blue" position={[130, -50, 25]} scale={5} visible={props.visible}>
+            <Text color="blue" position={[100, -50, 25]} scale={5} visible={props.visible}>
                 Z
             </Text>
         </>

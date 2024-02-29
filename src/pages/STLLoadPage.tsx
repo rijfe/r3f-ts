@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState, useRef,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Canvas, ThreeEvent, useThree, useFrame } from "@react-three/fiber";
-import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Cone, TransformControls } from "@react-three/drei";
+import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Cone, TransformControls, useHelper } from "@react-three/drei";
 import { BufferGeometry } from "three";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from "three";
@@ -23,10 +23,39 @@ import AxesHelper from "../components/AxesHelper";
 import HeadContainer from "../components/HeadContainer";
 import ListItem from "../components/ListItem";
 import DetailList from "../components/DetailList";
+import ViewList from "../components/ViewList";
+
+interface cameraProps {
+    cameraRef: React.MutableRefObject<THREE.OrthographicCamera>
+}
+
+function Camera({cameraRef}:cameraProps){
+
+    // useHelper(cameraRef, THREE.CameraHelper);
+    // useFrame((state, delta)=>{
+    //     console.log(state);
+    // });
+    // console.log(cameraRef.current);
+    return(
+        <OrthographicCamera
+            ref={cameraRef}
+            makeDefault               
+            zoom={2}
+            top={700}
+            bottom={-700}
+            left={700}
+            right={-700}
+            near={0.1}
+            far={2000}
+            position={[0,0,0]}
+        />
+    );
+}
 
 function STLLoadPage(){
-    const meshRef = useRef<THREE.Mesh>(null!);
+    const groupRef = useRef<THREE.Group>(null!);
     const ref = useRef(null!);
+    const cameraRef = useRef<THREE.OrthographicCamera>(null!);
 
     const [isEnter, setIsEnter] = useState<boolean>(false);
     const [isDrop, setIsDrop] = useState<boolean>(false);
@@ -64,14 +93,16 @@ function STLLoadPage(){
 
     const loading = (file:File) =>{
         const loader = new STLLoader();
-        if(!file.name.includes("stl")){
-            window.alert("잘못된 파일 형식입니다.");
-        }
-        else{
-            loader.load(URL.createObjectURL(file), geo=>{
-                setGeometry(prev => [...prev, geo]);
-            });
-            setIsDrop(true);
+        if(file){
+            if(!file.name.includes("stl")){
+                window.alert("잘못된 파일 형식입니다.");
+            }
+            else{
+                loader.load(URL.createObjectURL(file), geo=>{
+                    setGeometry(prev => [...prev, geo]);
+                });
+                setIsDrop(true);
+            }
         }
         
     };
@@ -96,12 +127,16 @@ function STLLoadPage(){
             <Bodycontainer >
                 <ListItem handleUpload={handleUpload} isOpen={open} setIsOpen={setOpen}/>
                 <DetailList isOpen={open} setGeo={setJigGeometry} setJig={setJigOpen} setIsDrop={setIsDrop}/>
+                <ViewList cameraRef={cameraRef}/>
                 {/* <LoadContainer>
                     <LoadMesh geometry={geometry} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr}/>
                 </LoadContainer> */}
                 {isDrop ? 
                 <>
                     <Canvas
+                        // camera={{
+                        //     position:[0,0,200]
+                        // }}
                         ref={ref}
                         onDragEnter={(event:React.DragEvent)=>{
                             event.preventDefault();
@@ -113,72 +148,69 @@ function STLLoadPage(){
                             event.preventDefault();
                         }}
                         onDrop={handleDrop}
-                    >   
-                        <ambientLight intensity={0.5}/>
-                        <directionalLight intensity={0.5} position={[0,1,0]}/>
-                        <directionalLight intensity={0.5} position={[0,-1,0]}/>
-                        <directionalLight intensity={0.5} position={[1,0,0]}/>
-                        <directionalLight intensity={0.5} position={[-1,0,0]}/>
-                        <directionalLight intensity={0.5} position={[0,0,1]}/>
-                        <directionalLight intensity={0.5} position={[0,0,-1]}/>
-                        {/* <Environment preset="forest" background/>*/}
-                        {jigOpen ?
-                            <mesh geometry={jigGeometry} visible={jigVisible}>
-                                <meshStandardMaterial color={"#fff"}/>
+                    >  
+                        <directionalLight intensity={0.6} position={[0,1,0]}/>
+                        <directionalLight intensity={0.6} position={[0,-1,0]}/>
+                        <directionalLight intensity={0.6} position={[1,0,0]}/>
+                        <directionalLight intensity={0.6} position={[-1,0,0]}/>
+                        <directionalLight intensity={0.6} position={[0,0,1]}/>
+                        <directionalLight intensity={0.6} position={[0,0,-1]}/>
+                        <group ref={groupRef}>
+                            {jigOpen ?
+                                <mesh position={[0,0,0]} geometry={jigGeometry} visible={jigVisible} >
+                                    <meshStandardMaterial color={"#ffffff"}/>
+                                </mesh>
+                            :null}
+                            {geometry.map((geo, idx)=>(<LoadMesh geometry={geo} setHoverd={setHovered} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr} visible={visible} setVisible={setVisible}/>))}
+                            <mesh position={[19.5,-18.47,0]}>
+                                <boxGeometry args={[14,18,12]}/>
+                                <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
                             </mesh>
-                         :null}
-                        {geometry.map((geo, idx)=>(<LoadMesh geometry={geo} setHoverd={setHovered} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr} visible={visible} setVisible={setVisible}/>))}
+                            <mesh position={[19.5,18.47,0]}>
+                                <boxGeometry args={[14,18,12]}/>
+                                <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
+                            </mesh>
+                            <mesh position={[0,-18.47,0]}>
+                                <boxGeometry args={[14,18,12]}/>
+                                <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
+                            </mesh>
+                            <mesh position={[0,18.47,0]}>
+                                <boxGeometry args={[14,18,12]}/>
+                                <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
+                            </mesh>
+                            <mesh position={[-19.5,-18.47,0]}>
+                                <boxGeometry args={[14,18,12]}/>
+                                <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
+                            </mesh>
+                            <mesh position={[-20,18.47,0]}>
+                                <boxGeometry args={[14,18,12]}/>
+                                <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
+                            </mesh>
+                            <AxesHelper posioin={new THREE.Vector3(19.5,-27.47,0)} visible={false} size={5}/>
+                        </group>
+                        <Camera cameraRef={cameraRef}/>
+                        {/* <Environment preset="forest" background/>*/}
+                        
                         {/* {isDrop && geometry && (
                             <LoadMesh geometry={geometry} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr}/>
                         )} */}
-                        {/* <mesh position={[19.5,-18.47,0]}>
-                            <boxGeometry args={[14,18,12]}/>
-                            <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
-                        </mesh>
-                        <mesh position={[19.5,18.47,0]}>
-                            <boxGeometry args={[14,18,12]}/>
-                            <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
-                        </mesh>
-                        <mesh position={[0,-18.47,0]}>
-                            <boxGeometry args={[14,18,12]}/>
-                            <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
-                        </mesh>
-                        <mesh position={[0,18.47,0]}>
-                            <boxGeometry args={[14,18,12]}/>
-                            <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
-                        </mesh>
-                        <mesh position={[-19.5,-18.47,0]}>
-                            <boxGeometry args={[14,18,12]}/>
-                            <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
-                        </mesh>
-                        <mesh position={[-20,18.47,0]}>
-                            <boxGeometry args={[14,18,12]}/>
-                            <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
-                        </mesh> */}
-                        {/* <AxesHelper posioin={new THREE.Vector3(130,-50,0)} visible={true} size={20}/>
+                        <AxesHelper posioin={new THREE.Vector3(100,-50,0)} visible={true} size={20}/>
 
-                        <AxesHelper posioin={new THREE.Vector3(19.5,-27.47,0)} visible={false} size={5}/> */}
-                        <OrbitControls dampingFactor={0.01}/>
-                        <OrthographicCamera               
-                            zoom={0.1}
-                            top={500}
-                            bottom={-500}
-                            left={500}
-                            right={-500}
-                            near={1}
-                            far={2000}
-                            position={[0, 0, 0]}
-                        ></OrthographicCamera>
-                        {target && visible &&<TransformControls object={target} position={[0,0,0]} mode={hovered ? "translate" : "rotate"} size={hovered ? 0.5 : 1.3}/>}
+                        {/* <AxesHelper posioin={new THREE.Vector3(19.5,-27.47,0)} visible={false} size={5}/> */}
+                        <OrbitControls enableDamping dampingFactor={0.3} rotateSpeed={0.5} panSpeed={0.5}/>
+                        {target && visible &&<TransformControls object={target} position={[0,0,0]} mode={hovered ? "translate" : "rotate"} size={hovered ? 0.2 : 0.4}/>}
                     </Canvas>
                     <Loader/>
                     <PointContainer>
                         {`x=${point[0]} y=${point[1]} z=${point[2]}`}
                     </PointContainer>
                     <LineBtn onClick={()=>{
-                        if(jigVisible){
-                            saveLine();
-                        }
+                        // if(jigVisible){
+                            
+                        //     groupRef.current.rotation.x = Math.PI/4;
+                        // }
+                        // groupRef.current.rotation.x = Math.PI/2;
+                        console.log(ref);
                         setJigVisible(!jigVisible);
                     }}>
                         {jigVisible ? <img src={inVisibleLogo} style={{width:"4rem", height:"4rem"}} alt="Save Line" title="Save Line"/> : <img src={visibleLogo} style={{width:"4rem", height:"4rem"}} alt="Add Line" title="Add Line"/>}
@@ -269,12 +301,12 @@ const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr, visible,
         const boundingBox = new THREE.Box3().setFromObject(meshRef.current);
         const center = boundingBox.getCenter(new THREE.Vector3());
 
-        camera.position.copy(center);
-        console.log(center);
-        camera.position.x += boundingBox.getSize(new THREE.Vector3()).length(); 
-        camera.position.z += boundingBox.getSize(new THREE.Vector3()).length(); 
-        camera.position.y += boundingBox.getSize(new THREE.Vector3()).length();
-        camera.lookAt(center);
+        // camera.position.copy(center);
+        // console.log(center);
+        // camera.position.x += boundingBox.getSize(new THREE.Vector3()).length(); 
+        // camera.position.z += boundingBox.getSize(new THREE.Vector3()).length(); 
+        // camera.position.y += boundingBox.getSize(new THREE.Vector3()).length();
+        // camera.lookAt(center);
         setCp([]);
         setWidth([boundingBox.max.x, boundingBox.min.x]);
         setHeight([boundingBox.max.y, boundingBox.min.y]);
