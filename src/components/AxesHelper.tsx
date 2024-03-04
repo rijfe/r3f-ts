@@ -15,26 +15,29 @@ function AxesHelper(props:AxesHelperProps){
                 color="red"
                 lineWidth={5}
                 position={props.posioin}
+                side={THREE.DoubleSide}
             />
             <Line
                 points={[new THREE.Vector3(0,0,0),new THREE.Vector3(0,props.size,0)]}
                 color="green"
                 lineWidth={5}
                 position={props.posioin}
+                side={THREE.DoubleSide}
             />
             <Line
                 points={[new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,-props.size)]}
                 color="blue"
                 lineWidth={5}
                 position={props.posioin}
+                side={THREE.DoubleSide}
             />
-            <Text color="red" position={[123, -50, 0]} scale={5} visible={props.visible}>
+            <Text color="red" position={[123, -50, 0]} scale={5} visible={props.visible} >
                 X
             </Text>
             <Text color="green" position={[100, -25, 0]} scale={5} visible={props.visible}>
                 Y
             </Text>
-            <Text color="blue" position={[100, -50, 25]} scale={5} visible={props.visible}>
+            <Text color="blue" position={[100, -50, -25]} scale={5} visible={props.visible}>
                 Z
             </Text>
         </>

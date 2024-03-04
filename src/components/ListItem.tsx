@@ -8,15 +8,18 @@ import docLogo from "../img/free-icon-new-document-2476546.png";
 interface listItemProps{
     handleUpload : any,
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
-    isOpen: boolean
+    setIsPartOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    isOpen: boolean,
+    isPartOpen: boolean
 }
 
-function ListItem({handleUpload, isOpen,setIsOpen}:listItemProps){
+function ListItem({handleUpload,setIsOpen, setIsPartOpen, isOpen, isPartOpen }:listItemProps){
     return(
         <ListItemContainer>
             <ProjectContainer>
                 <ListItemBox>
                     <img src={saveLogo}/>
+                    <FileInput/>
                 </ListItemBox>
                 <ListItemBox>
                     <img src={saveProLogo}/>
@@ -29,12 +32,23 @@ function ListItem({handleUpload, isOpen,setIsOpen}:listItemProps){
                 </ListItemBox>
                 <ListItemBox onClick={()=>{
                     setIsOpen(!isOpen);
+                    setIsPartOpen(false);
                 }}>
                     <img src={docLogo}/>
+                    <FileInput/>
                 </ListItemBox>
             </ProjectContainer>
             <BlankContainer></BlankContainer>
-            <ProjectDetailContainer></ProjectDetailContainer>
+            <ProjectDetailContainer>
+                <ListItemBox
+                    onClick={()=>{
+                        setIsOpen(false);
+                        setIsPartOpen(!isPartOpen);
+                    }}
+                >
+                    B
+                </ListItemBox>
+            </ProjectDetailContainer>
         </ListItemContainer>
     );
 }
@@ -59,6 +73,12 @@ const ListItemBox = styled.div`
     align-items: center;
     width:100%;
     height: 5rem;
+    &:hover{
+        background-color:#8D8D8D;
+    }
+    &:focus-within{
+        background-color:#ff0500;
+    }
 `;
 const FileInput = styled.input`
     display:none;

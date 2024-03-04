@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState, useRef,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Canvas, ThreeEvent, useThree, useFrame } from "@react-three/fiber";
-import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Cone, TransformControls, useHelper } from "@react-three/drei";
+import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Cone, TransformControls, useHelper, Plane } from "@react-three/drei";
 import { BufferGeometry } from "three";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from "three";
@@ -24,6 +24,7 @@ import HeadContainer from "../components/HeadContainer";
 import ListItem from "../components/ListItem";
 import DetailList from "../components/DetailList";
 import ViewList from "../components/ViewList";
+import PartList from "../components/PartList";
 
 interface cameraProps {
     cameraRef: React.MutableRefObject<THREE.OrthographicCamera>
@@ -41,13 +42,12 @@ function Camera({cameraRef}:cameraProps){
             ref={cameraRef}
             makeDefault               
             zoom={2}
-            top={700}
-            bottom={-700}
-            left={700}
-            right={-700}
-            near={0.1}
+            top={1000}
+            bottom={-1000}
+            left={1000}
+            right={-1000}
+            near={-60}
             far={2000}
-            position={[0,0,0]}
         />
     );
 }
@@ -63,7 +63,10 @@ function STLLoadPage(){
     const [colorState, setColorState] = useState<boolean>(false);
     const [color, setColor] = useState<Array<string>>([]);
     const [cp, setCp] = useState<THREE.Vector3Tuple[]>([]);
+
     const [open, setOpen] = useState<boolean>(false);
+    const [partOpen, setPartOpen] = useState<boolean>(false);
+
     const [visible, setVisible] = useState<boolean>(false);
     const [hovered, setHovered] = useState<boolean>(false);
     const [jigVisible, setJigVisible] = useState<boolean>(true);
@@ -106,7 +109,6 @@ function STLLoadPage(){
         }
         
     };
-
     const { target, setTarget } = useStore();
     // const { mode } = useControls({ mode: { value: "translate", options: ["translate", "rotate", "scale"] } });
     // const mode = "rotate";
@@ -125,8 +127,9 @@ function STLLoadPage(){
             </HeadContainer>
 
             <Bodycontainer >
-                <ListItem handleUpload={handleUpload} isOpen={open} setIsOpen={setOpen}/>
+                <ListItem handleUpload={handleUpload} setIsOpen={setOpen} setIsPartOpen={setPartOpen} isOpen={open} isPartOpen={partOpen}/>
                 <DetailList isOpen={open} setGeo={setJigGeometry} setJig={setJigOpen} setIsDrop={setIsDrop}/>
+                <PartList isPartOpen={partOpen}/>
                 <ViewList cameraRef={cameraRef}/>
                 {/* <LoadContainer>
                     <LoadMesh geometry={geometry} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr}/>
@@ -158,35 +161,35 @@ function STLLoadPage(){
                         <group ref={groupRef}>
                             {jigOpen ?
                                 <mesh position={[0,0,0]} geometry={jigGeometry} visible={jigVisible} >
-                                    <meshStandardMaterial color={"#ffffff"}/>
+                                    <meshStandardMaterial color={"#ffffff"} opacity={0} side={THREE.DoubleSide}/>
                                 </mesh>
                             :null}
                             {geometry.map((geo, idx)=>(<LoadMesh geometry={geo} setHoverd={setHovered} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr} visible={visible} setVisible={setVisible}/>))}
                             <mesh position={[19.5,-18.47,0]}>
                                 <boxGeometry args={[14,18,12]}/>
-                                <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
+                                <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
                             </mesh>
                             <mesh position={[19.5,18.47,0]}>
                                 <boxGeometry args={[14,18,12]}/>
-                                <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
+                                <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
                             </mesh>
                             <mesh position={[0,-18.47,0]}>
                                 <boxGeometry args={[14,18,12]}/>
-                                <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
+                                <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
                             </mesh>
                             <mesh position={[0,18.47,0]}>
                                 <boxGeometry args={[14,18,12]}/>
-                                <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
+                                <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
                             </mesh>
                             <mesh position={[-19.5,-18.47,0]}>
                                 <boxGeometry args={[14,18,12]}/>
-                                <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
+                                <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
                             </mesh>
                             <mesh position={[-20,18.47,0]}>
                                 <boxGeometry args={[14,18,12]}/>
-                                <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3"/>
+                                <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
                             </mesh>
-                            <AxesHelper posioin={new THREE.Vector3(19.5,-27.47,0)} visible={false} size={5}/>
+                            {/* <AxesHelper posioin={new THREE.Vector3(19.5,-27.47,0)} visible={false} size={5}/> */}
                         </group>
                         <Camera cameraRef={cameraRef}/>
                         {/* <Environment preset="forest" background/>*/}
@@ -194,12 +197,16 @@ function STLLoadPage(){
                         {/* {isDrop && geometry && (
                             <LoadMesh geometry={geometry} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr}/>
                         )} */}
+
                         <AxesHelper posioin={new THREE.Vector3(100,-50,0)} visible={true} size={20}/>
 
                         {/* <AxesHelper posioin={new THREE.Vector3(19.5,-27.47,0)} visible={false} size={5}/> */}
-                        <OrbitControls enableDamping dampingFactor={0.3} rotateSpeed={0.5} panSpeed={0.5}/>
-                        {target && visible &&<TransformControls object={target} position={[0,0,0]} mode={hovered ? "translate" : "rotate"} size={hovered ? 0.2 : 0.4}/>}
+                        <OrbitControls enableDamping dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.5} enablePan={!visible} enableRotate={!visible} mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
+                        {target && visible &&<TransformControls object={target} position={[0,0,0]} mode={hovered ? "translate" : "rotate"} size={hovered ? 0.2 : 0.4} onClick={(e)=>{e.stopPropagation();}} onPointerDown={(e)=>{e.stopPropagation();}}/>}
                     </Canvas>
+                    {/* <Canvas style={{width:20, height:20, position:"absolute"}}>
+                        <AxesHelper posioin={new THREE.Vector3(100,-50,0)} visible={true} size={20}/>
+                    </Canvas> */}
                     <Loader/>
                     <PointContainer>
                         {`x=${point[0]} y=${point[1]} z=${point[2]}`}
@@ -345,6 +352,7 @@ const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr, visible,
                 ref={meshRef} 
                 // onClick={state ? handleMeshClick : ()=>{}}
                 onDoubleClick={(event)=>{
+                    event.stopPropagation();
                     setting(event.object);
                     setVisible(!visible);
                     setFocus(!focus);
@@ -368,6 +376,9 @@ const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr, visible,
                 // }}
             >
                 <meshStandardMaterial ref={mateRef} color={focus ? "#fcf000" : "#ffffff"}/>
+                <Plane args={[14,12]} rotation-x={Math.PI/2} position={[0,7,0]}>
+                    <meshStandardMaterial attach="material" transparent opacity={0.4} color={"black"} side={THREE.DoubleSide}/>
+                </Plane>
                 {/* <Outlines thickness={0.01}/> */}
                 {state ? (cp.length > 0 ? <CatmullRomLine
                     points={cp}
