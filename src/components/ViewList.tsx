@@ -12,7 +12,15 @@ function ViewList({cameraRef}: ViewListProps){
             <ViewBtn onClick={(e)=>{
                 e.stopPropagation();
                 gsap.to(cameraRef.current.position,{
-                    duration:1,
+                    duration:2,
+                    x:40,
+                    y:0,
+                    z:0,
+                    ease:"linear"
+                });
+                cameraRef.current.lookAt(new THREE.Vector3(0,0,0));
+                gsap.to(cameraRef.current.position,{
+                    duration:2,
                     x:0,
                     y:0,
                     z:40,
@@ -26,7 +34,15 @@ function ViewList({cameraRef}: ViewListProps){
             <ViewBtn onClick={(e)=>{
                 e.stopPropagation();
                 gsap.to(cameraRef.current.position,{
-                    duration:1,
+                    duration:2,
+                    x:-40,
+                    y:0,
+                    z:0,
+                    ease:"linear"
+                });
+                cameraRef.current.lookAt(new THREE.Vector3(0,0,0));
+                gsap.to(cameraRef.current.position,{
+                    duration:2,
                     x:0,
                     y:0,
                     z:-40,
@@ -41,7 +57,14 @@ function ViewList({cameraRef}: ViewListProps){
             <ViewBtn onClick={(e)=>{
                 e.stopPropagation();
                 gsap.to(cameraRef.current.position,{
-                    duration:1,
+                    duration:2,
+                    x:0,
+                    y:0,
+                    z:40,
+                    ease:"linear"
+                });
+                gsap.to(cameraRef.current.position,{
+                    duration:2,
                     x:40,
                     y:0,
                     z:0,
@@ -55,7 +78,14 @@ function ViewList({cameraRef}: ViewListProps){
             <ViewBtn onClick={(e)=>{
                 e.stopPropagation();
                 gsap.to(cameraRef.current.position,{
-                    duration:1,
+                    duration:2,
+                    x:0,
+                    y:0,
+                    z:-40,
+                    ease:"linear"
+                });
+                gsap.to(cameraRef.current.position,{
+                    duration:2,
                     x:-40,
                     y:0,
                     z:0,
@@ -69,7 +99,14 @@ function ViewList({cameraRef}: ViewListProps){
             <ViewBtn onClick={(e)=>{
                 e.stopPropagation();
                 gsap.to(cameraRef.current.position,{
-                    duration:1,
+                    duration:2,
+                    x:0,
+                    y:0,
+                    z:40,
+                    ease:"linear"
+                });
+                gsap.to(cameraRef.current.position,{
+                    duration:2,
                     x:0,
                     y:40,
                     z:0,
@@ -83,7 +120,14 @@ function ViewList({cameraRef}: ViewListProps){
             <ViewBtn onClick={(e)=>{
                 e.stopPropagation();
                 gsap.to(cameraRef.current.position,{
-                    duration:1,
+                    duration:2,
+                    x:0,
+                    y:0,
+                    z:-40,
+                    ease:"linear"
+                });
+                gsap.to(cameraRef.current.position,{
+                    duration:2,
                     x:0,
                     y:-40,
                     z:0,
