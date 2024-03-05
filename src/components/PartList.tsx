@@ -2,12 +2,19 @@ import styled from "styled-components";
 
 interface PartListProps {
     isPartOpen : boolean,
+    lineNum: number,
 }
 
-function PartList({isPartOpen} : PartListProps){
+function PartList({isPartOpen, lineNum} : PartListProps){
     return (
         <PartListContainer className = {isPartOpen ? "part":""}>
-            <PartContainer></PartContainer>
+            <PartContainer
+                style={{height:`${lineNum*4.5}%`}}
+            >
+                <PartBox style={{height:`${100/lineNum}%`}}>
+                    <Part onClick={(e)=>{console.log(e.target);}}>pos1</Part>
+                </PartBox>
+            </PartContainer>
             <BlankContainer></BlankContainer>
             <ListContainer></ListContainer>
         </PartListContainer>
@@ -32,9 +39,9 @@ const PartListContainer = styled.div`
 
 const PartContainer = styled.div`
     width:100%;
-    height: 9%;
     background: #D8D8D8;
     display: flex;
+    flex-direction: column;
 `;
 
 const BlankContainer = styled.div`
@@ -46,4 +53,21 @@ const ListContainer = styled.div`
     width:100%;
     height:90%;
     background: #D8D8D8;
+`;
+
+const PartBox = styled.div`
+    width:100%;
+`;
+
+const Part = styled.div`
+    width:20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size:1.5rem;
+
+    &:hover{
+        border-bottom: 0.2rem solid #ff0000;
+    }
 `;

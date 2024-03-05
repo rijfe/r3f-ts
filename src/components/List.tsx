@@ -29,7 +29,7 @@ function List({no,title,content, num, setNum, chapter, setChapter ,setMachine,se
                 if(num === 2){
                     const loader = new STLLoader();
         
-                    loader.load("/models/ADRESS", geo=>{
+                    loader.load("/models/adress", geo=>{
                         setGeo(geo);
                     });
                     
