@@ -2,6 +2,7 @@ import styled from "styled-components";
 import * as THREE from "three";
 import gsap from "gsap";
 import { useState } from "react";
+import { useFrame } from "@react-three/fiber";
 
 interface ViewListProps{
     cameraRef: React.MutableRefObject<THREE.OrthographicCamera>,
@@ -9,6 +10,7 @@ interface ViewListProps{
 
 function ViewList({cameraRef}: ViewListProps){
     const [curView, setCurView] = useState<number>(1);
+
     return (
         <ViewListContainer>
             <ViewBtn onClick={(e)=>{
@@ -142,6 +144,12 @@ function ViewList({cameraRef}: ViewListProps){
                             y:0,
                             z:-40,
                             ease:"linear"
+                        });
+                        tl.to(cameraRef.current.rotation,{
+                            duration:0.3,
+                            x:0,
+                            y:0,
+                            z:0
                         });
                         tl.to(cameraRef.current.position,{
                             duration:0.5,
@@ -340,6 +348,14 @@ function ViewList({cameraRef}: ViewListProps){
                 cameraRef.current.lookAt(new THREE.Vector3(0,0,0));
             }}>
                 6
+            </ViewBtn>
+            <ViewBtn
+                onClick={()=>{
+                    // setClicked(true);
+                    console.log(cameraRef.current);
+                }}
+            >
+                7
             </ViewBtn>
         </ViewListContainer>
     );

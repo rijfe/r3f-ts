@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState, useRef,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Canvas, ThreeEvent, useThree, useFrame } from "@react-three/fiber";
-import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Cone, TransformControls, useHelper, Plane } from "@react-three/drei";
+import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Cone, TransformControls, useHelper, Plane, Detailed } from "@react-three/drei";
 import { BufferGeometry } from "three";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from "three";
@@ -32,7 +32,7 @@ interface cameraProps {
 
 function Camera({cameraRef}:cameraProps){
 
-    // useHelper(cameraRef, THREE.CameraHelper);
+    useHelper(cameraRef, THREE.CameraHelper);
     // useFrame((state, delta)=>{
     //     console.log(state);
     // });
@@ -41,12 +41,12 @@ function Camera({cameraRef}:cameraProps){
         <OrthographicCamera
             ref={cameraRef}
             makeDefault               
-            zoom={2}
+            zoom={8}
             top={1000}
             bottom={-1000}
             left={1000}
             right={-1000}
-            near={-60}
+            near={-30}
             far={2000}
             position={[0,0,-10]}
         />
@@ -161,11 +161,11 @@ function STLLoadPage(){
                         <directionalLight intensity={0.6} position={[0,0,-1]}/>
                         <group ref={groupRef}>
                             {jigOpen ?
-                                <mesh position={[0,0,0]} geometry={jigGeometry} visible={jigVisible} >
-                                    <meshStandardMaterial color={"#ffffff"} opacity={0} side={THREE.DoubleSide}/>
+                                <mesh position={[0,0,0]} geometry={jigGeometry} visible={jigVisible}  scale={0.3}>
+                                    <meshStandardMaterial color={"#ffffff"} opacity={0} side={THREE.DoubleSide} />
                                 </mesh>
                             :null}
-                            <mesh position={[19.5,-18.47,0]}>
+                            {/* <mesh position={[19.5,-18.47,0]}>
                                 <boxGeometry args={[14,18,12]}/>
                                 <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
                             </mesh>
@@ -184,8 +184,8 @@ function STLLoadPage(){
                             <mesh position={[-19.5,-18.47,0]}>
                                 <boxGeometry args={[14,18,12]}/>
                                 <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
-                            </mesh>
-                            <mesh position={[-20,18.47,0]}>
+                            </mesh> */}
+                            <mesh position={[-6,5.5,0]} scale={0.3}>
                                 <boxGeometry args={[14,18,12]}/>
                                 <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
                                 {geometry.map((geo, idx)=>(<LoadMesh geometry={geo} setHoverd={setHovered} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr} visible={visible} setVisible={setVisible}/>))}
@@ -199,7 +199,7 @@ function STLLoadPage(){
                             <LoadMesh geometry={geometry} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr}/>
                         )} */}
 
-                        <AxesHelper posioin={new THREE.Vector3(100,-50,0)} visible={true} size={20}/>
+                        <AxesHelper posioin={new THREE.Vector3(40,-30,0)} visible={true} size={10}/>
 
                         {/* <AxesHelper posioin={new THREE.Vector3(19.5,-27.47,0)} visible={false} size={5}/> */}
                         <OrbitControls enableDamping dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.5}  mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
@@ -302,6 +302,9 @@ const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr, visible,
     const [centerZ, setCenterZ] = useState<number>(0);
     const setting = useStore((state)=>state.setTarget);
     // const { target, setTarget } = useStore()
+    // useFrame(()=>{
+    //     console.log(meshRef.current);
+    // });
 
     useEffect(() => {
         if (!geometry || !meshRef.current) return;
