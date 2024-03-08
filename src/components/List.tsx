@@ -6,6 +6,7 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import testLogo from "../img/free-icon-plus-sign-3114793.png";
 import { useLoader } from "@react-three/fiber";
 
+
 interface ListProps{
     no: number,
     title: string,
@@ -21,6 +22,7 @@ interface ListProps{
 }
 
 function List({no,title,content, num, setNum, chapter, setChapter ,setMachine,setGeo, setIsDrop, setJig}:ListProps){
+
     return (
         <ListItemBox onDoubleClick={()=>{
                 if(chapter === num){
@@ -29,12 +31,12 @@ function List({no,title,content, num, setNum, chapter, setChapter ,setMachine,se
                 if(num === 1)setMachine(title);
                 if(num === 2){
                     const loader = new STLLoader();
-                    // const test = useLoader(STLLoader, "/models/5X500L V2-CAD BLOCK JIG_형상추가.stl");
                     // console.log(test);
+                    
                     loader.load("/models/ADRESS", geo=>{
                         setGeo(geo);
                     });
-                    
+                    // setGeo(test);
                     setIsDrop(true);
                     setJig(true);
                 }

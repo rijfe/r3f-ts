@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState, useRef,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Canvas, ThreeEvent, useThree, useFrame } from "@react-three/fiber";
+import { Canvas, ThreeEvent, useThree, useFrame,useLoader } from "@react-three/fiber";
 import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Cone, TransformControls, useHelper, Plane, Detailed } from "@react-three/drei";
 import { BufferGeometry } from "three";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
@@ -25,34 +25,11 @@ import ListItem from "../components/ListItem";
 import DetailList from "../components/DetailList";
 import ViewList from "../components/ViewList";
 import PartList from "../components/PartList";
+import LoadMesh from "../components/LoadMesh";
+import Camera from "../components/Camera";
 
-interface cameraProps {
-    cameraRef: React.MutableRefObject<THREE.OrthographicCamera>
-}
-
-function Camera({cameraRef}:cameraProps){
-
-    useHelper(cameraRef, THREE.CameraHelper);
-    // useFrame((state, delta)=>{
-    //     console.log(state);
-    // });
-    // console.log(cameraRef.current);
-    return(
-        <OrthographicCamera
-            ref={cameraRef}
-            makeDefault               
-            zoom={8}
-            top={1000}
-            bottom={-1000}
-            left={1000}
-            right={-1000}
-            near={-30}
-            far={2000}
-            position={[0,0,-10]}
-        />
-    );
-}
-
+const useStore = create((set:any)=>({target: null, setTarget: (target : any)=>set({target}) }));
+const test = useLoader.preload(STLLoader, ["/models/5X500L V2-CAD BLOCK JIG_형상추가.stl"]);
 function STLLoadPage(){
     const groupRef = useRef<THREE.Group>(null!);
     const ref = useRef(null!);
@@ -110,6 +87,7 @@ function STLLoadPage(){
         }
         
     };
+    console.log(test);
     const { target, setTarget } = useStore();
     // const { mode } = useControls({ mode: { value: "translate", options: ["translate", "rotate", "scale"] } });
     // const mode = "rotate";
@@ -188,30 +166,19 @@ function STLLoadPage(){
                             <mesh position={[-6,5.5,0]} scale={0.3}>
                                 <boxGeometry args={[14,18,12]}/>
                                 <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
-                                {geometry.map((geo, idx)=>(<LoadMesh geometry={geo} setHoverd={setHovered} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr} visible={visible} setVisible={setVisible}/>))}
+                                {geometry.map((geo, idx)=>(<LoadMesh geometry={geo} setHoverd={setHovered} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr} visible={visible} setVisible={setVisible} useStore={useStore}/>))}
                             </mesh>
                             {/* <AxesHelper posioin={new THREE.Vector3(19.5,-27.47,0)} visible={false} size={5}/> */}
                         </group>
                         <Camera cameraRef={cameraRef}/>
-                        {/* <Environment preset="forest" background/>*/}
-                        
-                        {/* {isDrop && geometry && (
-                            <LoadMesh geometry={geometry} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr}/>
-                        )} */}
 
                         <AxesHelper posioin={new THREE.Vector3(40,-30,0)} visible={true} size={10}/>
 
                         {/* <AxesHelper posioin={new THREE.Vector3(19.5,-27.47,0)} visible={false} size={5}/> */}
                         <OrbitControls enableDamping dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.5}  mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
-                        {target && visible &&<TransformControls object={target} position={[0,0,0]} mode={hovered ? "translate" : "rotate"} size={hovered ? 0.2 : 0.4} onClick={(e)=>{e.stopPropagation();}} onPointerDown={(e)=>{e.stopPropagation();}}/>}
+                        {target && visible &&<TransformControls object={target} position={[0,0,0]} mode={hovered ? "translate" : "rotate"} size={hovered ? 0.2 : 0.4} onClick={(e)=>{e.stopPropagation();}} onPointerDown={(e)=>{e.stopPropagation();}} scale={0.3}/>}
                     </Canvas>
-                    {/* <Canvas style={{width:20, height:20, position:"absolute"}}>
-                        <AxesHelper posioin={new THREE.Vector3(100,-50,0)} visible={true} size={20}/>
-                    </Canvas> */}
                     <Loader/>
-                    <PointContainer>
-                        {`x=${point[0]} y=${point[1]} z=${point[2]}`}
-                    </PointContainer>
                     <LineBtn onClick={()=>{
                         // if(jigVisible){
                             
@@ -223,24 +190,6 @@ function STLLoadPage(){
                     }}>
                         {jigVisible ? <img src={inVisibleLogo} style={{width:"4rem", height:"4rem"}} alt="Save Line" title="Save Line"/> : <img src={visibleLogo} style={{width:"4rem", height:"4rem"}} alt="Add Line" title="Add Line"/>}
                     </LineBtn>
-                    {/* <ColorBtn onClick={()=>{setColorState(!colorState);}}>
-                        <img src={colorlogo} style={{width:"4rem", height:"4rem"}} alt="Change Color" title="Change Color"/>
-                    </ColorBtn> */}
-                    {colorState ? 
-                    <ColorContainer>
-                        <CirclePicker
-                            onChange={(c)=>{
-                                if(color.length <= cpArr.length){
-                                    setColor(pre=>[...pre, c.hex]);
-                                }
-                                else{
-                                    color[color.length-1] = c.hex;
-                                }
-                                console.log(c.hex);
-                            }}
-                        />
-                    </ColorContainer>
-                    : null}
                 </>
                 :
                 <FileUploadBox 
@@ -268,215 +217,6 @@ function STLLoadPage(){
         </Container>
     );
 }
-
-const useStore = create((set:any)=>({target: null, setTarget: (target : any)=>set({target}) }))
-
-interface loadMesh{
-    geometry: any,
-    state : boolean,
-    setState :  React.Dispatch<React.SetStateAction<boolean>>,
-    color: Array<string>,
-    cp: THREE.Vector3Tuple[],
-    setCp : React.Dispatch<React.SetStateAction<THREE.Vector3Tuple[]>>,
-    cpArr : Array<any>,
-    visible : boolean,
-    setVisible :  React.Dispatch<React.SetStateAction<boolean>>,
-    setHoverd :  React.Dispatch<React.SetStateAction<boolean>>,
-}
-
-const LoadMesh = ({ geometry, state, setState, color, cp, setCp, cpArr, visible, setVisible, setHoverd} : loadMesh) => {
-    const meshRef = useRef<THREE.Mesh>(null!);
-    const mateRef = useRef<THREE.MeshStandardMaterial>(null!);
-    const coneRef1 = useRef<THREE.Mesh>(null!);
-    const coneRef2 = useRef<THREE.Mesh>(null!);
-    const coneRef3 = useRef<THREE.Mesh>(null!);
-    const coneRef4 = useRef<THREE.Mesh>(null!);
-
-    const { camera, raycaster, scene } = useThree();
-    const [point, setPoint] = useRecoilState(pointState);
-    const [pEnter, setPEnter] = useState<boolean>(false);
-    const [curPoint, setCurPoint] = useState<THREE.Vector3>();
-    const [focus, setFocus] = useState<boolean>(false);
-    const [width, setWidth] = useState<Array<number>>([]);
-    const [height, setHeight] = useState<Array<number>>([]);
-    const [centerZ, setCenterZ] = useState<number>(0);
-    const setting = useStore((state)=>state.setTarget);
-    // const { target, setTarget } = useStore()
-    // useFrame(()=>{
-    //     console.log(meshRef.current);
-    // });
-
-    useEffect(() => {
-        if (!geometry || !meshRef.current) return;
-
-        const boundingBox = new THREE.Box3().setFromObject(meshRef.current);
-        const center = boundingBox.getCenter(new THREE.Vector3());
-
-        // camera.position.copy(center);
-        // console.log(center);
-        // camera.position.x += boundingBox.getSize(new THREE.Vector3()).length(); 
-        // camera.position.z += boundingBox.getSize(new THREE.Vector3()).length(); 
-        // camera.position.y += boundingBox.getSize(new THREE.Vector3()).length();
-        // camera.lookAt(center);
-        setCp([]);
-        setWidth([boundingBox.max.x, boundingBox.min.x]);
-        setHeight([boundingBox.max.y, boundingBox.min.y]);
-        setCenterZ(center.z);
-        setFocus(false);
-    }, []);
-
-    const handleMeshClick = (event: ThreeEvent<MouseEvent>) => {
-        event.stopPropagation();
-
-        const x = (event.clientX / window.innerWidth) * 2 - 1;
-        const y = -(event.clientY / window.innerHeight) * 2 + 1;
-        raycaster.setFromCamera(new THREE.Vector2(x, y), camera);
-        const intersects : any = raycaster.intersectObject(meshRef.current,false);
-        if (intersects.length > 0){
-            // console.log(intersects[0].point.toArray());
-            let arr = intersects[0].point.toArray();
-            arr.map((ele:number,idx:number)=>{
-                arr[idx] = Math.round(ele*10)/10;
-            })
-            setPoint(arr);
-            setCp(pre=>[...pre, arr]);
-            setCurPoint(arr);
-        }
-    };
-
-    // useEffect(()=>{
-    //     if(!state)saveLine();
-    //     console.log(cpArr);
-    // },[state])
-    //const vector3Array: THREE.Vector3[] = cp.map(tuple => new THREE.Vector3().fromArray(tuple));
-
-    return( 
-            <mesh 
-                geometry={geometry} 
-                ref={meshRef} 
-                // onClick={state ? handleMeshClick : ()=>{}}
-                onDoubleClick={(event)=>{
-                    event.stopPropagation();
-                    setting(event.object);
-                    setVisible(!visible);
-                    setFocus(!focus);
-                }}
-                onPointerOver={()=>{
-                    if(focus){
-                        setHoverd(true);
-                    }
-                    
-                }}
-                onPointerOut={()=>{
-                    if(focus){
-                        setHoverd(false);
-                    }
-                }}
-                
-                // onClick={(e)=>{
-                //     e.stopPropagation();
-                //     if(focus){
-                //         setFocus(!focus);
-                //     }  
-                // }}
-            >
-                <meshStandardMaterial ref={mateRef} color={focus ? "#fcf000" : "#ffffff"} side={THREE.DoubleSide}/>
-                {/* <Outlines thickness={0.01}/> */}
-                {state ? (cp.length > 0 ? <CatmullRomLine
-                    points={cp}
-                    color="red"
-                    lineWidth={5}
-                    closed={true}
-                />:null):cpArr.length > 0 ? cpArr?.map((points:any, idx:number)=>(
-                    points.length > 0 ? <CatmullRomLine
-                        points={points}
-                        color={`${color[idx]}`}
-                        lineWidth={5}
-                        closed={true}
-                    />: null
-                )) :null}
-            {pEnter ? <mesh position={curPoint}>
-                    <sphereGeometry args={[0.2]}/>
-                    <meshStandardMaterial color="red"/>
-                </mesh>:null}
-                {/* {cp.map((point, index) => (
-                    <points key={index} position={[point[0], point[1], point[2]]}>
-                        <sphereGeometry args={[4, 16, 16]} />
-                        <meshStandardMaterial color="red" />
-                    </points>
-                ))} */}
-                {/* {focus ? 
-            <>
-                <Cone
-                    ref={coneRef1}
-                    args={[1, 2, 8]}
-                    position={[width[0] + 5, (height[0]+height[1])/2, centerZ]}
-                    rotation-z={-Math.PI / 2}
-                    onClick={(event)=>{
-                        meshRef.current.position.x += 1;
-                        event.object.position.x += 1;
-                        coneRef2.current.position.x += 1;
-                        coneRef3.current.position.x += 1;
-                        coneRef4.current.position.x += 1;
-                        setWidth([event.object.position.x-5, coneRef2.current.position.x+5]);
-                    }}
-                >
-                    <meshStandardMaterial color={"#ff0000"} />
-                </Cone>
-                <Cone
-                    ref={coneRef2}
-                    args={[1, 2, 8]}
-                    position={[width[1] - 5, (height[0]+height[1])/2, centerZ]}
-                    rotation-z={Math.PI / 2}
-                    onClick={(event)=>{
-                        meshRef.current.position.x -= 1;
-                        event.object.position.x -= 1;
-                        coneRef1.current.position.x -= 1;
-                        coneRef3.current.position.x -= 1;
-                        coneRef4.current.position.x -= 1;
-                        setWidth([coneRef1.current.position.x-5, event.object.position.x+5]);
-                    }}
-                >
-                        <meshStandardMaterial color={"#ff0000"} />
-                </Cone>
-                <Cone
-                    ref={coneRef3}
-                    args={[1, 2, 8]}
-                    position={[(width[0]+width[1])/2, height[0]+5, centerZ]}
-                    rotation-y={Math.PI / 2}
-                    onClick={(event)=>{
-                        meshRef.current.position.y += 1;
-                        event.object.position.y += 1;
-                        coneRef1.current.position.y += 1;
-                        coneRef2.current.position.y += 1;
-                        coneRef4.current.position.y += 1;
-                        setHeight([event.object.position.y-5, coneRef4.current.position.y+5]);
-                    }}
-                >
-                        <meshStandardMaterial color={"#ff0000"} />
-                </Cone>
-                <Cone
-                    ref={coneRef4}
-                    args={[1, 2, 8]}
-                    position={[(width[0]+width[1])/2, height[1]-5, centerZ]}
-                    rotation-z={-Math.PI}
-                    onClick={(event)=>{
-                        meshRef.current.position.y-= 1;
-                        event.object.position.y -= 1;
-                        coneRef1.current.position.y -= 1;
-                        coneRef2.current.position.y -= 1;
-                        coneRef3.current.position.y -= 1;
-                        setHeight([coneRef3.current.position.y-5, event.object.position.y+5]);
-                    }}
-                >
-                        <meshStandardMaterial color={"#ff0000"} />
-                </Cone>
-            </>
-            : null} */}
-            </mesh>
-            
-    );
-};
 
 export default STLLoadPage;
 
@@ -522,21 +262,6 @@ const LineBtn = styled.div`
     }
 `;
 
-const ColorBtn = styled.div`
-    position:absolute;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    width: 5rem;
-    height: 5rem;
-    left:2rem;
-    top:8rem;
-    font-size:1.5rem;
-
-    &:hover{
-    }
-`;
-
 const FileUploadBox = styled.label`
     display: flex;
     width:100%;
@@ -559,10 +284,4 @@ const FileImg = styled.img`
 
 const FileInput = styled.input`
     display:none;
-`;
-
-const ColorContainer = styled.div`
-    position: absolute;
-    left:2rem;
-    top:14rem;
 `;
