@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState, useRef,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Canvas, ThreeEvent, useThree, useFrame,useLoader } from "@react-three/fiber";
-import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Cone, TransformControls, useHelper, Plane, Detailed } from "@react-three/drei";
+import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Cone, TransformControls, useHelper, Plane, Detailed, Html } from "@react-three/drei";
 import { BufferGeometry } from "three";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from "three";
@@ -58,8 +58,6 @@ function STLLoadPage(){
     const [jigGeometry, setJigGeometry] = useState<BufferGeometry>(null!);
     const [jigOpen, setJigOpen] = useState<boolean>(false);
 
-    const navigate = useNavigate();
-
     const handleDrop = (event : React.DragEvent) =>{
         event.preventDefault();
         const file = event.dataTransfer.files[0];
@@ -87,18 +85,11 @@ function STLLoadPage(){
         }
         
     };
-    console.log(test);
+
     const { target, setTarget } = useStore();
-    // const { mode } = useControls({ mode: { value: "translate", options: ["translate", "rotate", "scale"] } });
-    // const mode = "rotate";
-    const saveLine = () => {
-        setCpArr(pre => [...pre, cp]);
-        console.log(cpArr);
-        setCp([]);
-    };
+    const camera = new THREE.OrthographicCamera(1000, 1000,1000,1000,0.1,2000);
     useEffect(()=>{
-        setCpArr([]);
-        setCp([]);
+        camera.zoom = 6;
     },[geometry, jigGeometry]);
     return(
         <Container>
@@ -108,17 +99,14 @@ function STLLoadPage(){
             <Bodycontainer >
                 <ListItem handleUpload={handleUpload} setIsOpen={setOpen} setIsPartOpen={setPartOpen} isOpen={open} isPartOpen={partOpen}/>
                 <DetailList isOpen={open} setGeo={setJigGeometry} setJig={setJigOpen} setIsDrop={setIsDrop}/>
-                <PartList isPartOpen={partOpen} lineNum={1}/>
-                {jigGeometry ?<ViewList cameraRef={cameraRef}/>:null}
-                {/* <LoadContainer>
-                    <LoadMesh geometry={geometry} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr}/>
-                </LoadContainer> */}
+                <PartList isPartOpen={partOpen} lineNum={2}/>
+                
+    
                 {isDrop ? 
                 <>
                     <Canvas
-                        // camera={{
-                        //     position:[0,0,200]
-                        // }}
+                        camera={camera}
+                        // onResize={}
                         ref={ref}
                         onDragEnter={(event:React.DragEvent)=>{
                             event.preventDefault();
@@ -130,7 +118,11 @@ function STLLoadPage(){
                             event.preventDefault();
                         }}
                         onDrop={handleDrop}
-                    >  
+                    >   
+                        
+                        {jigGeometry ?<ViewList cameraRef={cameraRef}/>:null}
+
+                        {/* <Camera cameraRef={cameraRef}/> */}
                         <directionalLight intensity={0.6} position={[0,1,0]}/>
                         <directionalLight intensity={0.6} position={[0,-1,0]}/>
                         <directionalLight intensity={0.6} position={[1,0,0]}/>
@@ -139,7 +131,7 @@ function STLLoadPage(){
                         <directionalLight intensity={0.6} position={[0,0,-1]}/>
                         <group ref={groupRef}>
                             {jigOpen ?
-                                <mesh position={[0,0,0]} geometry={jigGeometry} visible={jigVisible}  scale={0.3}>
+                                <mesh position={[0,0,0]} geometry={jigGeometry} visible={jigVisible}  scale={[0.4,0.4,0.4]}>
                                     <meshStandardMaterial color={"#ffffff"} opacity={0} side={THREE.DoubleSide} />
                                 </mesh>
                             :null}
@@ -163,29 +155,22 @@ function STLLoadPage(){
                                 <boxGeometry args={[14,18,12]}/>
                                 <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
                             </mesh> */}
-                            <mesh position={[-6,5.5,0]} scale={0.3}>
+                            <mesh position={[-8,7.4,0]} scale={0.4}>
                                 <boxGeometry args={[14,18,12]}/>
-                                <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
+                                <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
                                 {geometry.map((geo, idx)=>(<LoadMesh geometry={geo} setHoverd={setHovered} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr} visible={visible} setVisible={setVisible} useStore={useStore}/>))}
                             </mesh>
-                            {/* <AxesHelper posioin={new THREE.Vector3(19.5,-27.47,0)} visible={false} size={5}/> */}
+                            
                         </group>
-                        <Camera cameraRef={cameraRef}/>
 
                         <AxesHelper posioin={new THREE.Vector3(40,-30,0)} visible={true} size={10}/>
 
-                        {/* <AxesHelper posioin={new THREE.Vector3(19.5,-27.47,0)} visible={false} size={5}/> */}
+                        
                         <OrbitControls enableDamping dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.5}  mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
                         {target && visible &&<TransformControls object={target} position={[0,0,0]} mode={hovered ? "translate" : "rotate"} size={hovered ? 0.2 : 0.4} onClick={(e)=>{e.stopPropagation();}} onPointerDown={(e)=>{e.stopPropagation();}} scale={0.3}/>}
                     </Canvas>
                     <Loader/>
                     <LineBtn onClick={()=>{
-                        // if(jigVisible){
-                            
-                        //     groupRef.current.rotation.x = Math.PI/4;
-                        // }
-                        // groupRef.current.rotation.x = Math.PI/2;
-                        console.log(ref);
                         setJigVisible(!jigVisible);
                     }}>
                         {jigVisible ? <img src={inVisibleLogo} style={{width:"4rem", height:"4rem"}} alt="Save Line" title="Save Line"/> : <img src={visibleLogo} style={{width:"4rem", height:"4rem"}} alt="Add Line" title="Add Line"/>}

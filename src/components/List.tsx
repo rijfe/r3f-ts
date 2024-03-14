@@ -35,7 +35,9 @@ function List({no,title,content, num, setNum, chapter, setChapter ,setMachine,se
                     
                     loader.load("/models/ADRESS", geo=>{
                         setGeo(geo);
+                        console.log(geo);
                     });
+                    
                     // setGeo(test);
                     setIsDrop(true);
                     setJig(true);

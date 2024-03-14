@@ -7,22 +7,19 @@ interface cameraProps {
 
 function Camera({cameraRef}:cameraProps){
     useHelper(cameraRef, THREE.CameraHelper);
-    // useFrame((state, delta)=>{
-    //     console.log(state);
-    // });
-    // console.log(cameraRef.current);
+    
     return(
         <OrthographicCamera
-            ref={cameraRef}
-            makeDefault               
-            zoom={8}
+            ref={cameraRef}              
+            zoom={6}
             top={1000}
             bottom={-1000}
             left={1000}
             right={-1000}
-            near={-30}
+            near={0.1}
             far={2000}
-            position={[0,0,-10]}
+            position={[0,0,0]}
+            makeDefault
         />
     );
 }

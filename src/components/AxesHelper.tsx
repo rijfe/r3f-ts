@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { Line, Text, Cone } from "@react-three/drei";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface AxesHelperProps {
     size: number,
@@ -12,11 +12,14 @@ interface AxesHelperProps {
 function AxesHelper(props:AxesHelperProps){
     const ref = useRef<THREE.Group>(null!);
     const [vetor3, setVector3] = useState<THREE.Vector3>(null!);
-
-    useFrame((state, delta)=>{
-        setVector3(state.camera.position);
-        // console.log(delta);
-    });
+    // const set = useThree((state) => state.set);
+    // useEffect(()=>{
+    //     console.log(set);
+    // },[]);
+    console.log(useThree());
+    useFrame(({gl, scene, camera})=>{
+        gl.render(scene,camera);
+    }, 1);
     return(
         <group ref={ref} position={[10,-20,0]}>
             <Line
@@ -47,7 +50,7 @@ function AxesHelper(props:AxesHelperProps){
                 <meshStandardMaterial color={"#00ff00"} side={THREE.DoubleSide}/>
             </Cone>
             <Line
-                points={[new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,-props.size)]}
+                points={[new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,props.size)]}
                 color="#00009a"
                 lineWidth={5}
                 position={props.posioin}
@@ -55,8 +58,8 @@ function AxesHelper(props:AxesHelperProps){
             />
             <Cone
                 args={[1,2]}
-                position={[40,-30,-11.2]}
-                rotation-x={-Math.PI/2}
+                position={[40,-30,11.2]}
+                rotation-x={Math.PI/2}
             >
                 <meshStandardMaterial color={"#0000ff"} side={THREE.DoubleSide}/>
             </Cone>
@@ -66,7 +69,7 @@ function AxesHelper(props:AxesHelperProps){
             <Text color="#009a00" position={[40, -15, 0]} scale={5} visible={props.visible}>
                 Y
             </Text>
-            <Text color="#00009a" position={[37, -30, -15]} scale={5} visible={props.visible}>
+            <Text color="#00009a" position={[37, -30, 15]} scale={5} visible={props.visible}>
                 Z
             </Text>
         </group>

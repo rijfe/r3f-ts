@@ -17,30 +17,30 @@ function ListItem({handleUpload,setIsOpen, setIsPartOpen, isOpen, isPartOpen }:l
     return(
         <ListItemContainer>
             <ProjectContainer>
-                <ListItemBox>
-                    <img src={saveLogo}/>
+                <ListItemBox style={{height: "25%"}}>
+                    <img style={{width:"60%", height:"60%"}} src={saveLogo}/>
                     <FileInput/>
                 </ListItemBox>
-                <ListItemBox>
-                    <img src={saveProLogo}/>
-                </ListItemBox>
-                <ListItemBox onClick={()=>{
+                <ListItemBox style={{height: "25%"}}>
+                    <img style={{width:"60%", height:"60%"}} src={saveProLogo}/>
+                </ListItemBox >
+                <ListItemBox style={{height: "25%"}} onClick={()=>{
                     document.getElementById("file")?.click();
                 }}>
-                    <img src={folderLogo}/>
+                    <img style={{width:"60%", height:"60%"}} src={folderLogo}/>
                     <FileInput type="file" id="file" onChange={handleUpload}/>
-                </ListItemBox>
-                <ListItemBox onClick={()=>{
+                </ListItemBox >
+                <ListItemBox style={{height: "25%"}} onClick={()=>{
                     setIsOpen(!isOpen);
                     setIsPartOpen(false);
                 }}>
-                    <img src={docLogo}/>
+                    <img style={{width:"60%", height:"60%"}} src={docLogo}/>
                     <FileInput/>
                 </ListItemBox>
             </ProjectContainer>
             <BlankContainer></BlankContainer>
             <ProjectDetailContainer>
-                <ListItemBox
+                <ListItemBox style={{height: "5rem"}}
                     onClick={()=>{
                         setIsOpen(false);
                         setIsPartOpen(!isPartOpen);
@@ -72,7 +72,6 @@ const ListItemBox = styled.div`
     justify-content: center;
     align-items: center;
     width:100%;
-    height: 5rem;
     &:hover{
         background-color:#8D8D8D;
     }
