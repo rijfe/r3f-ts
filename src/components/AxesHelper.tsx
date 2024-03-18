@@ -16,7 +16,7 @@ function AxesHelper(props:AxesHelperProps){
     // useEffect(()=>{
     //     console.log(set);
     // },[]);
-    console.log(useThree());
+    // console.log(useThree().camera);
     useFrame(({gl, scene, camera})=>{
         gl.render(scene,camera);
     }, 1);

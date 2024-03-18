@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect } from "react";
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useRecoilState } from "recoil";
-import { CatmullRomLine } from "@react-three/drei";
+import { CatmullRomLine, Plane } from "@react-three/drei";
 import create from 'zustand';
 
 interface loadMesh{
@@ -21,7 +21,9 @@ interface loadMesh{
 
 function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible, setVisible, setHoverd, useStore} : loadMesh){
     const meshRef = useRef<THREE.Mesh>(null!);
+    const meshAllRef = useRef<THREE.Mesh>(null!);
     const mateRef = useRef<THREE.MeshStandardMaterial>(null!);
+    const planeRef = useRef<THREE.Mesh>(null!);
     const coneRef1 = useRef<THREE.Mesh>(null!);
     const coneRef2 = useRef<THREE.Mesh>(null!);
     const coneRef3 = useRef<THREE.Mesh>(null!);
@@ -36,6 +38,10 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
     const [centerZ, setCenterZ] = useState<number>(0);
     const setting = useStore((state:any)=>state.setTarget);
 
+    // useFrame(()=>{
+    //     planeRef.current.rotation.set(Math.PI/2,0,0);
+    // });
+
     useEffect(() => {
         if (!geometry || !meshRef.current) return;
 
@@ -47,9 +53,12 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
         setHeight([boundingBox.max.y, boundingBox.min.y]);
         setCenterZ(center.z);
         setFocus(false);
-    }, []);
+        console.log(boundingBox.max.y, boundingBox.min.y);
+        console.log(meshRef.current.position);
+    }, [geometry]);
 
     return( 
+        <mesh ref={meshAllRef}>
             <mesh 
                 geometry={geometry} 
                 ref={meshRef}
@@ -62,17 +71,18 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
                 onPointerOver={()=>{
                     if(focus){
                         setHoverd(true);
+                        setting(meshAllRef);
                     }
                     
                 }}
                 onPointerOut={()=>{
                     if(focus){
                         setHoverd(false);
+                        setting(meshRef)
                     }
                 }}                       
             >
                 <meshStandardMaterial ref={mateRef} color={focus ? "#fcf000" : "#ffffff"} side={THREE.DoubleSide}/>
-                
                 {state ? (cp.length > 0 ? <CatmullRomLine
                     points={cp}
                     color="red"
@@ -90,7 +100,11 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
                     <sphereGeometry args={[0.2]}/>
                     <meshStandardMaterial color="red"/>
                 </mesh>:null}
-            </mesh>      
+            </mesh>
+             <Plane ref={planeRef} args={[14,12]} rotation-x={Math.PI/2} position={[0,6,0]} >
+                <meshStandardMaterial  side={THREE.DoubleSide} opacity={0.2}/>
+            </Plane>
+        </mesh>
     );
 }
 

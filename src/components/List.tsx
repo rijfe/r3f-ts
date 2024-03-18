@@ -24,7 +24,8 @@ interface ListProps{
 function List({no,title,content, num, setNum, chapter, setChapter ,setMachine,setGeo, setIsDrop, setJig}:ListProps){
 
     return (
-        <ListItemBox onDoubleClick={()=>{
+        <ListItemBox onDoubleClick={(e)=>{
+                e.stopPropagation();
                 if(chapter === num){
                     setChapter(num+1);
                 }

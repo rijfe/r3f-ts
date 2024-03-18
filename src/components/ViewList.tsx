@@ -7,14 +7,18 @@ import { Html } from "@react-three/drei";
 
 interface ViewListProps{
     cameraRef: React.MutableRefObject<THREE.OrthographicCamera>,
+    controlRef: any
 }
 
-function ViewList({cameraRef}: ViewListProps){
+function ViewList({cameraRef, controlRef}: ViewListProps){
     const [curView, setCurView] = useState<number>(1);
-    const {camera} = useThree();
+    const {camera, get} = useThree();
+    // console.log(controlRef.current);
     return (
         <Html 
             as="div"
+            className="viewlist"
+            zIndexRange={[2,0]}
             fullscreen
         >
             <ViewListContainer>
@@ -134,7 +138,7 @@ function ViewList({cameraRef}: ViewListProps){
                         }
                     }
                     setCurView(2);
-                    camera.lookAt(new THREE.Vector3(0,0,0));
+                    // camera.lookAt(new THREE.Vector3(0,0,0));
                 }}>
                     2
                 </ViewBtn >
@@ -358,12 +362,14 @@ function ViewList({cameraRef}: ViewListProps){
                     onClick={()=>{
                         // setClicked(true);
                         console.log(camera);
+                        controlRef.current.reset();
                     }}
                 >
                     7
                 </ViewBtn>
             </ViewListContainer>
         </Html>
+        
     );
 }
 

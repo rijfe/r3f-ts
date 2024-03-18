@@ -7,6 +7,8 @@ interface cameraProps {
 
 function Camera({cameraRef}:cameraProps){
     useHelper(cameraRef, THREE.CameraHelper);
+    const camera = OrthographicCamera;
+    console.log(camera);
     
     return(
         <OrthographicCamera
@@ -20,7 +22,11 @@ function Camera({cameraRef}:cameraProps){
             far={2000}
             position={[0,0,0]}
             makeDefault
-        />
+            onUpdate={(c)=>{
+                c.updateProjectionMatrix();
+            }}
+    >
+    </OrthographicCamera>
     );
 }
 

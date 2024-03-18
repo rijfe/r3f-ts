@@ -27,6 +27,7 @@ import ViewList from "../components/ViewList";
 import PartList from "../components/PartList";
 import LoadMesh from "../components/LoadMesh";
 import Camera from "../components/Camera";
+import Connector from "../components/Connector";
 
 const useStore = create((set:any)=>({target: null, setTarget: (target : any)=>set({target}) }));
 const test = useLoader.preload(STLLoader, ["/models/5X500L V2-CAD BLOCK JIG_형상추가.stl"]);
@@ -34,6 +35,7 @@ function STLLoadPage(){
     const groupRef = useRef<THREE.Group>(null!);
     const ref = useRef(null!);
     const cameraRef = useRef<THREE.OrthographicCamera>(null!);
+    const controlRef = useRef(null!);
 
     const [isEnter, setIsEnter] = useState<boolean>(false);
     const [isDrop, setIsDrop] = useState<boolean>(false);
@@ -90,6 +92,7 @@ function STLLoadPage(){
     const camera = new THREE.OrthographicCamera(1000, 1000,1000,1000,0.1,2000);
     useEffect(()=>{
         camera.zoom = 6;
+        console.log(target);
     },[geometry, jigGeometry]);
     return(
         <Container>
@@ -105,7 +108,10 @@ function STLLoadPage(){
                 {isDrop ? 
                 <>
                     <Canvas
+                        // style={{zIndex:-1}}
+                        eventPrefix="offset"
                         camera={camera}
+                        // orthographic
                         // onResize={}
                         ref={ref}
                         onDragEnter={(event:React.DragEvent)=>{
@@ -120,15 +126,17 @@ function STLLoadPage(){
                         onDrop={handleDrop}
                     >   
                         
-                        {jigGeometry ?<ViewList cameraRef={cameraRef}/>:null}
+                        {jigGeometry ?<ViewList cameraRef={cameraRef} controlRef={controlRef}/>:null}
 
-                        {/* <Camera cameraRef={cameraRef}/> */}
+                        
                         <directionalLight intensity={0.6} position={[0,1,0]}/>
                         <directionalLight intensity={0.6} position={[0,-1,0]}/>
                         <directionalLight intensity={0.6} position={[1,0,0]}/>
                         <directionalLight intensity={0.6} position={[-1,0,0]}/>
                         <directionalLight intensity={0.6} position={[0,0,1]}/>
                         <directionalLight intensity={0.6} position={[0,0,-1]}/>
+
+                        <Camera cameraRef={cameraRef}/>
                         <group ref={groupRef}>
                             {jigOpen ?
                                 <mesh position={[0,0,0]} geometry={jigGeometry} visible={jigVisible}  scale={[0.4,0.4,0.4]}>
@@ -159,6 +167,7 @@ function STLLoadPage(){
                                 <boxGeometry args={[14,18,12]}/>
                                 <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
                                 {geometry.map((geo, idx)=>(<LoadMesh geometry={geo} setHoverd={setHovered} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr} visible={visible} setVisible={setVisible} useStore={useStore}/>))}
+                                {/* <Connector top={2} bottom={2} height={6}/> */}
                             </mesh>
                             
                         </group>
@@ -166,7 +175,7 @@ function STLLoadPage(){
                         <AxesHelper posioin={new THREE.Vector3(40,-30,0)} visible={true} size={10}/>
 
                         
-                        <OrbitControls enableDamping dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.5}  mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
+                        <OrbitControls ref={controlRef} enableDamping dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.5}  mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
                         {target && visible &&<TransformControls object={target} position={[0,0,0]} mode={hovered ? "translate" : "rotate"} size={hovered ? 0.2 : 0.4} onClick={(e)=>{e.stopPropagation();}} onPointerDown={(e)=>{e.stopPropagation();}} scale={0.3}/>}
                     </Canvas>
                     <Loader/>

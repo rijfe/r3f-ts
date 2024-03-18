@@ -58,7 +58,7 @@ export default ListItem;
 const ListItemContainer = styled.div`
     height:100%;
     width: 7rem;
-    z-index: 3;
+    z-index: 5;
 `;
 
 const ProjectContainer = styled.div`
