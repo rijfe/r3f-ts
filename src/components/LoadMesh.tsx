@@ -4,6 +4,7 @@ import * as THREE from "three";
 import { useRecoilState } from "recoil";
 import { CatmullRomLine, Plane } from "@react-three/drei";
 import create from 'zustand';
+import Connector from "./Connector";
 
 interface loadMesh{
     geometry: any,
@@ -38,9 +39,22 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
     const [centerZ, setCenterZ] = useState<number>(0);
     const setting = useStore((state:any)=>state.setTarget);
 
-    // useFrame(()=>{
-    //     planeRef.current.rotation.set(Math.PI/2,0,0);
-    // });
+    useFrame(()=>{
+       const boundary = {
+        minX : -7, maxX:7, minY:-9, maxY: 9, minZ: -6, maxZ: 6
+       }
+    //    console.log(meshAllRef.current.position);
+       if(meshAllRef.current.position.x < boundary.minX || meshAllRef.current.position.x > boundary.maxX 
+        || meshAllRef.current.position.y < boundary.minY || meshAllRef.current.position.y > boundary.maxY 
+        || meshAllRef.current.position.z < boundary.minZ || meshAllRef.current.position.z > boundary.maxZ ){
+            console.log('Mesh가 특정 영역을 벗어났습니다!');
+            // meshRef.current.material = new THREE.MeshStandardMaterial()
+            mateRef.current.color = new THREE.Color("#ff0000");
+        }
+        else{
+            mateRef.current.color = focus ? new THREE.Color("#fcf000") : new THREE.Color("#ffffff");
+        }
+    });
 
     useEffect(() => {
         if (!geometry || !meshRef.current) return;
@@ -53,8 +67,8 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
         setHeight([boundingBox.max.y, boundingBox.min.y]);
         setCenterZ(center.z);
         setFocus(false);
-        console.log(boundingBox.max.y, boundingBox.min.y);
-        console.log(meshRef.current.position);
+        console.log(`mixX: ${boundingBox.min.x} maxX:${boundingBox.max.x}`);
+
     }, [geometry]);
 
     return( 
@@ -83,7 +97,7 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
                 }}                       
             >
                 <meshStandardMaterial ref={mateRef} color={focus ? "#fcf000" : "#ffffff"} side={THREE.DoubleSide}/>
-                {state ? (cp.length > 0 ? <CatmullRomLine
+                {/* {state ? (cp.length > 0 ? <CatmullRomLine
                     points={cp}
                     color="red"
                     lineWidth={5}
@@ -99,11 +113,12 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
             {pEnter ? <mesh position={curPoint}>
                     <sphereGeometry args={[0.2]}/>
                     <meshStandardMaterial color="red"/>
-                </mesh>:null}
+                </mesh>:null} */}
             </mesh>
              <Plane ref={planeRef} args={[14,12]} rotation-x={Math.PI/2} position={[0,6,0]} >
                 <meshStandardMaterial  side={THREE.DoubleSide} opacity={0.2}/>
             </Plane>
+            <Connector top={2} bottom={2} height={4}/>
         </mesh>
     );
 }

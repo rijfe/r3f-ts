@@ -11,6 +11,7 @@ function Connector(props : ConnectorProps){
     return (
         <Cylinder
             args={[props.top, props.bottom, props.height]}
+            position={[0,5,0]}
         >
             <meshStandardMaterial color={"#00ffff"}/>
         </Cylinder>

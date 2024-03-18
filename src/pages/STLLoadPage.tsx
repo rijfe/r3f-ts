@@ -91,7 +91,7 @@ function STLLoadPage(){
     const { target, setTarget } = useStore();
     const camera = new THREE.OrthographicCamera(1000, 1000,1000,1000,0.1,2000);
     useEffect(()=>{
-        camera.zoom = 6;
+        camera.zoom = 8;
         console.log(target);
     },[geometry, jigGeometry]);
     return(
@@ -167,7 +167,6 @@ function STLLoadPage(){
                                 <boxGeometry args={[14,18,12]}/>
                                 <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
                                 {geometry.map((geo, idx)=>(<LoadMesh geometry={geo} setHoverd={setHovered} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr} visible={visible} setVisible={setVisible} useStore={useStore}/>))}
-                                {/* <Connector top={2} bottom={2} height={6}/> */}
                             </mesh>
                             
                         </group>
