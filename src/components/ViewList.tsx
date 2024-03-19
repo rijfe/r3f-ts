@@ -12,14 +12,14 @@ interface ViewListProps{
 
 function ViewList({cameraRef, controlRef}: ViewListProps){
     const [curView, setCurView] = useState<number>(1);
-    const {camera, get} = useThree();
-    // console.log(controlRef.current);
+    const {camera, get, size} = useThree();
     return (
         <Html 
             as="div"
             className="viewlist"
             zIndexRange={[2,0]}
             fullscreen
+            onClick={()=>{console.log()}}
         >
             <ViewListContainer>
                 <ViewBtn onClick={(e)=>{

@@ -14,13 +14,6 @@ function Camera({cameraRef}:cameraProps){
         <OrthographicCamera
             ref={cameraRef}              
             zoom={6}
-            top={1000}
-            bottom={-1000}
-            left={1000}
-            right={-1000}
-            near={0.1}
-            far={2000}
-            position={[0,0,0]}
             makeDefault
             onUpdate={(c)=>{
                 c.updateProjectionMatrix();

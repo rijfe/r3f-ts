@@ -78,7 +78,7 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
                 ref={meshRef}
                 onDoubleClick={(event)=>{
                     event.stopPropagation();
-                    setting(event.object);
+                    setting(meshAllRef);
                     setVisible(!visible);
                     setFocus(!focus);
                 }}

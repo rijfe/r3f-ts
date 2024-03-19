@@ -17,9 +17,9 @@ function AxesHelper(props:AxesHelperProps){
     //     console.log(set);
     // },[]);
     // console.log(useThree().camera);
-    useFrame(({gl, scene, camera})=>{
-        gl.render(scene,camera);
-    }, 1);
+    // useFrame(({gl, scene, camera})=>{
+    //     gl.render(scene,camera);
+    // }, 1);
     return(
         <group ref={ref} position={[10,-20,0]}>
             <Line
