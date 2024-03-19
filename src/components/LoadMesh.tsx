@@ -43,12 +43,12 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
        const boundary = {
         minX : -7, maxX:7, minY:-9, maxY: 9, minZ: -6, maxZ: 6
        }
-    //    console.log(meshAllRef.current.position);
+
        if(meshAllRef.current.position.x < boundary.minX || meshAllRef.current.position.x > boundary.maxX 
         || meshAllRef.current.position.y < boundary.minY || meshAllRef.current.position.y > boundary.maxY 
         || meshAllRef.current.position.z < boundary.minZ || meshAllRef.current.position.z > boundary.maxZ ){
             console.log('Mesh가 특정 영역을 벗어났습니다!');
-            // meshRef.current.material = new THREE.MeshStandardMaterial()
+            
             mateRef.current.color = new THREE.Color("#ff0000");
         }
         else{

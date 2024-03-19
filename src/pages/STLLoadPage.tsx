@@ -106,18 +106,13 @@ function STLLoadPage(){
 
             <Bodycontainer >
                 <ListItem handleUpload={handleUpload} setIsOpen={setOpen} setIsPartOpen={setPartOpen} isOpen={open} isPartOpen={partOpen}/>
-                <DetailList isOpen={open} setGeo={setJigGeometry} setJig={setJigOpen} setIsDrop={setIsDrop}/>
+                <DetailList isOpen={open} setGeo={setJigGeometry} setJig={setJigOpen} setIsDrop={setIsDrop} setIsOpen={setOpen}/>
                 <PartList isPartOpen={partOpen} lineNum={2}/>
                 
     
                 {isDrop ? 
                 <>
                         <Canvas
-                            // style={{zIndex:-1}}
-                            // eventPrefix="offset"
-                            // camera={camera}
-                            // orthographic
-                            // onResize={}
                             ref={ref}
                             onDragEnter={(event:React.DragEvent)=>{
                                 event.preventDefault();
@@ -136,6 +131,7 @@ function STLLoadPage(){
                                 <Suspense fallback={null}>
                                     {jigOpen ? <Camera cameraRef={cameraRef}/> : null}
                                 </Suspense>
+                                <OrbitControls ref={controlRef} enableDamping dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.5}  mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
                                 {jigGeometry ?<ViewList cameraRef={cameraRef} controlRef={controlRef}/>:null}
 
                                 
@@ -180,9 +176,6 @@ function STLLoadPage(){
                                     
                                 </group>
                             <AxesHelper posioin={new THREE.Vector3(40,-30,0)} visible={true} size={10}/>
-
-                            
-                            <OrbitControls ref={controlRef} enableDamping dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.5}  mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
                             {target && visible &&<TransformControls object={target} position={[0,0,0]} mode={hovered ? "translate" : "rotate"} size={hovered ? 0.2 : 0.4} onClick={(e)=>{e.stopPropagation();}} onPointerDown={(e)=>{e.stopPropagation();}} scale={0.3}/>}
                         </Canvas>
                     <Loader/>
@@ -234,20 +227,6 @@ const Bodycontainer = styled.div`
     flex-direction:row;
 `;
 
-const LoadContainer = styled.div`
-    flex: 1;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-`;
-
-const PointContainer = styled.div`
-    position: absolute;
-    right:2rem;
-    bottom:2rem;
-    font-size:1.5rem;
-`;
-
 const LineBtn = styled.div`
     position:absolute;
     display:flex;
@@ -281,8 +260,4 @@ const FileImg = styled.img`
     width: 13rem;
     height: 13rem;
     margin-bottom:2rem;
-`;
-
-const FileInput = styled.input`
-    display:none;
 `;

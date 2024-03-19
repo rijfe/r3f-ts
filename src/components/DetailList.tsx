@@ -9,9 +9,10 @@ interface DetailListProps {
     setGeo: React.Dispatch<React.SetStateAction<BufferGeometry<THREE.NormalBufferAttributes>>>,
     setIsDrop: React.Dispatch<React.SetStateAction<boolean>>,
     setJig: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-function DetailList({isOpen, setGeo,setIsDrop, setJig}:DetailListProps){
+function DetailList({isOpen, setGeo,setIsDrop, setJig, setIsOpen}:DetailListProps){
     const [chapter, setChapter] = useState<number>(1);
     const [num, setNum] = useState<number>(1);
     const [machine, setMachine] = useState<string>("");
@@ -240,7 +241,7 @@ function DetailList({isOpen, setGeo,setIsDrop, setJig}:DetailListProps){
             return(
                 <>
                     {machineData.map((ele,idx)=>(
-                        <List key={idx} no={0} title={ele} chapter={chapter} setJig={setJig} content="no" num={num} setNum={setNum} setMachine={setMachine} setChapter={setChapter} setGeo={setGeo} setIsDrop={setIsDrop}/>
+                        <List key={idx} no={0} title={ele} chapter={chapter} setIsOpen={setIsOpen} setJig={setJig} content="no" num={num} setNum={setNum} setMachine={setMachine} setChapter={setChapter} setGeo={setGeo} setIsDrop={setIsDrop}/>
                     ))}
                 </>
             )
@@ -249,7 +250,7 @@ function DetailList({isOpen, setGeo,setIsDrop, setJig}:DetailListProps){
             return (
                 <>
                     {machineJigData[machine].map((ele : any, idx:number)=>(
-                        <List key={idx} no={ele.no} title={ele.title} chapter={chapter} setJig={setJig} content={ele.content} num={num} setNum={setNum} setMachine={setMachine} setChapter={setChapter} setGeo={setGeo} setIsDrop={setIsDrop}/>
+                        <List key={idx} no={ele.no} title={ele.title} chapter={chapter} setIsOpen={setIsOpen} setJig={setJig} content={ele.content} num={num} setNum={setNum} setMachine={setMachine} setChapter={setChapter} setGeo={setGeo} setIsDrop={setIsDrop}/>
                     ))}
                 </>
                 

@@ -19,9 +19,10 @@ interface ListProps{
     setGeo: React.Dispatch<React.SetStateAction<BufferGeometry<THREE.NormalBufferAttributes>>>,
     setIsDrop: React.Dispatch<React.SetStateAction<boolean>>,
     setJig: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-function List({no,title,content, num, setNum, chapter, setChapter ,setMachine,setGeo, setIsDrop, setJig}:ListProps){
+function List({no,title,content, num, setNum, chapter, setChapter ,setMachine,setGeo, setIsDrop, setJig, setIsOpen}:ListProps){
 
     return (
         <ListItemBox onDoubleClick={(e)=>{
@@ -32,14 +33,13 @@ function List({no,title,content, num, setNum, chapter, setChapter ,setMachine,se
                 if(num === 1)setMachine(title);
                 if(num === 2){
                     const loader = new STLLoader();
-                    // console.log(test);
                     
                     loader.load("/models/ADRESS", geo=>{
                         setGeo(geo);
                         console.log(geo);
                     });
-                    
-                    // setGeo(test);
+
+                    setIsOpen(false);
                     setIsDrop(true);
                     setJig(true);
                 }

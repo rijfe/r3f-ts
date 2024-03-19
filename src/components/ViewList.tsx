@@ -69,7 +69,6 @@ function ViewList({cameraRef, controlRef}: ViewListProps){
                                 z:0,
                                 ease:"linear"
                             });
-                            // camera.lookAt(new THREE.Vector3(0,0,0));
                             tl.to(camera.position,{
                                 duration:0.5,
                                 x:0,

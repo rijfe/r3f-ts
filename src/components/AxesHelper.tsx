@@ -11,15 +11,7 @@ interface AxesHelperProps {
 
 function AxesHelper(props:AxesHelperProps){
     const ref = useRef<THREE.Group>(null!);
-    const [vetor3, setVector3] = useState<THREE.Vector3>(null!);
-    // const set = useThree((state) => state.set);
-    // useEffect(()=>{
-    //     console.log(set);
-    // },[]);
-    // console.log(useThree().camera);
-    // useFrame(({gl, scene, camera})=>{
-    //     gl.render(scene,camera);
-    // }, 1);
+    
     return(
         <group ref={ref} position={[10,-20,0]}>
             <Line
