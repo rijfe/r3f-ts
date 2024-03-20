@@ -10,10 +10,12 @@ interface listItemProps{
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
     setIsPartOpen: React.Dispatch<React.SetStateAction<boolean>>,
     isOpen: boolean,
-    isPartOpen: boolean
+    isPartOpen: boolean,
+    isSetOpen: boolean,
+    setIsSetOpen: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-function ListItem({handleUpload,setIsOpen, setIsPartOpen, isOpen, isPartOpen }:listItemProps){
+function ListItem({handleUpload,setIsOpen, setIsPartOpen, isOpen, isPartOpen, isSetOpen, setIsSetOpen }:listItemProps){
     return(
         <ListItemContainer>
             <ProjectContainer>
@@ -47,6 +49,15 @@ function ListItem({handleUpload,setIsOpen, setIsPartOpen, isOpen, isPartOpen }:l
                     }}
                 >
                     B
+                </ListItemBox>
+                <ListItemBox style={{height: "5rem"}}
+                    onClick={()=>{
+                        setIsOpen(false);
+                        setIsPartOpen(false);
+                        setIsSetOpen(!isSetOpen);
+                    }}
+                >
+                    S
                 </ListItemBox>
             </ProjectDetailContainer>
         </ListItemContainer>

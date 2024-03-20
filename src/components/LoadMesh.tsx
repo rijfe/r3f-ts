@@ -17,10 +17,12 @@ interface loadMesh{
     visible : boolean,
     setVisible :  React.Dispatch<React.SetStateAction<boolean>>,
     setHoverd :  React.Dispatch<React.SetStateAction<boolean>>,
-    useStore: any
+    useStore: any,
+    setSetting: React.Dispatch<React.SetStateAction<boolean>>,
+    isSettingOpen : boolean
 }
 
-function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible, setVisible, setHoverd, useStore} : loadMesh){
+function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible, setVisible, setHoverd, useStore, setSetting, isSettingOpen} : loadMesh){
     const meshRef = useRef<THREE.Mesh>(null!);
     const meshAllRef = useRef<THREE.Mesh>(null!);
     const mateRef = useRef<THREE.MeshStandardMaterial>(null!);
@@ -38,6 +40,16 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
     const [height, setHeight] = useState<Array<number>>([]);
     const [centerZ, setCenterZ] = useState<number>(0);
     const setting = useStore((state:any)=>state.setTarget);
+    const newArr = [];
+    const restrictMovement = () => {
+        // mesh의 현재 위치 가져오기
+        const { y } = planeRef.current.position;
+    
+        // y축 이동만 허용
+        planeRef.current.position.y = y;
+        planeRef.current.position.x = 0;
+        planeRef.current.position.z = 0;
+      };
 
     useFrame(()=>{
        const boundary = {
@@ -53,12 +65,15 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
         }
         else{
             mateRef.current.color = focus ? new THREE.Color("#fcf000") : new THREE.Color("#ffffff");
+            // if(focus){
+            //     console.log(meshRef.current.geometry.attributes.position.array);
+            // }
         }
+        restrictMovement();
     });
 
     useEffect(() => {
         if (!geometry || !meshRef.current) return;
-
         const boundingBox = new THREE.Box3().setFromObject(meshRef.current);
         const center = boundingBox.getCenter(new THREE.Vector3());
 
@@ -67,7 +82,15 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
         setHeight([boundingBox.max.y, boundingBox.min.y]);
         setCenterZ(center.z);
         setFocus(false);
-        console.log(`mixX: ${boundingBox.min.x} maxX:${boundingBox.max.x}`);
+        console.log(boundingBox.max.x, boundingBox.min.x);
+        console.log(boundingBox.max.z, boundingBox.min.z);
+        const arr = meshRef.current.geometry.attributes.position.array;
+        const {x,y,z} = meshRef.current.position;
+        for(let i =0; i<arr.length; i+=3){
+            newArr.push([arr[i]+x, arr[i+1]+y, arr[i+2]+z]);
+        }
+
+        // console.log(newArr);
 
     }, [geometry]);
 
@@ -81,6 +104,7 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
                     setting(meshAllRef);
                     setVisible(!visible);
                     setFocus(!focus);
+                    setSetting(!isSettingOpen);
                 }}
                 onPointerOver={()=>{
                     if(focus){
@@ -115,10 +139,10 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
                     <meshStandardMaterial color="red"/>
                 </mesh>:null} */}
             </mesh>
-             <Plane ref={planeRef} args={[14,12]} rotation-x={Math.PI/2} position={[0,6,0]} >
-                <meshStandardMaterial  side={THREE.DoubleSide} opacity={0.2}/>
+            <Plane ref={planeRef} args={[14,12]} rotation-x={Math.PI/2} position={[0,6,0]} >
+                <meshStandardMaterial side={THREE.DoubleSide} opacity={0.2}/>
             </Plane>
-            <Connector top={2} bottom={2} height={4}/>
+            <Connector meshRef={meshRef} top={2} bottom={2} height={4} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} />
         </mesh>
     );
 }

@@ -6,8 +6,8 @@ interface cameraProps {
 }
 
 function Camera({cameraRef}:cameraProps){
-    useHelper(cameraRef, THREE.CameraHelper);
-    const camera = OrthographicCamera;
+    // useHelper(cameraRef, THREE.CameraHelper);
+    // const camera = OrthographicCamera;
     
     
     return(

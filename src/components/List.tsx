@@ -38,7 +38,7 @@ function List({no,title,content, num, setNum, chapter, setChapter ,setMachine,se
                         setGeo(geo);
                         console.log(geo);
                     });
-
+                    
                     setIsOpen(false);
                     setIsDrop(true);
                     setJig(true);

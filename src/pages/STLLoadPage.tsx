@@ -28,6 +28,7 @@ import PartList from "../components/PartList";
 import LoadMesh from "../components/LoadMesh";
 import Camera from "../components/Camera";
 import Connector from "../components/Connector";
+import SettingBox from "../components/SettingBox";
 
 const useStore = create((set:any)=>({target: null, setTarget: (target : any)=>set({target}) }));
 const test = useLoader.preload(STLLoader, ["/models/5X500L V2-CAD BLOCK JIG_형상추가.stl"]);
@@ -46,6 +47,7 @@ function STLLoadPage(){
 
     const [open, setOpen] = useState<boolean>(false);
     const [partOpen, setPartOpen] = useState<boolean>(false);
+    const [settingOpen, setSettingOpen] = useState<boolean>(false);
 
     const [visible, setVisible] = useState<boolean>(false);
     const [hovered, setHovered] = useState<boolean>(false);
@@ -98,6 +100,7 @@ function STLLoadPage(){
         camera.top = 1000;
         camera.bottom = 1000;
         camera.updateProjectionMatrix();
+        console.log(target);
     },[geometry, jigGeometry, open, partOpen]);
     return(
         <Container>
@@ -105,9 +108,10 @@ function STLLoadPage(){
             </HeadContainer>
 
             <Bodycontainer >
-                <ListItem handleUpload={handleUpload} setIsOpen={setOpen} setIsPartOpen={setPartOpen} isOpen={open} isPartOpen={partOpen}/>
+                <ListItem setIsSetOpen={setSettingOpen} isSetOpen={settingOpen} handleUpload={handleUpload} setIsOpen={setOpen} setIsPartOpen={setPartOpen} isOpen={open} isPartOpen={partOpen}/>
                 <DetailList isOpen={open} setGeo={setJigGeometry} setJig={setJigOpen} setIsDrop={setIsDrop} setIsOpen={setOpen}/>
                 <PartList isPartOpen={partOpen} lineNum={2}/>
+                <SettingBox isSettingOpen={settingOpen}/>
                 
     
                 {isDrop ? 
@@ -171,12 +175,13 @@ function STLLoadPage(){
                                     <mesh position={[-8,7.4,0]} scale={0.4}>
                                         <boxGeometry args={[14,18,12]}/>
                                         <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
-                                        {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh geometry={geo} setHoverd={setHovered} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr} visible={visible} setVisible={setVisible} useStore={useStore}/>)) : null}
+                                        {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh isSettingOpen={settingOpen} setSetting={setSettingOpen} geometry={geo} setHoverd={setHovered} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr} visible={visible} setVisible={setVisible} useStore={useStore}/>)) : null}
                                     </mesh>
                                     
                                 </group>
                             <AxesHelper posioin={new THREE.Vector3(40,-30,0)} visible={true} size={10}/>
                             {target && visible &&<TransformControls object={target} position={[0,0,0]} mode={hovered ? "translate" : "rotate"} size={hovered ? 0.2 : 0.4} onClick={(e)=>{e.stopPropagation();}} onPointerDown={(e)=>{e.stopPropagation();}} scale={0.3}/>}
+                            
                         </Canvas>
                     <Loader/>
                     <LineBtn onClick={()=>{
@@ -261,3 +266,4 @@ const FileImg = styled.img`
     height: 13rem;
     margin-bottom:2rem;
 `;
+
