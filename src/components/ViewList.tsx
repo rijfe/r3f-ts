@@ -13,13 +13,17 @@ interface ViewListProps{
 function ViewList({cameraRef, controlRef}: ViewListProps){
     const [curView, setCurView] = useState<number>(1);
     const {camera, get, size} = useThree();
+    useFrame(()=>{
+        controlRef.current.update();
+    })
     return (
         <Html 
             as="div"
             className="viewlist"
-            zIndexRange={[2,0]}
+            style={{zIndex:10}}
             fullscreen
-            onClick={()=>{console.log()}}
+            onClick={(e)=>{e.stopPropagation(); console.log("click");}}
+            onContextMenu={(e)=>e.stopPropagation()}
         >
             <ViewListContainer>
                 <ViewBtn onClick={(e)=>{
@@ -43,6 +47,17 @@ function ViewList({cameraRef, controlRef}: ViewListProps){
                             });
                         }
                         else{
+                            tl.to(camera.position,{
+                                duration:0.5,
+                                x:0,
+                                y:0,
+                                z:40,
+                                ease:"linear"
+                            });
+                        }
+                    }
+                    else{
+                        if(camera.position.x !== 0 || camera.position.y !== 0 || camera.position.z !== 40){
                             tl.to(camera.position,{
                                 duration:0.5,
                                 x:0,
@@ -136,6 +151,17 @@ function ViewList({cameraRef, controlRef}: ViewListProps){
                             
                         }
                     }
+                    else{
+                        if(camera.position.x !== 0 || camera.position.y !== 0 || camera.position.z !== -40){
+                            tl.to(camera.position,{
+                                duration:0.5,
+                                x:0,
+                                y:0,
+                                z:-40,
+                                ease:"linear"
+                            });
+                        }
+                    }
                     setCurView(2);
                     // camera.lookAt(new THREE.Vector3(0,0,0));
                 }}>
@@ -196,6 +222,17 @@ function ViewList({cameraRef, controlRef}: ViewListProps){
                             
                         }
                     }
+                    else{
+                        if(camera.position.x !== 40 || camera.position.y !== 0 || camera.position.z !== 0){
+                            tl.to(camera.position,{
+                                duration:0.5,
+                                x:40,
+                                y:0,
+                                z:0,
+                                ease:"linear"
+                            });
+                        }
+                    }
                     setCurView(3);
                     // camera.position.set(40,0,0);
                     camera.lookAt(new THREE.Vector3(0,0,0));
@@ -250,6 +287,17 @@ function ViewList({cameraRef, controlRef}: ViewListProps){
                             }
                         }
                     }
+                    else{
+                        if(camera.position.x !== -40 || camera.position.y !== 0 || camera.position.z !== 0){
+                            tl.to(camera.position,{
+                                duration:0.5,
+                                x:-40,
+                                y:0,
+                                z:0,
+                                ease:"linear"
+                            });
+                        }
+                    }
                     setCurView(4);
                     // camera.position.set(-40,0,0);
                     // camera.lookAt(new THREE.Vector3(0,0,0));
@@ -291,6 +339,17 @@ function ViewList({cameraRef, controlRef}: ViewListProps){
                                 z:40,
                                 ease:"linear"
                             });
+                            tl.to(camera.position,{
+                                duration:0.5,
+                                x:0,
+                                y:40,
+                                z:0,
+                                ease:"linear"
+                            });
+                        }
+                    }
+                    else{
+                        if(camera.position.x !== 0 || camera.position.y !== 40 || camera.position.z !== 0){
                             tl.to(camera.position,{
                                 duration:0.5,
                                 x:0,
@@ -350,7 +409,17 @@ function ViewList({cameraRef, controlRef}: ViewListProps){
                             });
                         }
                     }
-
+                    else{
+                        if(camera.position.x !== 0 || camera.position.y !== -40 || camera.position.z !== 0){
+                            tl.to(camera.position,{
+                                duration:0.5,
+                                x:0,
+                                y:-40,
+                                z:0,
+                                ease:"linear"
+                            });
+                        }
+                    }
                     setCurView(6);
                     // camera.position.set(0,-40,0);
                     camera.lookAt(new THREE.Vector3(0,0,0));

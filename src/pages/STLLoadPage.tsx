@@ -8,14 +8,10 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from "three";
 import { pointState, getPointState } from "../store/pointState";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { CirclePicker} from 'react-color';
-import { useControls } from "leva";
+
 import create from 'zustand';
 
 import logo from "../img/free-icon-file-and-folder-8291136.png";
-import colorlogo from "../img/free-icon-color-palette-2561365.png";
-import plusLogo from "../img/free-icon-plus-sign-3114793.png";
-import checkLogo from "../img/free-icon-check-mark-66936.png";
 import visibleLogo from "../img/free-icon-eye-5368960.png";
 import inVisibleLogo from "../img/free-icon-invisible-symbol-84529.png";
 
@@ -29,6 +25,7 @@ import LoadMesh from "../components/LoadMesh";
 import Camera from "../components/Camera";
 import Connector from "../components/Connector";
 import SettingBox from "../components/SettingBox";
+import { off } from "process";
 
 const useStore = create((set:any)=>({target: null, setTarget: (target : any)=>set({target}) }));
 const test = useLoader.preload(STLLoader, ["/models/5X500L V2-CAD BLOCK JIG_형상추가.stl"]);
@@ -41,7 +38,7 @@ function STLLoadPage(){
     const [isEnter, setIsEnter] = useState<boolean>(false);
     const [isDrop, setIsDrop] = useState<boolean>(false);
     const [state, setState] = useState<boolean>(false);
-    const [colorState, setColorState] = useState<boolean>(false);
+    const [offset, setOffset] = useState<number>(6.0);
     const [color, setColor] = useState<Array<string>>([]);
     const [cp, setCp] = useState<THREE.Vector3Tuple[]>([]);
 
@@ -91,16 +88,9 @@ function STLLoadPage(){
     };
 
     const { target, setTarget } = useStore();
-    const camera = new THREE.OrthographicCamera(1000, 1000,1000,1000,0.1,2000);
+
     useEffect(()=>{
-        camera.zoom = 8;
-        // console.log(target);
-        camera.left = 1000;
-        camera.right = 1000;
-        camera.top = 1000;
-        camera.bottom = 1000;
-        camera.updateProjectionMatrix();
-        console.log(target);
+      cameraRef.current.updateMatrix();
     },[geometry, jigGeometry, open, partOpen]);
     return(
         <Container>
@@ -111,8 +101,7 @@ function STLLoadPage(){
                 <ListItem setIsSetOpen={setSettingOpen} isSetOpen={settingOpen} handleUpload={handleUpload} setIsOpen={setOpen} setIsPartOpen={setPartOpen} isOpen={open} isPartOpen={partOpen}/>
                 <DetailList isOpen={open} setGeo={setJigGeometry} setJig={setJigOpen} setIsDrop={setIsDrop} setIsOpen={setOpen}/>
                 <PartList isPartOpen={partOpen} lineNum={2}/>
-                <SettingBox isSettingOpen={settingOpen}/>
-                
+                <SettingBox isSettingOpen={settingOpen} boffset={offset} setBoffset={setOffset}/>
     
                 {isDrop ? 
                 <>
@@ -127,59 +116,59 @@ function STLLoadPage(){
                             onDragOver={(event:React.DragEvent)=>{
                                 event.preventDefault();
                             }}
-                            onDrop={handleDrop}
-                            onCreated={(state)=>{
-                                console.log(state);
-                            }}
+                            onDrop={(e)=>{e.preventDefault(); handleDrop(e);}}
+                            // onContextMenu={(e)=>{console.log(e); }}
+                            style={{zIndex:30}}
+                            orthographic
                         >   
-                                <Suspense fallback={null}>
-                                    {jigOpen ? <Camera cameraRef={cameraRef}/> : null}
-                                </Suspense>
-                                <OrbitControls ref={controlRef} enableDamping dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.5}  mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
-                                {jigGeometry ?<ViewList cameraRef={cameraRef} controlRef={controlRef}/>:null}
 
+                                <Camera cameraRef={cameraRef}/>
+                            
+                            {jigGeometry ?<ViewList cameraRef={cameraRef} controlRef={controlRef}/>:null}
+
+                            
+                            <directionalLight intensity={0.6} position={[0,1,0]}/>
+                            <directionalLight intensity={0.6} position={[0,-1,0]}/>
+                            <directionalLight intensity={0.6} position={[1,0,0]}/>
+                            <directionalLight intensity={0.6} position={[-1,0,0]}/>
+                            <directionalLight intensity={0.6} position={[0,0,1]}/>
+                            <directionalLight intensity={0.6} position={[0,0,-1]}/>
+                            
+                            <group ref={groupRef}>
+                                {jigOpen  ?
+                                    <mesh position={[0,0,0]} geometry={jigGeometry} visible={jigVisible}  scale={[0.4,0.4,0.4]}>
+                                        <meshStandardMaterial color={"#ffffff"} opacity={0} side={THREE.DoubleSide} />
+                                    </mesh>
+                                :null}
+                                {/* <mesh position={[19.5,-18.47,0]}>
+                                    <boxGeometry args={[14,18,12]}/>
+                                    <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
+                                </mesh>
+                                <mesh position={[19.5,18.47,0]}>
+                                    <boxGeometry args={[14,18,12]}/>
+                                    <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
+                                </mesh>
+                                <mesh position={[0,-18.47,0]}>
+                                    <boxGeometry args={[14,18,12]}/>
+                                    <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
+                                </mesh>
+                                <mesh position={[0,18.47,0]}>
+                                    <boxGeometry args={[14,18,12]}/>
+                                    <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
+                                </mesh>
+                                <mesh position={[-19.5,-18.47,0]}>
+                                    <boxGeometry args={[14,18,12]}/>
+                                    <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
+                                </mesh> */}
+                                <mesh position={[-8,7.4,0]} scale={0.4}>
+                                    <boxGeometry args={[14,18,12]}/>
+                                    <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
+                                    {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={geo} setHoverd={setHovered} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr} visible={visible} setVisible={setVisible} useStore={useStore}/>)) : null}
+                                </mesh>
                                 
-                                <directionalLight intensity={0.6} position={[0,1,0]}/>
-                                <directionalLight intensity={0.6} position={[0,-1,0]}/>
-                                <directionalLight intensity={0.6} position={[1,0,0]}/>
-                                <directionalLight intensity={0.6} position={[-1,0,0]}/>
-                                <directionalLight intensity={0.6} position={[0,0,1]}/>
-                                <directionalLight intensity={0.6} position={[0,0,-1]}/>
-                                
-                                <group ref={groupRef}>
-                                    {jigOpen  ?
-                                        <mesh position={[0,0,0]} geometry={jigGeometry} visible={jigVisible}  scale={[0.4,0.4,0.4]}>
-                                            <meshStandardMaterial color={"#ffffff"} opacity={0} side={THREE.DoubleSide} />
-                                        </mesh>
-                                    :null}
-                                    {/* <mesh position={[19.5,-18.47,0]}>
-                                        <boxGeometry args={[14,18,12]}/>
-                                        <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
-                                    </mesh>
-                                    <mesh position={[19.5,18.47,0]}>
-                                        <boxGeometry args={[14,18,12]}/>
-                                        <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
-                                    </mesh>
-                                    <mesh position={[0,-18.47,0]}>
-                                        <boxGeometry args={[14,18,12]}/>
-                                        <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
-                                    </mesh>
-                                    <mesh position={[0,18.47,0]}>
-                                        <boxGeometry args={[14,18,12]}/>
-                                        <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
-                                    </mesh>
-                                    <mesh position={[-19.5,-18.47,0]}>
-                                        <boxGeometry args={[14,18,12]}/>
-                                        <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
-                                    </mesh> */}
-                                    <mesh position={[-8,7.4,0]} scale={0.4}>
-                                        <boxGeometry args={[14,18,12]}/>
-                                        <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
-                                        {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh isSettingOpen={settingOpen} setSetting={setSettingOpen} geometry={geo} setHoverd={setHovered} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr} visible={visible} setVisible={setVisible} useStore={useStore}/>)) : null}
-                                    </mesh>
-                                    
-                                </group>
+                            </group>
                             <AxesHelper posioin={new THREE.Vector3(40,-30,0)} visible={true} size={10}/>
+                            <OrbitControls ref={controlRef} dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.5}  mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
                             {target && visible &&<TransformControls object={target} position={[0,0,0]} mode={hovered ? "translate" : "rotate"} size={hovered ? 0.2 : 0.4} onClick={(e)=>{e.stopPropagation();}} onPointerDown={(e)=>{e.stopPropagation();}} scale={0.3}/>}
                             
                         </Canvas>
@@ -241,7 +230,7 @@ const LineBtn = styled.div`
     height: 5rem;
     right:2rem;
     top:8rem;
-
+    z-index: 50;
     &:hover{
 
     }

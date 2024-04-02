@@ -65,7 +65,7 @@ const ListItemBox = styled.div`
     margin-top:5px;
     display:flex;
     flex-direction: row;
-
+    z-index: 50;
     &:hover{
         border: 3px solid #90d0f0;
         background-color: rgba(150,180, 180, .5);

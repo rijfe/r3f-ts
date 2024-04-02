@@ -282,11 +282,11 @@ const DetailListContainer = styled.div`
     position: fixed;
     left: -50%;
     transition: 0.5s ease;
-    z-index:3;
+    z-index:50;
     &.detail{
         left: 8rem;
         transition: 0.5s ease;
-        z-index:1;
+        z-index:50;
     }
 `;
 

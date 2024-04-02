@@ -1,6 +1,11 @@
 import styled from "styled-components";
 
-function Curves(){
+interface CurvesProps{
+    boffset: number,
+    setBoffset: React.Dispatch<React.SetStateAction<number>>,
+}
+
+function Curves({boffset, setBoffset}:CurvesProps){
     return(
         <CurvesContainer>
             <TitleContainer>
@@ -15,17 +20,41 @@ function Curves(){
                 </SetDetailContainer>
                 <SetDetailContainer>
                     <DetailTitleBox><h2 style={{fontWeight:500, fontSize:"1.5rem"}}>Curve Type</h2></DetailTitleBox>
-                    <DetailSettingBox>This More Detail</DetailSettingBox>
+                    <DetailSettingBox>
+                        <select name="curve">
+                            <option style={{textAlignLast: "center"}} value="Margin">Margin</option>
+                            <option style={{textAlignLast: "center"}} value="InlayOutlayMargin">InlayOutlayMargin</option>
+                            <option style={{textAlignLast: "center"}} value="Emergence">Emergence</option>
+                            <option style={{textAlignLast: "center"}} value="ToothArea">ToothArea</option>
+                            <option style={{textAlignLast: "center"}} value="CustomArea">CustomArea</option>
+                        </select>
+                    </DetailSettingBox>
                 </SetDetailContainer>
             </CurveSetContainer>
-            <BlankContainer></BlankContainer>
+            <BlankContainer>
+                <SetDetailContainer>
+                    <DetailTitleBox></DetailTitleBox>
+                    <DetailSettingBox>
+                        <input type="radio" id="check-Manual" name="check" value="Manual"/>
+                        <label htmlFor="check-Manual">Manual</label> 
+                        <input type="radio" id="check-auto" checked name="check" value="Auto"/>
+                        <label htmlFor="check-auto">Auto</label>
+                    </DetailSettingBox>
+                </SetDetailContainer>
+            </BlankContainer>
             <OffsetContainer>
                 <OffsetDetailContainer>
                     <OffsetTitleBox>
                         <h2 style={{fontWeight:500, fontSize:"1.5rem"}}>BoundaryOffset</h2>
                     </OffsetTitleBox>
                     <OffsetSettingBox>
-                        <OffsetInput/>
+                        <OffsetInput 
+                            onChange={(e)=>{
+                                setBoffset(Number(e.target.value));
+                                e.preventDefault();
+                            }}
+                            type="number" value={boffset}
+                        />
                     </OffsetSettingBox>
                 </OffsetDetailContainer>
                 <OffsetDetailContainer>
@@ -33,7 +62,7 @@ function Curves(){
                         <h2 style={{fontWeight:500, fontSize:"1.5rem"}}>BoundaryAngle</h2>
                     </OffsetTitleBox>
                     <OffsetSettingBox>
-                        <OffsetInput/>
+                        <OffsetInput type="number" value={0.0}/>
                     </OffsetSettingBox>
                 </OffsetDetailContainer>
                 <OffsetDetailContainer>
@@ -41,7 +70,7 @@ function Curves(){
                         <h2 style={{fontWeight:500, fontSize:"1.5rem"}}>NCCavityOffset</h2>
                     </OffsetTitleBox>
                     <OffsetSettingBox>
-                        <OffsetInput/>
+                        <OffsetInput type="number" value={0.00}/>
                     </OffsetSettingBox>
                 </OffsetDetailContainer>
             </OffsetContainer>
@@ -146,4 +175,5 @@ const TitleBox = styled.div`
     border-right:none;
     border-bottom:1px solid;
     background-color:#D8D8D8;
+    text-align:center;
  `;

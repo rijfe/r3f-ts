@@ -1,12 +1,16 @@
 import styled from "styled-components";
-import Curves from "./Curves";
 import { useState } from "react";
 
+import Curves from "./Curves";
+import Connectors from "./Connectors";
+
 interface SettingProps {
-    isSettingOpen : boolean
+    isSettingOpen : boolean,
+    boffset: number,
+    setBoffset: React.Dispatch<React.SetStateAction<number>>,
 }
 
-function SettingBox({isSettingOpen} : SettingProps){
+function SettingBox({isSettingOpen, boffset, setBoffset} : SettingProps){
     const [num, setNum] = useState<number>(1);
     return (
         <Container className={isSettingOpen ? "setting" : ""}>
@@ -20,7 +24,8 @@ function SettingBox({isSettingOpen} : SettingProps){
             </SettingPartContainer>
             <BlankContainer/>
             <SettingDetailContainer>
-                {num === 1 ? <Curves/> : null}
+                {num === 1 ? <Curves boffset={boffset} setBoffset={setBoffset}/> : null}
+                {num === 5 ? <Connectors/> : null}
             </SettingDetailContainer>
         </Container>
     );
@@ -34,11 +39,11 @@ const Container = styled.div`
     position: fixed;
     left: -50%;
     transition: 0.5s ease;
-    z-index:3;
+    z-index:50;
     &.setting{
         left: 8rem;
         transition: 0.5s ease;
-        z-index:1;
+        z-index:50;
     }
 `
 

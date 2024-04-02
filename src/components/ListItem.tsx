@@ -35,6 +35,7 @@ function ListItem({handleUpload,setIsOpen, setIsPartOpen, isOpen, isPartOpen, is
                 <ListItemBox style={{height: "25%"}} onClick={()=>{
                     setIsOpen(!isOpen);
                     setIsPartOpen(false);
+                    setIsSetOpen(false);
                 }}>
                     <img style={{width:"60%", height:"60%"}} src={docLogo}/>
                     <FileInput/>
@@ -46,6 +47,7 @@ function ListItem({handleUpload,setIsOpen, setIsPartOpen, isOpen, isPartOpen, is
                     onClick={()=>{
                         setIsOpen(false);
                         setIsPartOpen(!isPartOpen);
+                        setIsSetOpen(false);
                     }}
                 >
                     B
@@ -69,7 +71,7 @@ export default ListItem;
 const ListItemContainer = styled.div`
     height:100%;
     width: 7rem;
-    z-index: 5;
+    z-index: 60;
 `;
 
 const ProjectContainer = styled.div`

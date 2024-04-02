@@ -19,10 +19,11 @@ interface loadMesh{
     setHoverd :  React.Dispatch<React.SetStateAction<boolean>>,
     useStore: any,
     setSetting: React.Dispatch<React.SetStateAction<boolean>>,
-    isSettingOpen : boolean
+    isSettingOpen : boolean,
+    offset: number
 }
 
-function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible, setVisible, setHoverd, useStore, setSetting, isSettingOpen} : loadMesh){
+function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible, setVisible, setHoverd, offset, useStore, setSetting, isSettingOpen} : loadMesh){
     const meshRef = useRef<THREE.Mesh>(null!);
     const meshAllRef = useRef<THREE.Mesh>(null!);
     const mateRef = useRef<THREE.MeshStandardMaterial>(null!);
@@ -139,7 +140,7 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
                     <meshStandardMaterial color="red"/>
                 </mesh>:null} */}
             </mesh>
-            <Plane ref={planeRef} args={[14,12]} rotation-x={Math.PI/2} position={[0,6,0]} >
+            <Plane ref={planeRef} args={[14,12]} rotation-x={Math.PI/2} position={[0,offset,0]} >
                 <meshStandardMaterial side={THREE.DoubleSide} opacity={0.2}/>
             </Plane>
             <Connector meshRef={meshRef} top={2} bottom={2} height={4} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} />

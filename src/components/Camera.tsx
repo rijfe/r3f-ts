@@ -18,8 +18,8 @@ function Camera({cameraRef}:cameraProps){
             onUpdate={(c)=>{
                 c.updateProjectionMatrix();
             }}
-    >
-    </OrthographicCamera>
+        >
+        </OrthographicCamera>
     );
 }
 
