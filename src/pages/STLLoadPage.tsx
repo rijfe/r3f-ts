@@ -89,8 +89,10 @@ function STLLoadPage(){
 
     const { target, setTarget } = useStore();
 
+    // const camera = new THREE.OrthographicCamera(-1,1,-1,1,0.1,2000);
+
     useEffect(()=>{
-      cameraRef.current.updateMatrix();
+      
     },[geometry, jigGeometry, open, partOpen]);
     return(
         <Container>
@@ -120,9 +122,19 @@ function STLLoadPage(){
                             // onContextMenu={(e)=>{console.log(e); }}
                             style={{zIndex:30}}
                             orthographic
+                            // camera={camera}
+                            camera={{
+                                left:-2000,
+                                right: 2000,
+                                top:2000,
+                                bottom: 2000,
+                                zoom:6,
+                                near:0.1,
+                                far:2000
+                            }}
                         >   
 
-                                <Camera cameraRef={cameraRef}/>
+                            {/* <Camera cameraRef={cameraRef}/> */}
                             
                             {jigGeometry ?<ViewList cameraRef={cameraRef} controlRef={controlRef}/>:null}
 

@@ -15,9 +15,6 @@ function Camera({cameraRef}:cameraProps){
             ref={cameraRef}              
             zoom={6}
             makeDefault
-            onUpdate={(c)=>{
-                c.updateProjectionMatrix();
-            }}
         >
         </OrthographicCamera>
     );
