@@ -77,7 +77,7 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
         if (!geometry || !meshRef.current) return;
         const boundingBox = new THREE.Box3().setFromObject(meshRef.current);
         const center = boundingBox.getCenter(new THREE.Vector3());
-
+        meshRef.current.geometry.center();
         setCp([]);
         setWidth([boundingBox.max.x, boundingBox.min.x]);
         setHeight([boundingBox.max.y, boundingBox.min.y]);
@@ -102,7 +102,7 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
                 ref={meshRef}
                 onDoubleClick={(event)=>{
                     event.stopPropagation();
-                    setting(meshAllRef);
+                    setting(meshRef);
                     setVisible(!visible);
                     setFocus(!focus);
                     setSetting(!isSettingOpen);
@@ -110,7 +110,7 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
                 onPointerOver={()=>{
                     if(focus){
                         setHoverd(true);
-                        setting(meshAllRef);
+                        setting(meshRef);
                     }
                     
                 }}
@@ -119,7 +119,8 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
                         setHoverd(false);
                         setting(meshRef)
                     }
-                }}                       
+                }}
+                position={[0,0,0]}                    
             >
                 <meshStandardMaterial ref={mateRef} color={focus ? "#fcf000" : "#ffffff"} side={THREE.DoubleSide}/>
                 {/* {state ? (cp.length > 0 ? <CatmullRomLine

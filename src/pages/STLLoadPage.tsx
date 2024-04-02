@@ -80,6 +80,7 @@ function STLLoadPage(){
             else{
                 loader.load(URL.createObjectURL(file), geo=>{
                     setGeometry(prev => [...prev, geo]);
+                    console.log(geo.boundingBox?.getCenter);
                 });
                 setIsDrop(true);
             }
