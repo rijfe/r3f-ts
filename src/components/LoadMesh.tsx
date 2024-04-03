@@ -26,25 +26,26 @@ interface loadMesh{
     distance: number,
     cutting : number,
     setNum: React.Dispatch<React.SetStateAction<number>>,
+    setOffset: React.Dispatch<React.SetStateAction<number>>,
 }
 
-function LoadMesh({ geometry, type,connectOn, setCp, visible, setVisible, setHoverd, offset, useStore, setSetting, isSettingOpen, width, height, angle, distance, rotation, cutting, setNum} : loadMesh){
+function LoadMesh({ geometry, type,connectOn, setCp, visible, setVisible, setHoverd, offset, setOffset,useStore, setSetting, isSettingOpen, width, height, angle, distance, rotation, cutting, setNum} : loadMesh){
     const meshRef = useRef<THREE.Mesh>(null!);
     const meshAllRef = useRef<THREE.Mesh>(null!);
     const mateRef = useRef<THREE.MeshStandardMaterial>(null!);
-    const planeRef = useRef<THREE.Mesh>(null!);
 
     const { camera, raycaster, scene } = useThree();
     const [pEnter, setPEnter] = useState<boolean>(false);
     const [curPoint, setCurPoint] = useState<THREE.Vector3>();
     const [focus, setFocus] = useState<boolean>(false);
     const [centerZ, setCenterZ] = useState<number>(0);
+    const [curY, setCurY] = useState<number>(0);
     const setting = useStore((state:any)=>state.setTarget);
     const newArr = [];
     const restrictMovement = () => {
         // mesh의 현재 위치 가져오기
-        planeRef.current.position.x = 0;
-        planeRef.current.position.z = 0;
+        // planeRef.current.position.x = 0;
+        // planeRef.current.position.z = 0;
       };
 
     useFrame(()=>{
@@ -65,8 +66,12 @@ function LoadMesh({ geometry, type,connectOn, setCp, visible, setVisible, setHov
             //     console.log(meshRef.current.geometry.attributes.position.array);
             // }
         }
-        planeRef.current.position.x = 0;
-        planeRef.current.position.z = 0;
+        // planeRef.current.position.x = 0;
+        // planeRef.current.position.z = 0;
+        if(curY !== meshAllRef.current.position.y){
+            setCurY(meshAllRef.current.position.y);
+            setOffset(offset+curY);
+        }
         restrictMovement();
     });
 
@@ -87,8 +92,8 @@ function LoadMesh({ geometry, type,connectOn, setCp, visible, setVisible, setHov
         }
 
         // console.log(newArr);
-
-    }, [geometry]);
+        setOffset(offset+curY);
+    }, [geometry,offset]);
 
     return( 
         <mesh ref={meshAllRef}>
@@ -136,9 +141,6 @@ function LoadMesh({ geometry, type,connectOn, setCp, visible, setVisible, setHov
                     <meshStandardMaterial color="red"/>
                 </mesh>:null} */}
             </mesh>
-            <Plane ref={planeRef} args={[14,12]} rotation-x={Math.PI/2} position={[0,offset,0]} >
-                <meshStandardMaterial side={THREE.DoubleSide} opacity={0.2}/>
-            </Plane>
             {connectOn ? type === "Ellipse" ? <Connector setNum={setNum} setSetting={setSetting} meshRef={meshRef} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector width={width}  height={width} depth={height}/> : null}
         </mesh>
     );

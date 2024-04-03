@@ -22,6 +22,8 @@ interface ConnectorsProps{
 }
 
 function Connectors(props : ConnectorsProps){
+    const [checkedValue, setCheckedValue] = useState<String>("Manual");
+    const [checked, setChecked] = useState<String>("Manual");
 
     const CircleType = () => {
         return(
@@ -89,9 +91,9 @@ function Connectors(props : ConnectorsProps){
                 <TypeTextContainer>
                 </TypeTextContainer>
                 <TypeSelectContainer>
-                    <input type="radio" id="check-Manual" checked name="check" value="Manual"/>
+                    <input type="radio" id="check-Manual" checked={checked === "Manual"} name="check" value="Manual" onChange={(e)=>{setChecked(e.target.value); setCheckedValue(e.target.value);}}/>
                     <label htmlFor="check-Manual">Manual</label> 
-                    <input type="radio" id="check-auto" name="check" value="Auto"/>
+                    <input type="radio" id="check-auto" name="check" checked={checked === "Auto"} value="Auto" onChange={(e)=>{setChecked(e.target.value); setCheckedValue(e.target.value);}}/>
                     <label htmlFor="check-auto">Auto</label>
                 </TypeSelectContainer>
             </BlankContainer>
@@ -180,7 +182,38 @@ function Connectors(props : ConnectorsProps){
                             value={props.cutting}
                         />
                     </DetailValueBox>
-                </DetailSettingBox></>}
+                </DetailSettingBox>
+                {checkedValue === "Auto" ? 
+                    <><DetailSettingBox>
+                        <DetailTitleBox>
+                            <h2 style={{fontWeight:500, fontSize:"1.5rem"}}>Min Distance</h2>
+                        </DetailTitleBox>
+                        <DetailValueBox>
+                            <ValueInput 
+                                type="number"
+                                // onChange={(e)=>{
+                                //     props.setDistance(Number(e.target.value))
+                                // }}
+                                // value={props.distance}
+                            />
+                        </DetailValueBox>
+                    </DetailSettingBox>
+                    <DetailSettingBox>
+                        <DetailTitleBox>
+                            <h2 style={{fontWeight:500, fontSize:"1.5rem"}}>Max Distance</h2>
+                        </DetailTitleBox>
+                        <DetailValueBox>
+                            <ValueInput 
+                                type="number"
+                                // onChange={(e)=>{
+                                //     props.setDistance(Number(e.target.value))
+                                // }}
+                                // value={props.distance}
+                            />
+                        </DetailValueBox>
+                    </DetailSettingBox></>
+                : null}
+                </>}
             </DetailSettingContainer>
             <BtnContainer>
                 <BtnBox>
@@ -303,7 +336,7 @@ const ValueInput = styled.input`
     width: 100%;
     height: 30%;
     display:flex;
-    justify-content: end
+    justify-content: end;
  `;
 
  const BtnArea = styled.div`

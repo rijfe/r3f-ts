@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState, useRef,useEffect, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { Canvas, ThreeEvent, useThree, useFrame,useLoader } from "@react-three/fiber";
-import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Cone, TransformControls,} from "@react-three/drei";
+import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Cone, TransformControls, Plane} from "@react-three/drei";
 import { BufferGeometry } from "three";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from "three";
@@ -43,6 +43,7 @@ function STLLoadPage(){
     const [settingNum, setSettingNum] = useState<number>(1);
 
     const [offset, setOffset] = useState<number>(6.0);
+    const [planeY, setPlaneY] = useState<number>(6.0);
     const [conWid, setConWid] = useState<number>(4.0);
     const [conHei, setConHei] = useState<number>(3.0);
     const [conAngle, setConAngle] = useState<number>(4.0);
@@ -62,7 +63,7 @@ function STLLoadPage(){
     const [visible, setVisible] = useState<boolean>(false);
     const [hovered, setHovered] = useState<boolean>(false);
     const [jigVisible, setJigVisible] = useState<boolean>(true);
-
+    const planeRef = useRef<THREE.Mesh>(null!);
     const [cpArr, setCpArr] = useState<Array<any>>([]);
     const [type, setType] = useState<String>("Ellipse");
     const point = useRecoilValue(getPointState);
@@ -137,12 +138,12 @@ function STLLoadPage(){
                             orthographic
                             // camera={camera}
                             camera={{
-                                left:-2000,
-                                right: 2000,
-                                top:2000,
-                                bottom: 2000,
+                                left:-8000,
+                                right: 8000,
+                                top:8000,
+                                bottom: 8000,
                                 zoom:6,
-                                near:0.1,
+                                near:-8000,
                                 far:2000
                             }}
                         >   
@@ -199,10 +200,13 @@ function STLLoadPage(){
                                 >
                                     <boxGeometry args={[14,18,12]}/>
                                     <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
-                                    {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={geo} setHoverd={setHovered}  setCp={setCp}  visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/>)) : null}
+                                    {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh setOffset={setPlaneY} setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={geo} setHoverd={setHovered}  setCp={setCp}  visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/>)) : null}
                                     {/* {showConnect ? {
                                         type === "Rectangle" ? <Connector top={2} bottom={2} height={4} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd}/> : <RectangleConnector/>
                                     } : null} */}
+                                    <Plane ref={planeRef} args={[14,12]} rotation-x={Math.PI/2} position={[0,planeY,0]} >
+                                        <meshStandardMaterial side={THREE.DoubleSide} opacity={0.2}/>
+                                    </Plane>
                                 </mesh>
                                 
                             </group>
