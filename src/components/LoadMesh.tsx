@@ -5,49 +5,44 @@ import { useRecoilState } from "recoil";
 import { CatmullRomLine, Plane } from "@react-three/drei";
 import create from 'zustand';
 import Connector from "./Connector";
+import RectangleConnector from "./RectangleConnector";
 
 interface loadMesh{
     geometry: any,
-    state : boolean,
-    setState :  React.Dispatch<React.SetStateAction<boolean>>,
-    color: Array<string>,
-    cp: THREE.Vector3Tuple[],
-    setCp : React.Dispatch<React.SetStateAction<THREE.Vector3Tuple[]>>,
-    cpArr : Array<any>,
+    setCp : React.Dispatch<React.SetStateAction<THREE.Vector3Tuple[]>>
     visible : boolean,
     setVisible :  React.Dispatch<React.SetStateAction<boolean>>,
     setHoverd :  React.Dispatch<React.SetStateAction<boolean>>,
     useStore: any,
     setSetting: React.Dispatch<React.SetStateAction<boolean>>,
     isSettingOpen : boolean,
-    offset: number
+    offset: number,
+    connectOn: boolean,
+    type: String,
+    width: number,
+    height : number,
+    angle : number,
+    rotation : number,
+    distance: number,
+    cutting : number,
+    setNum: React.Dispatch<React.SetStateAction<number>>,
 }
 
-function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible, setVisible, setHoverd, offset, useStore, setSetting, isSettingOpen} : loadMesh){
+function LoadMesh({ geometry, type,connectOn, setCp, visible, setVisible, setHoverd, offset, useStore, setSetting, isSettingOpen, width, height, angle, distance, rotation, cutting, setNum} : loadMesh){
     const meshRef = useRef<THREE.Mesh>(null!);
     const meshAllRef = useRef<THREE.Mesh>(null!);
     const mateRef = useRef<THREE.MeshStandardMaterial>(null!);
     const planeRef = useRef<THREE.Mesh>(null!);
-    const coneRef1 = useRef<THREE.Mesh>(null!);
-    const coneRef2 = useRef<THREE.Mesh>(null!);
-    const coneRef3 = useRef<THREE.Mesh>(null!);
-    const coneRef4 = useRef<THREE.Mesh>(null!);
 
     const { camera, raycaster, scene } = useThree();
     const [pEnter, setPEnter] = useState<boolean>(false);
     const [curPoint, setCurPoint] = useState<THREE.Vector3>();
     const [focus, setFocus] = useState<boolean>(false);
-    const [width, setWidth] = useState<Array<number>>([]);
-    const [height, setHeight] = useState<Array<number>>([]);
     const [centerZ, setCenterZ] = useState<number>(0);
     const setting = useStore((state:any)=>state.setTarget);
     const newArr = [];
     const restrictMovement = () => {
         // mesh의 현재 위치 가져오기
-        const { y } = planeRef.current.position;
-    
-        // y축 이동만 허용
-        planeRef.current.position.y = y;
         planeRef.current.position.x = 0;
         planeRef.current.position.z = 0;
       };
@@ -70,6 +65,8 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
             //     console.log(meshRef.current.geometry.attributes.position.array);
             // }
         }
+        planeRef.current.position.x = 0;
+        planeRef.current.position.z = 0;
         restrictMovement();
     });
 
@@ -79,8 +76,6 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
         const center = boundingBox.getCenter(new THREE.Vector3());
         meshRef.current.geometry.center();
         setCp([]);
-        setWidth([boundingBox.max.x, boundingBox.min.x]);
-        setHeight([boundingBox.max.y, boundingBox.min.y]);
         setCenterZ(center.z);
         setFocus(false);
         console.log(boundingBox.max.x, boundingBox.min.x);
@@ -102,7 +97,7 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
                 ref={meshRef}
                 onDoubleClick={(event)=>{
                     event.stopPropagation();
-                    setting(meshRef);
+                    setting(meshAllRef);
                     setVisible(!visible);
                     setFocus(!focus);
                     setSetting(!isSettingOpen);
@@ -110,7 +105,7 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
                 onPointerOver={()=>{
                     if(focus){
                         setHoverd(true);
-                        setting(meshRef);
+                        setting(meshAllRef);
                     }
                     
                 }}
@@ -144,7 +139,7 @@ function LoadMesh({ geometry, state, setState, color, cp, setCp, cpArr, visible,
             <Plane ref={planeRef} args={[14,12]} rotation-x={Math.PI/2} position={[0,offset,0]} >
                 <meshStandardMaterial side={THREE.DoubleSide} opacity={0.2}/>
             </Plane>
-            <Connector meshRef={meshRef} top={2} bottom={2} height={4} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} />
+            {connectOn ? type === "Ellipse" ? <Connector setNum={setNum} setSetting={setSetting} meshRef={meshRef} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector width={width}  height={width} depth={height}/> : null}
         </mesh>
     );
 }

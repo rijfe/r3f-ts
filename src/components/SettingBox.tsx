@@ -8,10 +8,25 @@ interface SettingProps {
     isSettingOpen : boolean,
     boffset: number,
     setBoffset: React.Dispatch<React.SetStateAction<number>>,
+    width: number,
+    height : number,
+    angle : number,
+    rotation : number,
+    distance: number,
+    cutting : number,
+    type: String,
+    setWidth: React.Dispatch<React.SetStateAction<number>>,
+    setHeight: React.Dispatch<React.SetStateAction<number>>,
+    setAngle: React.Dispatch<React.SetStateAction<number>>,
+    setRotation: React.Dispatch<React.SetStateAction<number>>,
+    setDistance: React.Dispatch<React.SetStateAction<number>>,
+    setCutting: React.Dispatch<React.SetStateAction<number>>,
+    setType: React.Dispatch<React.SetStateAction<String>>,
+    num: number,
+    setNum: React.Dispatch<React.SetStateAction<number>>,
 }
 
-function SettingBox({isSettingOpen, boffset, setBoffset} : SettingProps){
-    const [num, setNum] = useState<number>(1);
+function SettingBox({isSettingOpen, type, setType, boffset, setBoffset, width, height, angle, distance, cutting,rotation, setAngle, setDistance, setCutting, setHeight, setRotation, setWidth, num, setNum} : SettingProps){
     return (
         <Container className={isSettingOpen ? "setting" : ""}>
             <EmptyContainer/>
@@ -25,7 +40,7 @@ function SettingBox({isSettingOpen, boffset, setBoffset} : SettingProps){
             <BlankContainer/>
             <SettingDetailContainer>
                 {num === 1 ? <Curves boffset={boffset} setBoffset={setBoffset}/> : null}
-                {num === 5 ? <Connectors/> : null}
+                {num === 5 ? <Connectors type={type} setType={setType} width={width} height={height} rotation={rotation} angle={angle} distance={distance} cutting={cutting} setAngle={setAngle} setCutting={setCutting} setDistance={setDistance} setHeight={setHeight} setRotation={setRotation} setWidth={setWidth}/> : null}
             </SettingDetailContainer>
         </Container>
     );

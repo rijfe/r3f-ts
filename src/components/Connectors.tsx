@@ -1,8 +1,27 @@
 import { useState } from "react";
 import styled from "styled-components";
+import Addlogo from "../img/free-icon-play-button-arrowhead-27223.png";
+import Stoplogo from "../img/free-icon-stop-button-7513168.png";
+import DelLogo from "../img/free-icon-x-657059.png";
 
-function Connectors(){
-    const [type, setType] = useState<String>("");
+interface ConnectorsProps{
+    width: number,
+    height : number,
+    angle : number,
+    rotation : number,
+    distance: number,
+    cutting : number,
+    type: String,
+    setWidth: React.Dispatch<React.SetStateAction<number>>,
+    setHeight: React.Dispatch<React.SetStateAction<number>>,
+    setAngle: React.Dispatch<React.SetStateAction<number>>,
+    setRotation: React.Dispatch<React.SetStateAction<number>>,
+    setDistance: React.Dispatch<React.SetStateAction<number>>,
+    setCutting: React.Dispatch<React.SetStateAction<number>>,
+    setType: React.Dispatch<React.SetStateAction<String>>,
+}
+
+function Connectors(props : ConnectorsProps){
 
     const CircleType = () => {
         return(
@@ -18,7 +37,9 @@ function Connectors(){
                         <h2 style={{ fontWeight: 500, fontSize: "1.5rem" }}>Slope Angle</h2>
                     </DetailTitleBox>
                     <DetailValueBox>
-                        <ValueInput type="number" />
+                        <ValueInput 
+                            type="number"
+                        />
                     </DetailValueBox>
                 </DetailSettingBox><DetailSettingBox>
                     <DetailTitleBox>
@@ -57,7 +78,7 @@ function Connectors(){
                     <h2 style={{fontWeight:500, fontSize:"1.5rem"}}>Type</h2>
                 </TypeTextContainer>
                 <TypeSelectContainer>
-                    <select style={{width:"70%"}} name="connector" onChange={(e)=>{setType(e.target.value);}}>
+                    <select style={{width:"70%"}} name="connector" onChange={(e)=>{props.setType(e.target.value);}}>
                         <option value="Ellipse">Ellipse</option>
                         <option value="Rectangle">Rectangle</option>
                         <option value="Circle">Circle</option>
@@ -76,12 +97,18 @@ function Connectors(){
             </BlankContainer>
             <BlankContainer/>
             <DetailSettingContainer>
-                {type === "Circle" ? <CircleType/> :<><DetailSettingBox>
+                {props.type === "Circle" ? <CircleType/> :<><DetailSettingBox>
                     <DetailTitleBox>
                         <h2 style={{fontWeight:500, fontSize:"1.5rem"}}>Width</h2>
                     </DetailTitleBox>
                     <DetailValueBox>
-                        <ValueInput type="number"/>
+                        <ValueInput 
+                            type="number"
+                            onChange={(e)=>{
+                                props.setWidth(Number(e.target.value))
+                            }}
+                            value={props.width}
+                        />
                     </DetailValueBox>
                 </DetailSettingBox>
                 <DetailSettingBox>
@@ -89,7 +116,13 @@ function Connectors(){
                         <h2 style={{fontWeight:500, fontSize:"1.5rem"}}>Height</h2>
                     </DetailTitleBox>
                     <DetailValueBox>
-                        <ValueInput type="number"/>
+                        <ValueInput 
+                            type="number"
+                            onChange={(e)=>{
+                                props.setHeight(Number(e.target.value))
+                            }}
+                            value={props.height}
+                        />
                     </DetailValueBox>
                 </DetailSettingBox>
                 <DetailSettingBox>
@@ -97,7 +130,13 @@ function Connectors(){
                         <h2 style={{fontWeight:500, fontSize:"1.5rem"}}>Slope Angle</h2>
                     </DetailTitleBox>
                     <DetailValueBox>
-                        <ValueInput type="number"/>
+                        <ValueInput 
+                            type="number"
+                            onChange={(e)=>{
+                                props.setAngle(Number(e.target.value))
+                            }}
+                            value={props.angle}
+                        />
                     </DetailValueBox>
                 </DetailSettingBox>
                 <DetailSettingBox>
@@ -105,7 +144,13 @@ function Connectors(){
                         <h2 style={{fontWeight:500, fontSize:"1.5rem"}}>Rotation</h2>
                     </DetailTitleBox>
                     <DetailValueBox>
-                        <ValueInput type="number"/>
+                        <ValueInput 
+                            type="number"
+                            onChange={(e)=>{
+                                props.setRotation(Number(e.target.value))
+                            }}
+                            value={props.rotation}
+                        />
                     </DetailValueBox>
                 </DetailSettingBox>
                 <DetailSettingBox>
@@ -113,7 +158,13 @@ function Connectors(){
                         <h2 style={{fontWeight:500, fontSize:"1.5rem"}}>Distance(mm)</h2>
                     </DetailTitleBox>
                     <DetailValueBox>
-                        <ValueInput type="number"/>
+                        <ValueInput 
+                            type="number"
+                            onChange={(e)=>{
+                                props.setDistance(Number(e.target.value))
+                            }}
+                            value={props.distance}
+                        />
                     </DetailValueBox>
                 </DetailSettingBox>
                 <DetailSettingBox>
@@ -121,10 +172,25 @@ function Connectors(){
                         <h2 style={{fontWeight:500, fontSize:"1.5rem"}}>Cutting(%)</h2>
                     </DetailTitleBox>
                     <DetailValueBox>
-                        <ValueInput type="number"/>
+                        <ValueInput 
+                            type="number"
+                            onChange={(e)=>{
+                                props.setCutting(Number(e.target.value))
+                            }}
+                            value={props.cutting}
+                        />
                     </DetailValueBox>
                 </DetailSettingBox></>}
             </DetailSettingContainer>
+            <BtnContainer>
+                <BtnBox>
+                    <BtnArea>
+                        <img src={Addlogo} style={{width: "2rem", height:"2rem"}}/>
+                        <img src={Stoplogo} style={{width: "3rem", height:"3rem"}}/>
+                        <img src={DelLogo} style={{width: "2rem", height:"2rem"}}/>
+                    </BtnArea>
+                </BtnBox>
+            </BtnContainer>
         </ConnectorsContainer>
     );
 }
@@ -144,6 +210,7 @@ const BlankContainer = styled.div`
     height: 3%;
     display: flex;
     flex-direction: row;
+    align-items:center;
 `;
 
 const TitleContainer = styled.div`
@@ -195,7 +262,7 @@ const DetailSettingContainer = styled.div`
 
 const DetailSettingBox = styled.div`
     width:95%;
-    height:15%;
+    height:13%;
     display:flex;
     flex-direction: row;
     align-items:center;
@@ -223,4 +290,26 @@ const ValueInput = styled.input`
     border-bottom:1px solid;
     background-color:#D8D8D8;
     text-align:center;
+ `;
+
+ const BtnContainer = styled.div`
+    width: 100%;
+    height:19.5%;
+    display:flex;
+    align-items:end;
+ `;
+
+ const BtnBox = styled.div`
+    width: 100%;
+    height: 30%;
+    display:flex;
+    justify-content: end
+ `;
+
+ const BtnArea = styled.div`
+    height: 100%;
+    width: 40%;
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
  `;

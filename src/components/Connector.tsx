@@ -11,7 +11,9 @@ interface ConnectorProps {
     visible: boolean,
     setVisible :  React.Dispatch<React.SetStateAction<boolean>>,
     setHoverd :  React.Dispatch<React.SetStateAction<boolean>>,
-    meshRef : any
+    meshRef : any,
+    setSetting: React.Dispatch<React.SetStateAction<boolean>>,
+    setNum: React.Dispatch<React.SetStateAction<number>>,
     // boundingBox: THREE.Box3,
 }
 
@@ -54,6 +56,8 @@ function Connector(props : ConnectorProps){
                 props.setVisible(!props.visible);
                 props.setHoverd(true);
                 setFocus(!focus);
+                props.setSetting(true);
+                props.setNum(5);
             }}
         >
             <meshStandardMaterial ref={mateRef} color={focus ? "#fcf000":"#00ffff"}/>

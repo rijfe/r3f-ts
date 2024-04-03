@@ -42,6 +42,7 @@ function Curves({boffset, setBoffset}:CurvesProps){
                     </DetailSettingBox>
                 </SetDetailContainer>
             </BlankContainer>
+            <BlankContainer/>
             <OffsetContainer>
                 <OffsetDetailContainer>
                     <OffsetTitleBox>
@@ -91,6 +92,8 @@ const CurvesContainer = styled.div`
 const BlankContainer = styled.div`
     width:100%;
     height: 3%;
+    display:flex;
+    align-items:center;
 `;
 
 const TitleContainer = styled.div`

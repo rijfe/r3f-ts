@@ -26,6 +26,7 @@ import Camera from "../components/Camera";
 import Connector from "../components/Connector";
 import SettingBox from "../components/SettingBox";
 import { off } from "process";
+import RectangleConnector from "../components/RectangleConnector";
 
 const useStore = create((set:any)=>({target: null, setTarget: (target : any)=>set({target}) }));
 const test = useLoader.preload(STLLoader, ["/models/5X500L V2-CAD BLOCK JIG_형상추가.stl"]);
@@ -38,20 +39,32 @@ function STLLoadPage(){
     const [isEnter, setIsEnter] = useState<boolean>(false);
     const [isDrop, setIsDrop] = useState<boolean>(false);
     const [state, setState] = useState<boolean>(false);
+
+    const [settingNum, setSettingNum] = useState<number>(1);
+
     const [offset, setOffset] = useState<number>(6.0);
+    const [conWid, setConWid] = useState<number>(4.0);
+    const [conHei, setConHei] = useState<number>(3.0);
+    const [conAngle, setConAngle] = useState<number>(4.0);
+    const [conRota, setConRota] = useState<number>(0.0);
+    const [conDis, setConDis] = useState<number>(0.0);
+    const [conCut, setConCut] = useState<number>(50.0);
+
     const [color, setColor] = useState<Array<string>>([]);
     const [cp, setCp] = useState<THREE.Vector3Tuple[]>([]);
 
     const [open, setOpen] = useState<boolean>(false);
     const [partOpen, setPartOpen] = useState<boolean>(false);
     const [settingOpen, setSettingOpen] = useState<boolean>(false);
+    const [connectOn, setConnectOn] = useState<boolean>(false);
+    const [showConnect, setShowConnect] = useState<boolean>(false);
 
     const [visible, setVisible] = useState<boolean>(false);
     const [hovered, setHovered] = useState<boolean>(false);
     const [jigVisible, setJigVisible] = useState<boolean>(true);
 
     const [cpArr, setCpArr] = useState<Array<any>>([]);
-    
+    const [type, setType] = useState<String>("Ellipse");
     const point = useRecoilValue(getPointState);
     
 
@@ -80,7 +93,6 @@ function STLLoadPage(){
             else{
                 loader.load(URL.createObjectURL(file), geo=>{
                     setGeometry(prev => [...prev, geo]);
-                    console.log(geo.boundingBox?.getCenter);
                 });
                 setIsDrop(true);
             }
@@ -104,10 +116,10 @@ function STLLoadPage(){
                 <ListItem setIsSetOpen={setSettingOpen} isSetOpen={settingOpen} handleUpload={handleUpload} setIsOpen={setOpen} setIsPartOpen={setPartOpen} isOpen={open} isPartOpen={partOpen}/>
                 <DetailList isOpen={open} setGeo={setJigGeometry} setJig={setJigOpen} setIsDrop={setIsDrop} setIsOpen={setOpen}/>
                 <PartList isPartOpen={partOpen} lineNum={2}/>
-                <SettingBox isSettingOpen={settingOpen} boffset={offset} setBoffset={setOffset}/>
+                <SettingBox num={settingNum} setNum={setSettingNum} type={type} setType={setType} isSettingOpen={settingOpen} boffset={offset} setBoffset={setOffset} width={conWid} setWidth={setConWid} height={conHei} setHeight={setConHei} angle={conAngle} setAngle={setConAngle} rotation={conRota} setRotation={setConRota} distance={conDis} setDistance={setConDis} cutting={conCut} setCutting={setConCut}/>
     
                 {isDrop ? 
-                <>
+                    <>
                         <Canvas
                             ref={ref}
                             onDragEnter={(event:React.DragEvent)=>{
@@ -173,10 +185,24 @@ function STLLoadPage(){
                                     <boxGeometry args={[14,18,12]}/>
                                     <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
                                 </mesh> */}
-                                <mesh position={[-8,7.4,0]} scale={0.4}>
+                                <mesh 
+                                    position={[-8,7.4,0]} scale={0.4}
+                                    onPointerOver={()=>{
+                                        setShowConnect(true);
+                                    }}
+                                    onPointerOut={()=>{
+                                        setShowConnect(false);
+                                    }}
+                                    onClick={()=>{
+                                        setConnectOn(true);
+                                    }}
+                                >
                                     <boxGeometry args={[14,18,12]}/>
                                     <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
-                                    {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={geo} setHoverd={setHovered} state={state} setState={setState} color={color} cp={cp} setCp={setCp} cpArr={cpArr} visible={visible} setVisible={setVisible} useStore={useStore}/>)) : null}
+                                    {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={geo} setHoverd={setHovered}  setCp={setCp}  visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/>)) : null}
+                                    {/* {showConnect ? {
+                                        type === "Rectangle" ? <Connector top={2} bottom={2} height={4} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd}/> : <RectangleConnector/>
+                                    } : null} */}
                                 </mesh>
                                 
                             </group>

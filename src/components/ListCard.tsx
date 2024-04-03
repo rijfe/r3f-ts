@@ -5,11 +5,15 @@ interface ListCardProps{
     material: string,
     w: number,
     h: number,
-    d: number
+    d: number,
+    visible: boolean
 }
 
 function ListCard(props:ListCardProps){
     return (
+        props.visible ? 
+            <ListBox></ListBox> 
+        :
         <ListBox>
             <ListTitle>
                 <p style={{fontSize:"2rem", fontWeight:500, marginLeft:4}}>{props.title}</p>

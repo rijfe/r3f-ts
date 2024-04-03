@@ -13,105 +13,136 @@ function PartList({isPartOpen, lineNum} : PartListProps){
             material: "Dumy_Block",
             w: 15.0,
             h: 32.0,
-            d: 15.0
+            d: 15.0,
+            visible: false
         },
         {
             title: "Dumy2",
             material: "Dumy_Block",
             w: 19.4,
             h: 39.0,
-            d: 15.4
+            d: 15.4,
+            visible: false
         },
         {
             title: "Dumy3",
             material: "Dumy_Block",
             w: 15.2,
             h: 40.0,
-            d: 15.2
+            d: 15.2,
+            visible: false
         },
         {
             title: "Dumy4",
             material: "Dumy_Block",
             w: 12.0,
             h: 15.0,
-            d: 10.0
+            d: 10.0,
+            visible: false
         },
         {
             title: "Dumy5",
             material: "Dumy_Block",
             w: 15.4,
             h: 32.0,
-            d: 15.0
+            d: 15.0,
+            visible: false
         },
         {
             title: "Dumy6",
             material: "Dumy_Block",
             w: 14.0,
             h: 18.0,
-            d: 12.0
+            d: 12.0,
+            visible: false
         },
         {
             title: "Dumy7",
             material: "Dumy_Block",
             w: 10.0,
             h: 15.0,
-            d: 8.0
+            d: 8.0,
+            visible: false
         },
         {
             title: "Dumy8",
             material: "Dumy_Block",
             w: 15.9,
             h: 18.0,
-            d: 17.3
+            d: 17.3,
+            visible: false
         },
         {
             title: "Dumy9",
             material: "Dumy_Block",
             w: 10.0,
             h: 15.0,
-            d: 8.0
+            d: 8.0,
+            visible: false
         },
         {
             title: "Dumy10",
             material: "Dumy_Block",
             w: 10.0,
             h: 15.0,
-            d: 8.0
+            d: 8.0,
+            visible: false
         },
         {
             title: "Dumy11",
             material: "Dumy_Block",
             w: 10.0,
             h: 15.0,
-            d: 8.0
+            d: 8.0,
+            visible: false
         },
         {
             title: "Dumy12",
             material: "Dumy_Block",
             w: 10.0,
             h: 15.0,
-            d: 8.0
+            d: 8.0,
+            visible: false
         },
         {
             title: "Dumy13",
             material: "Dumy_Block",
             w: 10.0,
             h: 15.0,
-            d: 8.0
+            d: 8.0,
+            visible: false
         },
         {
             title: "Dumy14",
             material: "Dumy_Block",
             w: 10.0,
             h: 15.0,
-            d: 8.0
+            d: 8.0,
+            visible: false
         },
         {
             title: "Dumy15",
             material: "Dumy_Block",
             w: 10.0,
             h: 15.0,
-            d: 8.0
+            d: 8.0,
+            visible: false
+        },
+        {
+            title: "Dumy15",
+            material: "Dumy_Block",
+            w: 10.0,
+            h: 15.0,
+            d: 8.0,
+            visible: true
+        },
+        {
+            title: "Dumy15",
+            material: "Dumy_Block",
+            w: 10.0,
+            h: 15.0,
+            d: 8.0,
+            visible: true
         },
     ];
     return (
@@ -133,10 +164,14 @@ function PartList({isPartOpen, lineNum} : PartListProps){
             <BlankContainer></BlankContainer>
             <ListContainer>
                 <BlankContainer/>
-                {/* {dumyData.map((ele)=>(
-                    <ListCard title={ele.title} material={ele.material} w={ele.w} h={ele.h} d={ele.d}/>
-                ))} */}
-                <ListCard title={"title"} material={"material"} w={1} h={1} d={1}/>
+                <ListOverflow>
+                    {dumyData.map((ele)=>(
+                        <ListCard title={ele.title} material={ele.material} w={ele.w} h={ele.h} d={ele.d} visible={ele.visible}/>
+                    ))}
+                    <BlankContainer/>
+                </ListOverflow>
+                
+                {/* <ListCard title={"title"} material={"material"} w={1} h={1} d={1}/> */}
             </ListContainer>
         </PartListContainer>
     );
@@ -150,11 +185,11 @@ const PartListContainer = styled.div`
     position: fixed;
     left: -50%;
     transition: 0.5s ease;
-    z-index:-1;
+    z-index:50;
     &.part{
         left: 8rem;
         transition: 0.5s ease;
-        z-index:1;
+        z-index:50;
     }
 `
 
@@ -173,14 +208,16 @@ const BlankContainer = styled.div`
 const ListContainer = styled.div`
     width:100%;
     background: #D8D8D8;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
     height:90%;
+    overflow-y: auto;
 `;
 
 const ListOverflow = styled.div`
-
+    width:100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    overflow-y:auto;
 `;
 
 const PartBox = styled.div`
