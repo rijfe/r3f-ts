@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useRecoilState } from "recoil";
-import { CatmullRomLine, Plane } from "@react-three/drei";
+import { CatmullRomLine, Plane, useHelper } from "@react-three/drei";
 import create from 'zustand';
 import Connector from "./Connector";
 import RectangleConnector from "./RectangleConnector";
@@ -14,6 +14,8 @@ interface loadMesh{
     setVisible :  React.Dispatch<React.SetStateAction<boolean>>,
     setHoverd :  React.Dispatch<React.SetStateAction<boolean>>,
     useStore: any,
+    lightHelper1: React.MutableRefObject<THREE.DirectionalLight>,
+    lightHelper2: React.MutableRefObject<THREE.DirectionalLight>,
     setSetting: React.Dispatch<React.SetStateAction<boolean>>,
     isSettingOpen : boolean,
     offset: number,
@@ -27,9 +29,10 @@ interface loadMesh{
     cutting : number,
     setNum: React.Dispatch<React.SetStateAction<number>>,
     setOffset: React.Dispatch<React.SetStateAction<number>>,
+    boxRef: any
 }
 
-function LoadMesh({ geometry, type,connectOn, setCp, visible, setVisible, setHoverd, offset, setOffset,useStore, setSetting, isSettingOpen, width, height, angle, distance, rotation, cutting, setNum} : loadMesh){
+function LoadMesh({ geometry, type,connectOn, lightHelper1, boxRef,setCp, visible, setVisible, setHoverd, offset, setOffset,useStore, setSetting, isSettingOpen, width, height, angle, distance, rotation, cutting, setNum} : loadMesh){
     const meshRef = useRef<THREE.Mesh>(null!);
     const meshAllRef = useRef<THREE.Mesh>(null!);
     const mateRef = useRef<THREE.MeshStandardMaterial>(null!);
@@ -52,11 +55,14 @@ function LoadMesh({ geometry, type,connectOn, setCp, visible, setVisible, setHov
        const boundary = {
         minX : -7, maxX:7, minY:-9, maxY: 9, minZ: -6, maxZ: 6
        }
+       const allBoundingBox = new THREE.Box3().setFromObject(meshRef.current);
+       const box = new THREE.Box3().setFromObject(boxRef.current);
+    //    console.log(box.min.x);
 
-       if(meshAllRef.current.position.x < boundary.minX || meshAllRef.current.position.x > boundary.maxX 
-        || meshAllRef.current.position.y < boundary.minY || meshAllRef.current.position.y > boundary.maxY 
-        || meshAllRef.current.position.z < boundary.minZ || meshAllRef.current.position.z > boundary.maxZ ){
-            console.log('Mesh가 특정 영역을 벗어났습니다!');
+       if(allBoundingBox.min.x < box.min.x || allBoundingBox.max.x > box.max.x 
+        || allBoundingBox.min.y < box.min.y || allBoundingBox.max.y > box.max.y 
+        || allBoundingBox.min.z < box.min.z || allBoundingBox.max.z > box.max.z ){
+            // console.log('Mesh가 특정 영역을 벗어났습니다!');
             
             mateRef.current.color = new THREE.Color("#ff0000");
         }
@@ -74,7 +80,8 @@ function LoadMesh({ geometry, type,connectOn, setCp, visible, setVisible, setHov
         }
         restrictMovement();
     });
-
+    // useHelper(lightHelper1, THREE.DirectionalLightHelper);
+    // useHelper(lightHelper2, THREE.DirectionalLightHelper);
     useEffect(() => {
         if (!geometry || !meshRef.current) return;
         const boundingBox = new THREE.Box3().setFromObject(meshRef.current);
@@ -85,6 +92,7 @@ function LoadMesh({ geometry, type,connectOn, setCp, visible, setVisible, setHov
         setFocus(false);
         console.log(boundingBox.max.x, boundingBox.min.x);
         console.log(boundingBox.max.z, boundingBox.min.z);
+        console.log(boundingBox.max.y, boundingBox.min.y);
         const arr = meshRef.current.geometry.attributes.position.array;
         const {x,y,z} = meshRef.current.position;
         for(let i =0; i<arr.length; i+=3){

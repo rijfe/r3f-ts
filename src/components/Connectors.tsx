@@ -91,9 +91,9 @@ function Connectors(props : ConnectorsProps){
                 <TypeTextContainer>
                 </TypeTextContainer>
                 <TypeSelectContainer>
-                    <input type="radio" id="check-Manual" checked={checked === "Manual"} name="check" value="Manual" onChange={(e)=>{setChecked(e.target.value); setCheckedValue(e.target.value);}}/>
+                    <input type="radio" id="check-Manual" defaultChecked={checked === "Manual"} name="check" defaultValue="Manual" onChange={(e)=>{setChecked(e.target.value); setCheckedValue(e.target.value);}}/>
                     <label htmlFor="check-Manual">Manual</label> 
-                    <input type="radio" id="check-auto" name="check" checked={checked === "Auto"} value="Auto" onChange={(e)=>{setChecked(e.target.value); setCheckedValue(e.target.value);}}/>
+                    <input type="radio" id="check-auto" name="check" defaultChecked={checked === "Auto"} defaultValue="Auto" onChange={(e)=>{setChecked(e.target.value); setCheckedValue(e.target.value);}}/>
                     <label htmlFor="check-auto">Auto</label>
                 </TypeSelectContainer>
             </BlankContainer>

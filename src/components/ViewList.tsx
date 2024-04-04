@@ -7,14 +7,18 @@ import { Html } from "@react-three/drei";
 
 interface ViewListProps{
     cameraRef: React.MutableRefObject<THREE.OrthographicCamera>,
-    controlRef: any
+    controlRef: any,
+    lightRef: React.MutableRefObject<THREE.DirectionalLight>,
+    lightRef2: React.MutableRefObject<THREE.DirectionalLight>,
 }
 
-function ViewList({cameraRef, controlRef}: ViewListProps){
+function ViewList({cameraRef, controlRef, lightRef, lightRef2}: ViewListProps){
     const [curView, setCurView] = useState<number>(1);
     const {camera, get, size} = useThree();
     useFrame(()=>{
         controlRef.current.update();
+        lightRef.current.position.lerp(camera.position, 0.1);
+        lightRef2.current.position.lerp(camera.position, 0.1);
     })
     return (
         <Html 
@@ -429,7 +433,6 @@ function ViewList({cameraRef, controlRef}: ViewListProps){
                 <ViewBtn
                     onClick={()=>{
                         // setClicked(true);
-                        console.log(camera);
                         controlRef.current.reset();
                     }}
                 >

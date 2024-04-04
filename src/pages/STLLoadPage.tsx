@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState, useRef,useEffect, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { Canvas, ThreeEvent, useThree, useFrame,useLoader } from "@react-three/fiber";
-import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Cone, TransformControls, Plane} from "@react-three/drei";
+import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Cone, TransformControls, Plane, useHelper} from "@react-three/drei";
 import { BufferGeometry } from "three";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from "three";
@@ -35,6 +35,9 @@ function STLLoadPage(){
     const ref = useRef(null!);
     const cameraRef = useRef<THREE.OrthographicCamera>(null!);
     const controlRef = useRef(null!);
+    const lightHelper1 = useRef<THREE.DirectionalLight>(null!);
+    const lightHelper2 = useRef<THREE.DirectionalLight>(null!);
+    const boxRef = useRef(null!);
 
     const [isEnter, setIsEnter] = useState<boolean>(false);
     const [isDrop, setIsDrop] = useState<boolean>(false);
@@ -150,16 +153,17 @@ function STLLoadPage(){
 
                             {/* <Camera cameraRef={cameraRef}/> */}
                             
-                            {jigGeometry ?<ViewList cameraRef={cameraRef} controlRef={controlRef}/>:null}
+                            {jigGeometry ?<ViewList lightRef2={lightHelper2} lightRef={lightHelper1} cameraRef={cameraRef} controlRef={controlRef}/>:null}
 
                             
-                            <directionalLight intensity={0.6} position={[0,1,0]}/>
-                            <directionalLight intensity={0.6} position={[0,-1,0]}/>
-                            <directionalLight intensity={0.6} position={[1,0,0]}/>
-                            <directionalLight intensity={0.6} position={[-1,0,0]}/>
-                            <directionalLight intensity={0.6} position={[0,0,1]}/>
-                            <directionalLight intensity={0.6} position={[0,0,-1]}/>
-                            
+                            {/* <directionalLight intensity={0.6} position={[0,1,0]}/> */}
+                            {/* <directionalLight intensity={0.6} position={[0,-1,0]}/> */}
+                            {/* <directionalLight intensity={0.6} position={[1,0,0]}/> */}
+                            {/* <directionalLight intensity={0.6} position={[-1,0,0]}/> */}
+                            <directionalLight ref={lightHelper1} intensity={0.5} position={[10,0,40]} rotation-y={-Math.PI/4}/>
+                            <directionalLight ref={lightHelper2} intensity={0.5} position={[-10,0,40]} rotation-y={Math.PI/4}/>
+                            {/* <directionalLight ref={lightHelper2} intensity={0.7} position={[-1,1,1]} /> */}
+                            {/* <directionalLight intensity={0.6} position={[0,0,-1]}/> */}                            
                             <group ref={groupRef}>
                                 {jigOpen  ?
                                     <mesh position={[0,0,0]} geometry={jigGeometry} visible={jigVisible}  scale={[0.4,0.4,0.4]}>
@@ -187,6 +191,7 @@ function STLLoadPage(){
                                     <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
                                 </mesh> */}
                                 <mesh 
+                                    ref={boxRef}
                                     position={[-8,7.4,0]} scale={0.4}
                                     onPointerOver={()=>{
                                         setShowConnect(true);
@@ -200,13 +205,13 @@ function STLLoadPage(){
                                 >
                                     <boxGeometry args={[14,18,12]}/>
                                     <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
-                                    {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh setOffset={setPlaneY} setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={geo} setHoverd={setHovered}  setCp={setCp}  visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/>)) : null}
+                                    {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh boxRef={boxRef} lightHelper1={lightHelper1} lightHelper2={lightHelper2} setOffset={setPlaneY} setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={geo} setHoverd={setHovered}  setCp={setCp}  visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/>)) : null}
                                     {/* {showConnect ? {
                                         type === "Rectangle" ? <Connector top={2} bottom={2} height={4} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd}/> : <RectangleConnector/>
                                     } : null} */}
-                                    <Plane ref={planeRef} args={[14,12]} rotation-x={Math.PI/2} position={[0,planeY,0]} >
+                                   {geometry.length > 0 ? <Plane ref={planeRef} args={[14,12]} rotation-x={Math.PI/2} position={[0,planeY,0]} >
                                         <meshStandardMaterial side={THREE.DoubleSide} opacity={0.2}/>
-                                    </Plane>
+                                    </Plane>: null}
                                 </mesh>
                                 
                             </group>

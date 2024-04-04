@@ -22,11 +22,11 @@ function Curves({boffset, setBoffset}:CurvesProps){
                     <DetailTitleBox><h2 style={{fontWeight:500, fontSize:"1.5rem"}}>Curve Type</h2></DetailTitleBox>
                     <DetailSettingBox>
                         <select name="curve">
-                            <option style={{textAlignLast: "center"}} value="Margin">Margin</option>
-                            <option style={{textAlignLast: "center"}} value="InlayOutlayMargin">InlayOutlayMargin</option>
-                            <option style={{textAlignLast: "center"}} value="Emergence">Emergence</option>
-                            <option style={{textAlignLast: "center"}} value="ToothArea">ToothArea</option>
-                            <option style={{textAlignLast: "center"}} value="CustomArea">CustomArea</option>
+                            <option style={{textAlignLast: "center"}} defaultValue="Margin">Margin</option>
+                            <option style={{textAlignLast: "center"}} defaultValue="InlayOutlayMargin">InlayOutlayMargin</option>
+                            <option style={{textAlignLast: "center"}} defaultValue="Emergence">Emergence</option>
+                            <option style={{textAlignLast: "center"}} defaultValue="ToothArea">ToothArea</option>
+                            <option style={{textAlignLast: "center"}} defaultValue="CustomArea">CustomArea</option>
                         </select>
                     </DetailSettingBox>
                 </SetDetailContainer>
@@ -35,9 +35,9 @@ function Curves({boffset, setBoffset}:CurvesProps){
                 <SetDetailContainer>
                     <DetailTitleBox></DetailTitleBox>
                     <DetailSettingBox>
-                        <input type="radio" id="check-Manual" name="check" value="Manual"/>
+                        <input type="radio" id="check-Manual" name="check" defaultValue="Manual"/>
                         <label htmlFor="check-Manual">Manual</label> 
-                        <input type="radio" id="check-auto" checked name="check" value="Auto"/>
+                        <input type="radio" id="check-auto" checked name="check" defaultValue="Auto"/>
                         <label htmlFor="check-auto">Auto</label>
                     </DetailSettingBox>
                 </SetDetailContainer>
