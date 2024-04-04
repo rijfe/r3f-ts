@@ -166,7 +166,7 @@ function STLLoadPage(){
                             {/* <directionalLight intensity={0.6} position={[0,0,-1]}/> */}                            
                             <group ref={groupRef}>
                                 {jigOpen  ?
-                                    <mesh position={[0,0,0]} geometry={jigGeometry} visible={jigVisible}  scale={[0.4,0.4,0.4]}>
+                                    <mesh onClick={(e)=>{e.stopPropagation()}} onDoubleClick={(e)=>{e.stopPropagation();}} position={[0,0,0]} geometry={jigGeometry} visible={jigVisible}  scale={[0.4,0.4,0.4]}>
                                         <meshStandardMaterial color={"#ffffff"} opacity={0} side={THREE.DoubleSide} />
                                     </mesh>
                                 :null}

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Box } from "@react-three/drei";
+import { Cylinder } from "@react-three/drei";
 import { useState } from "react";
 
 interface RectangleConnectorProps{
@@ -12,17 +12,17 @@ function RectangleConnector(props:RectangleConnectorProps){
     const [focus, setFocus] = useState<boolean>(false);
 
     return(
-        <Box 
-            args={[props.width, props.height, props.depth]}
+        <Cylinder 
+            args={[props.width, props.height, props.depth, 4]}
             onDoubleClick={(e)=>{
                 e.stopPropagation();
                 setFocus(!focus);
             }}
             position={[0,5,0]}
-            rotation-x={Math.PI/2}
+            rotation-y={Math.PI/4}
         >
             <meshStandardMaterial color={focus ? "#fcf000":"#00ffff"}/>
-        </Box>
+        </Cylinder>
     );
 }
 

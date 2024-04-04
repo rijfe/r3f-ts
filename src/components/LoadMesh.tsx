@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useRecoilState } from "recoil";
@@ -44,62 +44,49 @@ function LoadMesh({ geometry, type,connectOn, lightHelper1, boxRef,setCp, visibl
     const [centerZ, setCenterZ] = useState<number>(0);
     const [curY, setCurY] = useState<number>(0);
     const setting = useStore((state:any)=>state.setTarget);
-    const newArr = [];
-    const restrictMovement = () => {
-        // mesh의 현재 위치 가져오기
-        // planeRef.current.position.x = 0;
-        // planeRef.current.position.z = 0;
-      };
+    const newArr = []
+
+    const world = useMemo(()=> new THREE.Vector3(), []);
 
     useFrame(()=>{
-       const boundary = {
-        minX : -7, maxX:7, minY:-9, maxY: 9, minZ: -6, maxZ: 6
-       }
-       const allBoundingBox = new THREE.Box3().setFromObject(meshRef.current);
-       const box = new THREE.Box3().setFromObject(boxRef.current);
-    //    console.log(box.min.x);
+        const boxCenter = boxRef.current.getWorldPosition(world);
+        const boundary = {
+            minX : boxCenter.x-4, maxX:boxCenter.x+4, minY:boxCenter.y-9, maxY: boxCenter.y+9, minZ: boxCenter.z-6, maxZ: boxCenter.z+6
+        }
+        const allBoundingBox = new THREE.Box3().setFromObject(meshRef.current);
+        const box = new THREE.Box3().setFromObject(boxRef.current);
+        const center = meshRef.current.getWorldPosition(world);
 
-       if(allBoundingBox.min.x < box.min.x || allBoundingBox.max.x > box.max.x 
-        || allBoundingBox.min.y < box.min.y || allBoundingBox.max.y > box.max.y 
-        || allBoundingBox.min.z < box.min.z || allBoundingBox.max.z > box.max.z ){
-            // console.log('Mesh가 특정 영역을 벗어났습니다!');
-            
+       if(center.x -3 < boundary.minX || center.x+3 > boundary.maxX 
+        || center.y -7 < boundary.minY || center.y +7 > boundary.maxY 
+        || center.z -5.5 < boundary.minZ || center.z +5.5 > boundary.maxZ ){           
             mateRef.current.color = new THREE.Color("#ff0000");
         }
         else{
             mateRef.current.color = focus ? new THREE.Color("#fcf000") : new THREE.Color("#ffffff");
-            // if(focus){
-            //     console.log(meshRef.current.geometry.attributes.position.array);
-            // }
+        
         }
-        // planeRef.current.position.x = 0;
-        // planeRef.current.position.z = 0;
+       
         if(curY !== meshAllRef.current.position.y){
             setCurY(meshAllRef.current.position.y);
             setOffset(offset+curY);
         }
-        restrictMovement();
-    });
-    // useHelper(lightHelper1, THREE.DirectionalLightHelper);
-    // useHelper(lightHelper2, THREE.DirectionalLightHelper);
+    })
     useEffect(() => {
         if (!geometry || !meshRef.current) return;
         const boundingBox = new THREE.Box3().setFromObject(meshRef.current);
         const center = boundingBox.getCenter(new THREE.Vector3());
         meshRef.current.geometry.center();
+        const box = new THREE.Box3().setFromObject(boxRef.current);
         setCp([]);
         setCenterZ(center.z);
         setFocus(false);
-        console.log(boundingBox.max.x, boundingBox.min.x);
-        console.log(boundingBox.max.z, boundingBox.min.z);
-        console.log(boundingBox.max.y, boundingBox.min.y);
+
         const arr = meshRef.current.geometry.attributes.position.array;
         const {x,y,z} = meshRef.current.position;
         for(let i =0; i<arr.length; i+=3){
             newArr.push([arr[i]+x, arr[i+1]+y, arr[i+2]+z]);
         }
-
-        // console.log(newArr);
         setOffset(offset+curY);
     }, [geometry,offset]);
 
@@ -131,23 +118,6 @@ function LoadMesh({ geometry, type,connectOn, lightHelper1, boxRef,setCp, visibl
                 position={[0,0,0]}                    
             >
                 <meshStandardMaterial ref={mateRef} color={focus ? "#fcf000" : "#ffffff"} side={THREE.DoubleSide}/>
-                {/* {state ? (cp.length > 0 ? <CatmullRomLine
-                    points={cp}
-                    color="red"
-                    lineWidth={5}
-                    closed={true}
-                />:null):cpArr.length > 0 ? cpArr?.map((points:any, idx:number)=>(
-                    points.length > 0 ? <CatmullRomLine
-                        points={points}
-                        color={`${color[idx]}`}
-                        lineWidth={5}
-                        closed={true}
-                    />: null
-                )) :null}
-            {pEnter ? <mesh position={curPoint}>
-                    <sphereGeometry args={[0.2]}/>
-                    <meshStandardMaterial color="red"/>
-                </mesh>:null} */}
             </mesh>
             {connectOn ? type === "Ellipse" ? <Connector setNum={setNum} setSetting={setSetting} meshRef={meshRef} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector width={width}  height={width} depth={height}/> : null}
         </mesh>

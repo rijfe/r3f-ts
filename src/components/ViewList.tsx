@@ -14,12 +14,13 @@ interface ViewListProps{
 
 function ViewList({cameraRef, controlRef, lightRef, lightRef2}: ViewListProps){
     const [curView, setCurView] = useState<number>(1);
-    const {camera, get, size} = useThree();
+    const {camera} = useThree();
     useFrame(()=>{
         controlRef.current.update();
         lightRef.current.position.lerp(camera.position, 0.1);
         lightRef2.current.position.lerp(camera.position, 0.1);
     })
+ 
     return (
         <Html 
             as="div"
@@ -167,7 +168,6 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2}: ViewListProps){
                         }
                     }
                     setCurView(2);
-                    // camera.lookAt(new THREE.Vector3(0,0,0));
                 }}>
                     2
                 </ViewBtn >
@@ -425,15 +425,15 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2}: ViewListProps){
                         }
                     }
                     setCurView(6);
-                    // camera.position.set(0,-40,0);
                     camera.lookAt(new THREE.Vector3(0,0,0));
                 }}>
                     6
                 </ViewBtn>
                 <ViewBtn
                     onClick={()=>{
-                        // setClicked(true);
                         controlRef.current.reset();
+                        lightRef.current.position.lerp(new THREE.Vector3(10,0,40),0.1);
+                        lightRef2.current.position.lerp(new THREE.Vector3(-10,0,40),0.1);
                     }}
                 >
                     7

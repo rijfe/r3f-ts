@@ -151,22 +151,22 @@ function PartList({isPartOpen, lineNum} : PartListProps){
                 style={{height:`${lineNum*4.5}%`}}
             >
                 <PartBox style={{height:`${100/lineNum}%`}}>
-                    <Part onClick={(e)=>{console.log(e.target);}}><PartDeco>pos1</PartDeco></Part>
-                    <Part onClick={(e)=>{console.log(e.target);}}><PartDeco>pos2</PartDeco></Part>
-                    <Part onClick={(e)=>{console.log(e.target);}}><PartDeco>pos3</PartDeco></Part>
-                    <Part onClick={(e)=>{console.log(e.target);}}><PartDeco>pos4</PartDeco></Part>
-                    <Part onClick={(e)=>{console.log(e.target);}}><PartDeco>pos5</PartDeco></Part>
+                    <Part onClick={(e)=>{}}><PartDeco>pos1</PartDeco></Part>
+                    <Part onClick={(e)=>{}}><PartDeco>pos2</PartDeco></Part>
+                    <Part onClick={(e)=>{}}><PartDeco>pos3</PartDeco></Part>
+                    <Part onClick={(e)=>{}}><PartDeco>pos4</PartDeco></Part>
+                    <Part onClick={(e)=>{}}><PartDeco>pos5</PartDeco></Part>
                 </PartBox>
                 <PartBox style={{height:`${100/lineNum}%`}}>
-                    <Part onClick={(e)=>{console.log(e.target);}}><PartDeco>pos6</PartDeco></Part>
+                    <Part onClick={(e)=>{}}><PartDeco>pos6</PartDeco></Part>
                 </PartBox>
             </PartContainer>
             <BlankContainer></BlankContainer>
             <ListContainer>
                 <BlankContainer/>
                 <ListOverflow>
-                    {dumyData.map((ele)=>(
-                        <ListCard title={ele.title} material={ele.material} w={ele.w} h={ele.h} d={ele.d} visible={ele.visible}/>
+                    {dumyData.map((ele, idx)=>(
+                        <ListCard key={idx} title={ele.title} material={ele.material} w={ele.w} h={ele.h} d={ele.d} visible={ele.visible}/>
                     ))}
                     <BlankContainer/>
                 </ListOverflow>

@@ -37,7 +37,7 @@ function Curves({boffset, setBoffset}:CurvesProps){
                     <DetailSettingBox>
                         <input type="radio" id="check-Manual" name="check" defaultValue="Manual"/>
                         <label htmlFor="check-Manual">Manual</label> 
-                        <input type="radio" id="check-auto" checked name="check" defaultValue="Auto"/>
+                        <input type="radio" id="check-auto" defaultChecked name="check" defaultValue="Auto"/>
                         <label htmlFor="check-auto">Auto</label>
                     </DetailSettingBox>
                 </SetDetailContainer>
@@ -63,7 +63,7 @@ function Curves({boffset, setBoffset}:CurvesProps){
                         <h2 style={{fontWeight:500, fontSize:"1.5rem"}}>BoundaryAngle</h2>
                     </OffsetTitleBox>
                     <OffsetSettingBox>
-                        <OffsetInput type="number" value={0.0}/>
+                        <OffsetInput type="number" defaultValue={0.0}/>
                     </OffsetSettingBox>
                 </OffsetDetailContainer>
                 <OffsetDetailContainer>
@@ -71,7 +71,7 @@ function Curves({boffset, setBoffset}:CurvesProps){
                         <h2 style={{fontWeight:500, fontSize:"1.5rem"}}>NCCavityOffset</h2>
                     </OffsetTitleBox>
                     <OffsetSettingBox>
-                        <OffsetInput type="number" value={0.00}/>
+                        <OffsetInput type="number" defaultValue={0.00}/>
                     </OffsetSettingBox>
                 </OffsetDetailContainer>
             </OffsetContainer>
