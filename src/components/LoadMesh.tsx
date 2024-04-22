@@ -14,12 +14,11 @@ interface loadMesh{
     setVisible :  React.Dispatch<React.SetStateAction<boolean>>,
     setHoverd :  React.Dispatch<React.SetStateAction<boolean>>,
     useStore: any,
-    lightHelper1: React.MutableRefObject<THREE.DirectionalLight>,
-    lightHelper2: React.MutableRefObject<THREE.DirectionalLight>,
     setSetting: React.Dispatch<React.SetStateAction<boolean>>,
     isSettingOpen : boolean,
     offset: number,
     connectOn: boolean,
+    showConnect: boolean,
     type: String,
     width: number,
     height : number,
@@ -29,10 +28,14 @@ interface loadMesh{
     cutting : number,
     setNum: React.Dispatch<React.SetStateAction<number>>,
     setOffset: React.Dispatch<React.SetStateAction<number>>,
-    boxRef: any
+    boxRef: any,
+    connecStart:boolean,
+    setConnecStart: React.Dispatch<React.SetStateAction<boolean>>,
+    setConnecOn: React.Dispatch<React.SetStateAction<boolean>>,
+    position:number
 }
 
-function LoadMesh({ geometry, type,connectOn, lightHelper1, boxRef,setCp, visible, setVisible, setHoverd, offset, setOffset,useStore, setSetting, isSettingOpen, width, height, angle, distance, rotation, cutting, setNum} : loadMesh){
+function LoadMesh({ geometry, type,connectOn, position, boxRef,setCp, showConnect, visible, setVisible, setHoverd, offset, setOffset,useStore, setSetting, isSettingOpen, width, height, connecStart, setConnecOn, setConnecStart, setNum} : loadMesh){
     const meshRef = useRef<THREE.Mesh>(null!);
     const meshAllRef = useRef<THREE.Mesh>(null!);
     const mateRef = useRef<THREE.MeshStandardMaterial>(null!);
@@ -56,7 +59,7 @@ function LoadMesh({ geometry, type,connectOn, lightHelper1, boxRef,setCp, visibl
         const allBoundingBox = new THREE.Box3().setFromObject(meshRef.current);
         const box = new THREE.Box3().setFromObject(boxRef.current);
         const center = meshRef.current.getWorldPosition(world);
-
+        
        if(center.x -3 < boundary.minX || center.x+3 > boundary.maxX 
         || center.y -7 < boundary.minY || center.y +7 > boundary.maxY 
         || center.z -5.5 < boundary.minZ || center.z +5.5 > boundary.maxZ ){           
@@ -81,7 +84,6 @@ function LoadMesh({ geometry, type,connectOn, lightHelper1, boxRef,setCp, visibl
         setCp([]);
         setCenterZ(center.z);
         setFocus(false);
-
         const arr = meshRef.current.geometry.attributes.position.array;
         const {x,y,z} = meshRef.current.position;
         for(let i =0; i<arr.length; i+=3){
@@ -91,7 +93,7 @@ function LoadMesh({ geometry, type,connectOn, lightHelper1, boxRef,setCp, visibl
     }, [geometry,offset]);
 
     return( 
-        <mesh ref={meshAllRef}>
+        <mesh ref={meshAllRef} >
             <mesh 
                 geometry={geometry} 
                 ref={meshRef}
@@ -119,7 +121,8 @@ function LoadMesh({ geometry, type,connectOn, lightHelper1, boxRef,setCp, visibl
             >
                 <meshStandardMaterial ref={mateRef} color={focus ? "#fcf000" : "#ffffff"} side={THREE.DoubleSide}/>
             </mesh>
-            {connectOn ? type === "Ellipse" ? <Connector setNum={setNum} setSetting={setSetting} meshRef={meshRef} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector width={width}  height={width} depth={height}/> : null}
+            {connectOn ? type === "Ellipse" ? <Connector x={position} setNum={setNum} setSetting={setSetting} meshRef={meshRef} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector x={position} width={width}  height={width} depth={height}/> : null}
+            {connecStart &&showConnect  ? type === "Ellipse" ? <Connector  x={position} setNum={setNum} setSetting={setSetting} meshRef={meshRef} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector x={position} width={width}  height={width} depth={height}/> : null}
         </mesh>
     );
 }

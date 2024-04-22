@@ -24,9 +24,10 @@ interface SettingProps {
     setType: React.Dispatch<React.SetStateAction<String>>,
     num: number,
     setNum: React.Dispatch<React.SetStateAction<number>>,
+    setConnStart: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-function SettingBox({isSettingOpen, type, setType, boffset, setBoffset, width, height, angle, distance, cutting,rotation, setAngle, setDistance, setCutting, setHeight, setRotation, setWidth, num, setNum} : SettingProps){
+function SettingBox({isSettingOpen, type, setConnStart,setType, boffset, setBoffset, width, height, angle, distance, cutting,rotation, setAngle, setDistance, setCutting, setHeight, setRotation, setWidth, num, setNum} : SettingProps){
     return (
         <Container className={isSettingOpen ? "setting" : ""}>
             <EmptyContainer/>
@@ -40,7 +41,7 @@ function SettingBox({isSettingOpen, type, setType, boffset, setBoffset, width, h
             <BlankContainer/>
             <SettingDetailContainer>
                 {num === 1 ? <Curves boffset={boffset} setBoffset={setBoffset}/> : null}
-                {num === 5 ? <Connectors type={type} setType={setType} width={width} height={height} rotation={rotation} angle={angle} distance={distance} cutting={cutting} setAngle={setAngle} setCutting={setCutting} setDistance={setDistance} setHeight={setHeight} setRotation={setRotation} setWidth={setWidth}/> : null}
+                {num === 5 ? <Connectors setConnStart={setConnStart} type={type} setType={setType} width={width} height={height} rotation={rotation} angle={angle} distance={distance} cutting={cutting} setAngle={setAngle} setCutting={setCutting} setDistance={setDistance} setHeight={setHeight} setRotation={setRotation} setWidth={setWidth}/> : null}
             </SettingDetailContainer>
         </Container>
     );

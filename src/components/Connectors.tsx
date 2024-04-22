@@ -19,6 +19,7 @@ interface ConnectorsProps{
     setDistance: React.Dispatch<React.SetStateAction<number>>,
     setCutting: React.Dispatch<React.SetStateAction<number>>,
     setType: React.Dispatch<React.SetStateAction<String>>,
+    setConnStart: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
 function Connectors(props : ConnectorsProps){
@@ -218,8 +219,20 @@ function Connectors(props : ConnectorsProps){
             <BtnContainer>
                 <BtnBox>
                     <BtnArea>
-                        <img src={Addlogo} style={{width: "2rem", height:"2rem"}}/>
-                        <img src={Stoplogo} style={{width: "3rem", height:"3rem"}}/>
+                        <img
+                            src={Addlogo} 
+                            style={{width: "2rem", height:"2rem"}}
+                            onClick={()=>{
+                                props.setConnStart(true);
+                            }}
+                        />
+                        <img 
+                            onClick={()=>{
+                                props.setConnStart(false);
+                            }}
+                            src={Stoplogo} 
+                            style={{width: "3rem", height:"3rem"}}
+                        />
                         <img src={DelLogo} style={{width: "2rem", height:"2rem"}}/>
                     </BtnArea>
                 </BtnBox>

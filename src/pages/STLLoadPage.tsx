@@ -41,14 +41,14 @@ function STLLoadPage(){
 
     const [isEnter, setIsEnter] = useState<boolean>(false);
     const [isDrop, setIsDrop] = useState<boolean>(false);
-    const [state, setState] = useState<boolean>(false);
+    const [state, setState] = useState<number>(0);
 
     const [settingNum, setSettingNum] = useState<number>(1);
 
     const [offset, setOffset] = useState<number>(6.0);
     const [planeY, setPlaneY] = useState<number>(6.0);
-    const [conWid, setConWid] = useState<number>(4.0);
-    const [conHei, setConHei] = useState<number>(3.0);
+    const [conWid, setConWid] = useState<number>(2.0);
+    const [conHei, setConHei] = useState<number>(4.0);
     const [conAngle, setConAngle] = useState<number>(4.0);
     const [conRota, setConRota] = useState<number>(0.0);
     const [conDis, setConDis] = useState<number>(0.0);
@@ -62,6 +62,7 @@ function STLLoadPage(){
     const [settingOpen, setSettingOpen] = useState<boolean>(false);
     const [connectOn, setConnectOn] = useState<boolean>(false);
     const [showConnect, setShowConnect] = useState<boolean>(false);
+    const [connStart, setConnStart] = useState<boolean>(false);
 
     const [visible, setVisible] = useState<boolean>(false);
     const [hovered, setHovered] = useState<boolean>(false);
@@ -109,8 +110,8 @@ function STLLoadPage(){
     // const camera = new THREE.OrthographicCamera(-1,1,-1,1,0.1,2000);
 
     useEffect(()=>{
-      
-    },[geometry, jigGeometry, open, partOpen]);
+    //   setSettingOpen(true);
+    },[geometry, ]);
     return(
         <Container>
             <HeadContainer>
@@ -120,7 +121,7 @@ function STLLoadPage(){
                 <ListItem setIsSetOpen={setSettingOpen} isSetOpen={settingOpen} handleUpload={handleUpload} setIsOpen={setOpen} setIsPartOpen={setPartOpen} isOpen={open} isPartOpen={partOpen}/>
                 <DetailList isOpen={open} setGeo={setJigGeometry} setJig={setJigOpen} setIsDrop={setIsDrop} setIsOpen={setOpen}/>
                 <PartList isPartOpen={partOpen} lineNum={2}/>
-                <SettingBox num={settingNum} setNum={setSettingNum} type={type} setType={setType} isSettingOpen={settingOpen} boffset={offset} setBoffset={setOffset} width={conWid} setWidth={setConWid} height={conHei} setHeight={setConHei} angle={conAngle} setAngle={setConAngle} rotation={conRota} setRotation={setConRota} distance={conDis} setDistance={setConDis} cutting={conCut} setCutting={setConCut}/>
+                <SettingBox setConnStart={setConnStart} num={settingNum} setNum={setSettingNum} type={type} setType={setType} isSettingOpen={settingOpen} boffset={offset} setBoffset={setOffset} width={conWid} setWidth={setConWid} height={conHei} setHeight={setConHei} angle={conAngle} setAngle={setConAngle} rotation={conRota} setRotation={setConRota} distance={conDis} setDistance={setConDis} cutting={conCut} setCutting={setConCut}/>
     
                 {isDrop ? 
                     <>
@@ -166,7 +167,7 @@ function STLLoadPage(){
                             {/* <directionalLight intensity={0.6} position={[0,0,-1]}/> */}                            
                             <group ref={groupRef}>
                                 {jigOpen  ?
-                                    <mesh onClick={(e)=>{e.stopPropagation()}} onDoubleClick={(e)=>{e.stopPropagation();}} position={[0,0,0]} geometry={jigGeometry} visible={jigVisible}  scale={[0.4,0.4,0.4]}>
+                                    <mesh onClick={(e)=>{e.stopPropagation()}} onDoubleClick={(e)=>{e.stopPropagation();}} position={[0,0,0]} geometry={jigGeometry} visible={jigVisible}  scale={0.4}>
                                         <meshStandardMaterial color={"#ffffff"} opacity={0} side={THREE.DoubleSide} />
                                     </mesh>
                                 :null}
@@ -192,7 +193,8 @@ function STLLoadPage(){
                                 </mesh> */}
                                 <mesh 
                                     ref={boxRef}
-                                    position={[-8,7.4,0]} scale={0.4}
+                                    position={[-8,7.4,0]} 
+                                    scale={0.4}
                                     onPointerOver={()=>{
                                         setShowConnect(true);
                                     }}
@@ -201,11 +203,19 @@ function STLLoadPage(){
                                     }}
                                     onClick={()=>{
                                         setConnectOn(true);
+                                        setShowConnect(false);
+                                        setConnStart(false);
+                                    }}
+                                    onPointerMove={(e)=>{
+                                        if(connStart && geometry.length > 0){
+                                            console.log(e.point);
+                                            setState(e.point.x);
+                                        }
                                     }}
                                 >
                                     <boxGeometry args={[14,18,12]}/>
                                     <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
-                                    {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh boxRef={boxRef} lightHelper1={lightHelper1} lightHelper2={lightHelper2} setOffset={setPlaneY} setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={geo} setHoverd={setHovered}  setCp={setCp}  visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/>)) : null}
+                                    {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh position={state} showConnect={showConnect} boxRef={boxRef} connecStart={connStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY} setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={geo} setHoverd={setHovered}  setCp={setCp}  visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/>)) : null}
                                     {/* {showConnect ? {
                                         type === "Rectangle" ? <Connector top={2} bottom={2} height={4} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd}/> : <RectangleConnector/>
                                     } : null} */}

@@ -6,6 +6,7 @@ interface RectangleConnectorProps{
     width: number,
     height:number,
     depth:number,
+    x:number,
 }
 
 function RectangleConnector(props:RectangleConnectorProps){
@@ -18,7 +19,7 @@ function RectangleConnector(props:RectangleConnectorProps){
                 e.stopPropagation();
                 setFocus(!focus);
             }}
-            position={[0,5,0]}
+            position={[props.x,5,0]}
             rotation-y={Math.PI/4}
         >
             <meshStandardMaterial color={focus ? "#fcf000":"#00ffff"}/>

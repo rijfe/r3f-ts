@@ -14,6 +14,7 @@ interface ConnectorProps {
     meshRef : any,
     setSetting: React.Dispatch<React.SetStateAction<boolean>>,
     setNum: React.Dispatch<React.SetStateAction<number>>,
+    x: number
     // boundingBox: THREE.Box3,
 }
 
@@ -48,7 +49,7 @@ function Connector(props : ConnectorProps){
         <Cylinder
             ref={cylinderRef}
             args={[props.top, props.bottom, props.height]}
-            position={[0,5,0]}
+            position={[props.x+6,5,0]}
             onDoubleClick={(e)=>{
                 e.stopPropagation();
                 // console.log(cylinderRef.current.geometry.attributes.position.array);
