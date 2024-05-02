@@ -7,6 +7,7 @@ import create from 'zustand';
 import Connector from "./Connector";
 import RectangleConnector from "./RectangleConnector";
 import { directionState, directionPoint,directionSet } from "../store/directionState";
+import DirectionArrow from "./DirectionArrow";
 
 interface loadMesh{
     geometry: any,
@@ -61,31 +62,36 @@ function LoadMesh({ geometry, type,connectOn, position, boxRef,setCp, showConnec
     useFrame(()=>{
         const boxCenter = boxRef.current.getWorldPosition(world);
         const boundary = {
-            minX : boxCenter.x-4, maxX:boxCenter.x+4, minY:boxCenter.y-9, maxY: boxCenter.y+9, minZ: boxCenter.z-6, maxZ: boxCenter.z+6
+            minX : boxCenter.x-4.5, maxX:boxCenter.x+4.5, minY:boxCenter.y-9, maxY: boxCenter.y+9, minZ: boxCenter.z-6, maxZ: boxCenter.z+6
         }
-        const allBoundingBox = new THREE.Box3().setFromObject(meshRef.current);
-        const box = new THREE.Box3().setFromObject(boxRef.current);
-        const center = meshRef.current.getWorldPosition(world);
-        
-       if(center.x -3 < boundary.minX || center.x+3 > boundary.maxX 
-        || center.y -7 < boundary.minY || center.y +7 > boundary.maxY 
-        || center.z -5.5 < boundary.minZ || center.z +5.5 > boundary.maxZ ){           
-            mateRef.current.color = new THREE.Color("#ff0000");
-        }
-        else{
-            mateRef.current.color = focus ? new THREE.Color("#fcf000") : new THREE.Color("#ffffff");
+        if(meshAllRef.current){
+            const allBoundingBox = new THREE.Box3().setFromObject(meshAllRef.current);
+            const box = new THREE.Box3().setFromObject(boxRef.current);
+            const center = meshRef.current.getWorldPosition(world);
+            if(center.x -3 < boundary.minX || center.x+3 > boundary.maxX 
+            || center.y -7 < boundary.minY || center.y +7 > boundary.maxY 
+            || center.z -5.5 < boundary.minZ || center.z +5.5 > boundary.maxZ ){           
+                mateRef.current.color = new THREE.Color("#ff0000");
+            }
+            else{
+                mateRef.current.color = focus ? new THREE.Color("#fcf000") : new THREE.Color("#ffffff");
 
+            }
+             if(curY !== meshAllRef.current.position.y){
+                setCurY(meshAllRef.current.position.y);
+            }
         }
+        
+        
+       
     //    if(box3 != null){
     //     const helper = new THREE.Box3Helper(box3, "#ff0f00");
     //     helper.position.set(0,0,0);
         
     //     scene.add(helper);
-    //    }
-        if(curY !== meshAllRef.current.position.y){
-            setCurY(meshAllRef.current.position.y);
-            setOffset(offset+curY);
-        }
+    //    
+
+       
 
         if(dircetion == 'yes'){
             setDirectionPoint([camera.rotation.x,camera.rotation.y,camera.rotation.z]);
@@ -97,7 +103,7 @@ function LoadMesh({ geometry, type,connectOn, position, boxRef,setCp, showConnec
         if (!geometry || !meshRef.current) return;
         else{
             const boundingBox = new THREE.Box3().setFromObject(meshRef.current);
-            console.log(boundingBox.max.y);
+            console.log(boundingBox.max.y-boundingBox.min.y);
             // const box = new THREE.BufferGeometry().boundingBox;
             const center = boundingBox.getCenter(new THREE.Vector3());
             meshRef.current.geometry.center();
@@ -111,6 +117,12 @@ function LoadMesh({ geometry, type,connectOn, position, boxRef,setCp, showConnec
         }
     
     }, [geometry,offset]);
+
+    useEffect(() => {
+        if(curY != 0) setOffset(offset+curY+1);
+
+        console.log(offset+curY);
+    }, [focus]);
 
     return( 
         <mesh ref={meshAllRef} >
@@ -148,10 +160,12 @@ function LoadMesh({ geometry, type,connectOn, position, boxRef,setCp, showConnec
                    color="white" 
                    renderOrder={1000}
                 /> */}
-                {/* <Outlines thickness={0.5} color="hotpink" scale={1.5}/> */}s
+                {/* <Outlines thickness={0.5} color="hotpink" scale={1.5}/> */}
+                {directionSet ? <DirectionArrow/> :null}
             </mesh>
             {connectOn ? type === "Ellipse" ? <Connector angle={angle} x={position} setNum={setNum} setSetting={setSetting} meshRef={meshRef} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}
             {connecStart &&showConnect  ? type === "Ellipse" ? <Connector angle={angle}  x={position} setNum={setNum} setSetting={setSetting} meshRef={meshRef} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}
+            
         </mesh>
     );
 }

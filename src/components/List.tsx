@@ -39,7 +39,7 @@ function List({no,title,content, num,idx, setNum, chapter, jig,setChapter ,setMa
                     
                     loader.load(`/models/${jig}`, geo=>{
                         setGeo(geo);
-                        console.log(geo);
+                        
                     });
                     
                     setIsOpen(false);

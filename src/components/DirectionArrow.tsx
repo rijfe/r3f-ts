@@ -11,8 +11,8 @@ function DirectionArrow(){
             position={[0,0,7]}
         >
             <Line
-                color="#9a0000"
-                lineWidth={8}
+                color="#750000"
+                lineWidth={4}
                 side={THREE.DoubleSide} 
                 position={[0,0,0.5]}
                 points={[new THREE.Vector3(0,0,0.7), new THREE.Vector3(0,0,0)]}          

@@ -27,7 +27,7 @@ import Connector from "../components/Connector";
 import SettingBox from "../components/SettingBox";
 import { off } from "process";
 import RectangleConnector from "../components/RectangleConnector";
-import { getDirectionSet } from "../store/directionState";
+import { directionSet, getDirectionSet } from "../store/directionState";
 import DirectionArrow from "../components/DirectionArrow";
 
 const useStore = create((set:any)=>({target: null, setTarget: (target : any)=>set({target}) }));
@@ -48,7 +48,7 @@ function STLLoadPage(){
     const [settingNum, setSettingNum] = useState<number>(1);
 
     const [offset, setOffset] = useState<number>(5.0);
-    const [planeY, setPlaneY] = useState<number>(6.0);
+    const [planeY, setPlaneY] = useState<number>(5.0);
     const [conWid, setConWid] = useState<number>(2.0);
     const [conHei, setConHei] = useState<number>(4.0);
     const [conAngle, setConAngle] = useState<number>(4.0);
@@ -80,6 +80,7 @@ function STLLoadPage(){
     const [jigOpen, setJigOpen] = useState<boolean>(false);
 
     const dirSet = useRecoilValue(getDirectionSet);
+    const [dircetionS, setDirectionset] = useRecoilState(directionSet);
 
     const handleDrop = (event : React.DragEvent) =>{
         event.preventDefault();
@@ -115,8 +116,8 @@ function STLLoadPage(){
 
     useEffect(()=>{
     //   setSettingOpen(true);
-        
-    },[]);
+        setDirectionset(false);
+    },[jigOpen]);
     return(
         <Container>
             <HeadContainer>
@@ -245,10 +246,9 @@ function STLLoadPage(){
                                     <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
                                     {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh position={state} showConnect={showConnect} boxRef={boxRef} connecStart={connStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY} setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={geo} setHoverd={setHovered}  setCp={setCp}  visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/>)) : null}
                                     {/* {showConnect ? type === "Rectangle" ? <Connector top={2} bottom={2} height={4} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd}/> : <RectangleConnector/>: null} */}
-                                   {geometry.length > 0 ? <Plane ref={planeRef} args={[14,12]} rotation-x={Math.PI/2} position={[0,planeY,0]} >
-                                        <meshStandardMaterial side={THREE.DoubleSide} opacity={0.2}/>
+                                   {geometry.length > 0 ? <Plane ref={planeRef} args={[14,12]} rotation-x={Math.PI/2} position={[0,planeY,0]}>
+                                        <meshStandardMaterial side={THREE.DoubleSide} opacity={0.1}/>
                                     </Plane>: null}
-                                    {dirSet ? <DirectionArrow/> :null}
                                 </mesh>
                                 
                             </group>
@@ -312,7 +312,8 @@ const Container = styled.div`
 `;
 
 const Bodycontainer = styled.div`
-    flex:1;
+    height:95%;
+    width:100vw;
     display:flex;
     flex-direction:row;
 `;

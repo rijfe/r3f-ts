@@ -351,7 +351,7 @@ const ValueInput = styled.input`
 
  const BtnBox = styled.div`
     width: 100%;
-    height: 30%;
+    height: 40%;
     display:flex;
     justify-content: end;
  `;

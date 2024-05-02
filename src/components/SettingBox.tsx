@@ -108,6 +108,6 @@ const BlankContainer = styled.div`
 
 const SettingDetailContainer = styled.div`
     width:100%;
-    height:50%;
+    height: 50%;
     background: #D8D8D8;
 `;

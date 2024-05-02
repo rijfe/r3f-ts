@@ -63,7 +63,7 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2}: ViewListProps){
             fullscreen
             onClick={(e)=>{e.stopPropagation(); console.log("click");}}
             // onContextMenu={(e)=>e.stopPropagation()}
-            // calculatePosition={(el: Object3D, camera: THREE.Camera, size: { width: number; height: number }) => number[]}
+            // calculatePosition={(el: THREE.Object3D, camera: THREE.Camera, size: { width: number; height: number }) => number[]}
         >
             <ViewListContainer>
                 <ViewBtn onClick={(e)=>{
