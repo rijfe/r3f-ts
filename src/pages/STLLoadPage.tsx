@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState, useRef,useEffect, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { Canvas, ThreeEvent, useThree, useFrame,useLoader } from "@react-three/fiber";
-import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Cone, TransformControls, Plane, useHelper} from "@react-three/drei";
+import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Cone, TransformControls, Plane, useHelper, Cylinder} from "@react-three/drei";
 import { BufferGeometry } from "three";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from "three";
@@ -27,6 +27,8 @@ import Connector from "../components/Connector";
 import SettingBox from "../components/SettingBox";
 import { off } from "process";
 import RectangleConnector from "../components/RectangleConnector";
+import { getDirectionSet } from "../store/directionState";
+import DirectionArrow from "../components/DirectionArrow";
 
 const useStore = create((set:any)=>({target: null, setTarget: (target : any)=>set({target}) }));
 const test = useLoader.preload(STLLoader, ["/models/5X500L V2-CAD BLOCK JIG_형상추가.stl"]);
@@ -45,7 +47,7 @@ function STLLoadPage(){
 
     const [settingNum, setSettingNum] = useState<number>(1);
 
-    const [offset, setOffset] = useState<number>(6.0);
+    const [offset, setOffset] = useState<number>(5.0);
     const [planeY, setPlaneY] = useState<number>(6.0);
     const [conWid, setConWid] = useState<number>(2.0);
     const [conHei, setConHei] = useState<number>(4.0);
@@ -76,6 +78,8 @@ function STLLoadPage(){
     const [geometry, setGeometry] = useState<Array<BufferGeometry>>([]);
     const [jigGeometry, setJigGeometry] = useState<BufferGeometry>(null!);
     const [jigOpen, setJigOpen] = useState<boolean>(false);
+
+    const dirSet = useRecoilValue(getDirectionSet);
 
     const handleDrop = (event : React.DragEvent) =>{
         event.preventDefault();
@@ -111,7 +115,8 @@ function STLLoadPage(){
 
     useEffect(()=>{
     //   setSettingOpen(true);
-    },[geometry, ]);
+        
+    },[]);
     return(
         <Container>
             <HeadContainer>
@@ -146,9 +151,9 @@ function STLLoadPage(){
                                 right: 8000,
                                 top:8000,
                                 bottom: 8000,
-                                zoom:6,
+                                zoom:5,
                                 near:-8000,
-                                far:2000
+                                far:2000,
                             }}
                         >   
 
@@ -161,13 +166,22 @@ function STLLoadPage(){
                             {/* <directionalLight intensity={0.6} position={[0,-1,0]}/> */}
                             {/* <directionalLight intensity={0.6} position={[1,0,0]}/> */}
                             {/* <directionalLight intensity={0.6} position={[-1,0,0]}/> */}
-                            <directionalLight ref={lightHelper1} intensity={0.5} position={[10,0,40]} rotation-y={-Math.PI/4}/>
-                            <directionalLight ref={lightHelper2} intensity={0.5} position={[-10,0,40]} rotation-y={Math.PI/4}/>
+                            <directionalLight ref={lightHelper1} intensity={0.7} position={[10,0,40]} rotation-y={-Math.PI/4}/>
+                            <directionalLight ref={lightHelper2} intensity={0.7} position={[-10,0,40]} rotation-y={Math.PI/4}/>
                             {/* <directionalLight ref={lightHelper2} intensity={0.7} position={[-1,1,1]} /> */}
                             {/* <directionalLight intensity={0.6} position={[0,0,-1]}/> */}                            
                             <group ref={groupRef}>
                                 {jigOpen  ?
-                                    <mesh onClick={(e)=>{e.stopPropagation()}} onDoubleClick={(e)=>{e.stopPropagation();}} position={[0,0,0]} geometry={jigGeometry} visible={jigVisible}  scale={0.4}>
+                                    <mesh 
+                                        onClick={(e)=>{e.stopPropagation()}} 
+                                        onDoubleClick={(e)=>{
+                                            e.stopPropagation();
+                                        }} 
+                                        position={[0,0,0]} 
+                                        geometry={jigGeometry} 
+                                        visible={jigVisible}  
+                                        scale={0.4}
+                                    >
                                         <meshStandardMaterial color={"#ffffff"} opacity={0} side={THREE.DoubleSide} />
                                     </mesh>
                                 :null}
@@ -191,6 +205,17 @@ function STLLoadPage(){
                                     <boxGeometry args={[14,18,12]}/>
                                     <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
                                 </mesh> */}
+                                {/* <mesh ref={boxRef} scale={0.4}>
+                                    <Cylinder 
+                                        args={[48,48,16,128]}
+                                        rotation-x={Math.PI/2}
+                                    
+                                    >
+                                        <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
+                                    </Cylinder>
+                                    {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh position={state} showConnect={showConnect} boxRef={boxRef} connecStart={connStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY} setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={geo} setHoverd={setHovered}  setCp={setCp}  visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/>)) : null}
+                                </mesh> */}
+                                
                                 <mesh 
                                     ref={boxRef}
                                     position={[-8,7.4,0]} 
@@ -202,32 +227,45 @@ function STLLoadPage(){
                                         setShowConnect(false);
                                     }}
                                     onClick={()=>{
-                                        setConnectOn(true);
-                                        setShowConnect(false);
-                                        setConnStart(false);
+                                        if(connStart){
+                                            setConnectOn(true);
+                                            setShowConnect(false);
+                                            setConnStart(false);
+                                        }
+                                        
                                     }}
                                     onPointerMove={(e)=>{
                                         if(connStart && geometry.length > 0){
-                                            console.log(e.point);
-                                            setState(e.point.x);
+                                            
+                                            setState(e.clientX / window.innerWidth *2 -1);
                                         }
                                     }}
                                 >
-                                    <boxGeometry args={[14,18,12]}/>
+                                    <boxGeometry args={[15,18,15]}/>
                                     <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
                                     {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh position={state} showConnect={showConnect} boxRef={boxRef} connecStart={connStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY} setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={geo} setHoverd={setHovered}  setCp={setCp}  visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/>)) : null}
-                                    {/* {showConnect ? {
-                                        type === "Rectangle" ? <Connector top={2} bottom={2} height={4} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd}/> : <RectangleConnector/>
-                                    } : null} */}
+                                    {/* {showConnect ? type === "Rectangle" ? <Connector top={2} bottom={2} height={4} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd}/> : <RectangleConnector/>: null} */}
                                    {geometry.length > 0 ? <Plane ref={planeRef} args={[14,12]} rotation-x={Math.PI/2} position={[0,planeY,0]} >
                                         <meshStandardMaterial side={THREE.DoubleSide} opacity={0.2}/>
                                     </Plane>: null}
+                                    {dirSet ? <DirectionArrow/> :null}
                                 </mesh>
                                 
                             </group>
-                            <AxesHelper posioin={new THREE.Vector3(40,-30,0)} visible={true} size={10}/>
-                            <OrbitControls ref={controlRef} dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.5}  mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
-                            {target && visible &&<TransformControls object={target} position={[0,0,0]} mode={hovered ? "translate" : "rotate"} size={hovered ? 0.2 : 0.4} onClick={(e)=>{e.stopPropagation();}} onPointerDown={(e)=>{e.stopPropagation();}} scale={0.3}/>}
+                            <AxesHelper position={new THREE.Vector3(40,-30,0)} visible={true} size={15}/>
+                            <OrbitControls ref={controlRef} dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.8}  mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
+                            {target && visible &&
+                                <TransformControls 
+                                    object={target}
+                                    position={[0,2,0]} 
+                                    mode={hovered ? "translate" : "rotate"} 
+                                    size={hovered ? 0.2 : 0.4}
+                                    onClick={(e)=>{e.stopPropagation();}} 
+                                    onPointerDown={(e)=>{e.stopPropagation();}} 
+                                    scale={0.4}
+                                    
+                                />
+                            }
                             
                         </Canvas>
                     <Loader/>

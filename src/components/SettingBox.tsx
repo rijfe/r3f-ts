@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import Curves from "./Curves";
 import Connectors from "./Connectors";
+import Directions from "./Directions";
 
 interface SettingProps {
     isSettingOpen : boolean,
@@ -30,7 +31,11 @@ interface SettingProps {
 function SettingBox({isSettingOpen, type, setConnStart,setType, boffset, setBoffset, width, height, angle, distance, cutting,rotation, setAngle, setDistance, setCutting, setHeight, setRotation, setWidth, num, setNum} : SettingProps){
     return (
         <Container className={isSettingOpen ? "setting" : ""}>
-            <EmptyContainer/>
+
+            <PosContainer></PosContainer>
+            <BlankContainer/>
+            <FileContainer></FileContainer>
+            <BlankContainer/>
             <SettingPartContainer>
                 <PartBox onClick={()=>{setNum(1);}}>1</PartBox>
                 <PartBox onClick={()=>{setNum(2);}}>2</PartBox>
@@ -41,6 +46,7 @@ function SettingBox({isSettingOpen, type, setConnStart,setType, boffset, setBoff
             <BlankContainer/>
             <SettingDetailContainer>
                 {num === 1 ? <Curves boffset={boffset} setBoffset={setBoffset}/> : null}
+                {num === 2 ? <Directions/> : null}
                 {num === 5 ? <Connectors setConnStart={setConnStart} type={type} setType={setType} width={width} height={height} rotation={rotation} angle={angle} distance={distance} cutting={cutting} setAngle={setAngle} setCutting={setCutting} setDistance={setDistance} setHeight={setHeight} setRotation={setRotation} setWidth={setWidth}/> : null}
             </SettingDetailContainer>
         </Container>
@@ -63,9 +69,16 @@ const Container = styled.div`
     }
 `
 
-const EmptyContainer = styled.div`
-    width:100%;
-    height: 40%;
+const PosContainer = styled.div`
+    width:  100%;
+    height: 8%;
+    background: #D8D8D8;
+`;
+
+const FileContainer = styled.div`
+    width:  100%;
+    height:30%;
+    background: #D8D8D8;
 `;
 
 const SettingPartContainer = styled.div`
@@ -95,6 +108,6 @@ const BlankContainer = styled.div`
 
 const SettingDetailContainer = styled.div`
     width:100%;
-    height:54%;
+    height:50%;
     background: #D8D8D8;
 `;

@@ -233,7 +233,10 @@ function Connectors(props : ConnectorsProps){
                             src={Stoplogo} 
                             style={{width: "3rem", height:"3rem"}}
                         />
-                        <img src={DelLogo} style={{width: "2rem", height:"2rem"}}/>
+                        <img 
+                            src={DelLogo} 
+                            style={{width: "2rem", height:"2rem"}}
+                        />
                     </BtnArea>
                 </BtnBox>
             </BtnContainer>
@@ -249,6 +252,7 @@ const ConnectorsContainer = styled.div`
     display:flex;
     align-items:center;
     flex-direction:column;
+    overflow-y:auto;
 `;
 
 const BlankContainer = styled.div`
@@ -261,7 +265,7 @@ const BlankContainer = styled.div`
 
 const TitleContainer = styled.div`
     width: 100%;
-    height: 8%;
+    height: 15%;
     display:flex;
     justify-content:center;
     align-items:center;
@@ -340,7 +344,7 @@ const ValueInput = styled.input`
 
  const BtnContainer = styled.div`
     width: 100%;
-    height:19.5%;
+    height:24%;
     display:flex;
     align-items:end;
  `;

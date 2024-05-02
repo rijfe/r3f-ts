@@ -12,6 +12,7 @@ interface ListProps{
     title: string,
     content: string,
     num: number,
+    jig:string,
     setNum: React.Dispatch<React.SetStateAction<number>>,
     chapter: number,
     setChapter: React.Dispatch<React.SetStateAction<number>>,
@@ -20,12 +21,14 @@ interface ListProps{
     setIsDrop: React.Dispatch<React.SetStateAction<boolean>>,
     setJig: React.Dispatch<React.SetStateAction<boolean>>,
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    idx:number
 }
 
-function List({no,title,content, num, setNum, chapter, setChapter ,setMachine,setGeo, setIsDrop, setJig, setIsOpen}:ListProps){
+function List({no,title,content, num,idx, setNum, chapter, jig,setChapter ,setMachine,setGeo, setIsDrop, setJig, setIsOpen}:ListProps){
 
     return (
-        <ListItemBox onDoubleClick={(e)=>{
+        idx > 8 ? <BlankItemBox></BlankItemBox>
+        :<ListItemBox onDoubleClick={(e)=>{
                 e.stopPropagation();
                 if(chapter === num){
                     setChapter(num+1);
@@ -34,7 +37,7 @@ function List({no,title,content, num, setNum, chapter, setChapter ,setMachine,se
                 if(num === 2){
                     const loader = new STLLoader();
                     
-                    loader.load("/models/ADRESS", geo=>{
+                    loader.load(`/models/${jig}`, geo=>{
                         setGeo(geo);
                         console.log(geo);
                     });
@@ -65,11 +68,18 @@ const ListItemBox = styled.div`
     margin-top:5px;
     display:flex;
     flex-direction: row;
-    z-index: 50;
     &:hover{
         border: 3px solid #90d0f0;
         background-color: rgba(150,180, 180, .5);
     }
+`;
+
+const BlankItemBox = styled.div`
+    width:95%;
+    height: 8rem;
+    margin-top:5px;
+    display:flex;
+    flex-direction: row;
 `;
 
 const ItemImgBox = styled.div`

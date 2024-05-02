@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import * as THREE from "three";
 import gsap from "gsap";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 
@@ -14,21 +14,56 @@ interface ViewListProps{
 
 function ViewList({cameraRef, controlRef, lightRef, lightRef2}: ViewListProps){
     const [curView, setCurView] = useState<number>(1);
+    const htmlRef = useRef<HTMLDivElement>(null!);
     const {camera} = useThree();
+
+    const [hX, setHX] = useState<number>(0);
+    const [hy, setHy] = useState<number>(0);
+
+    function toScreenPosition(obj: THREE.Vector3, camera: THREE.Camera) {
+        const vector = obj.clone();
+        const widthHalf = 0.5 * window.innerWidth;
+        const heightHalf = 0.5 * window.innerHeight;
+    
+        vector.project(camera);
+        vector.x = (vector.x * widthHalf) + widthHalf;
+        vector.y = -(vector.y * heightHalf) + heightHalf;
+    
+        return {
+          x: vector.x,
+          y: vector.y
+        };
+      }
+
     useFrame(()=>{
         controlRef.current.update();
         lightRef.current.position.lerp(camera.position, 0.1);
         lightRef2.current.position.lerp(camera.position, 0.1);
-    })
+        // console.log(camera.position);
+        const screenPos = new THREE.Vector3();
+        camera.getWorldPosition(screenPos);
+        // console.log(screenPos);
+        const { x, y } = toScreenPosition(screenPos, camera);
+        const htmlElement = document.querySelector(".viewlist") as HTMLElement;
+        
+        if (htmlElement) {
+            // console.log(htmlElement);
+            // htmlElement.style.left = `0rem`;
+            // htmlElement.style.top = `0rem`;
+
+        }
+    });
  
     return (
-        <Html 
+        <Html
+            ref={htmlRef}
             as="div"
             className="viewlist"
             style={{zIndex:10}}
             fullscreen
             onClick={(e)=>{e.stopPropagation(); console.log("click");}}
-            onContextMenu={(e)=>e.stopPropagation()}
+            // onContextMenu={(e)=>e.stopPropagation()}
+            // calculatePosition={(el: Object3D, camera: THREE.Camera, size: { width: number; height: number }) => number[]}
         >
             <ViewListContainer>
                 <ViewBtn onClick={(e)=>{
@@ -452,7 +487,7 @@ const ViewListContainer = styled.div`
     border: 1px solid;
     position: absolute;
     right:2rem;
-    top:30rem;
+    top:20rem;
     z-index: 10;
     display: flex;
     flex-direction: column;
