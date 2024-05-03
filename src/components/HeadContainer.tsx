@@ -1,32 +1,44 @@
 import styled from "styled-components";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { getUserInfo } from "../store/UserInfo";
 
 function HeadContainer(props:any){
     const navigate = useNavigate();
+    const userId = useRecoilValue(getUserInfo);
+    
 
     useEffect(()=>{
-        
+ 
     },[]);
 
     return(
-    <Header>
-        <HeaderTitle>
-            R3F
-        </HeaderTitle>
+        <Header>
+            <Content>
+               <HeaderTitle>
+                    R3F
+                </HeaderTitle>
 
-        <PageBox onClick={()=>{navigate('/main', {replace:true});}}>
-            Main
-        </PageBox>
+                <PageBox onClick={()=>{navigate('/main', {replace:true});}}>
+                    Main
+                </PageBox>
 
-        <PageBox onClick={()=>{navigate('/falling', {replace:true});}}>
-            Fall
-        </PageBox>
+                <PageBox onClick={()=>{navigate('/falling', {replace:true});}}>
+                    Fall
+                </PageBox>
 
-        <PageBox onClick={()=>{navigate('/load', {replace:true});}}>
-            Load
-        </PageBox>
-    </Header>);
+                <PageBox onClick={()=>{navigate('/load', {replace:true});}}>
+                    Load
+                </PageBox> 
+            </Content>
+            <UserContent>
+                <UserInfo>
+                    {userId}님 환영합니다.
+                </UserInfo>
+            </UserContent>
+        </Header>
+    );
 }
 
 export default HeadContainer;
@@ -37,6 +49,7 @@ const Header = styled.div`
     height: 5%;
     border-bottom: 1px solid;
     align-items: center;
+    justify-content:space-between;
 `;
 
 const HeaderTitle = styled.h1`
@@ -58,4 +71,23 @@ const PageBox = styled.div`
     &:hover{
         font-weight: 900;
     }
+`;
+
+const Content = styled.div`
+    height:100%;
+    width:auto;
+    display:flex;
+    flex-direction:row;
+`;
+
+const UserContent = styled.div`
+    height: 100%;
+    width:auto;
+    display: flex;
+    align-items:center;
+`;
+
+const UserInfo = styled.p`
+    font-size: 2rem;
+    margin-right:1rem;
 `;

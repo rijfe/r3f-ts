@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { directionSet } from "../store/directionState";
+import { userInfo } from "../store/UserInfo";
 
 function LoginPage(){
     const navigate = useNavigate();
@@ -10,6 +11,7 @@ function LoginPage(){
     const [id, setId] = useState<string>("");
     const [pwd, setPwd] = useState<string>("");
     const [dircetionS, setDirectionSet] = useRecoilState(directionSet);
+    const [userId, setUserId] = useRecoilState(userInfo);
 
     useEffect(()=>{
         setDirectionSet(false);
@@ -24,17 +26,30 @@ function LoginPage(){
                 <InputBoxContainer>
                     <InputBox placeholder=" ID" value={id} onChange={(event)=>{
                         setId(event.target.value);
+                        setUserId(event.target.value);
                     }}/>
-                    <InputBox placeholder=" PASSWORD" value={pwd} type="password" onChange={(event)=>{
-                        setPwd(event.target.value);
-                    }}/>
+                    <InputBox placeholder=" PASSWORD" value={pwd} type="password"
+                        onChange={(event)=>{
+                            setPwd(event.target.value);
+                        }}
+                        onKeyUp={(e)=>{
+                            if(e.key == "Enter"){
+                                if(id === "123" && pwd === "123") navigate("/main");
+                                else window.alert("ID와 비밀번호를 확인해주세요.");
+                            }
+                        }}
+                    />
                 </InputBoxContainer>
                 <LogintBtnContainer>
-                    <LoginBtn onClick={()=>{
-                        if(id === "123" && pwd === "123") navigate("/main");
-                        else window.alert("ID와 비밀번호를 확인해주세요.");
-                        // navigate("/main");
-                    }}>LOGIN</LoginBtn>
+                    <LoginBtn 
+                        onClick={()=>{
+                            if(id === "123" && pwd === "123") navigate("/main");
+                            else window.alert("ID와 비밀번호를 확인해주세요.");
+                            // navigate("/main");
+                        }}
+                    >
+                        LOGIN
+                    </LoginBtn>
                     @ 아름덴티스트리
                 </LogintBtnContainer>
             </LoginBox>

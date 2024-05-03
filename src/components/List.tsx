@@ -35,9 +35,8 @@ function List({no,title,content, num,idx, setNum, chapter, jig,setChapter ,setMa
                 if(num === 2){
                     const loader = new STLLoader();
                     
-                    loader.load(`/models/${jig}`, geo=>{
+                    loader.load(`/models/${jig}`, async geo=>{
                         setGeo(geo);
-                        
                     });
                     
                     setIsOpen(false);

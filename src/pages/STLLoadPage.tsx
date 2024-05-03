@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState, useRef,useEffect, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { Canvas, ThreeEvent, useThree, useFrame,useLoader } from "@react-three/fiber";
-import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Cone, TransformControls, Plane, useHelper, Cylinder} from "@react-three/drei";
+import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Box, TransformControls, Plane, useHelper, Cylinder} from "@react-three/drei";
 import { BufferGeometry } from "three";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from "three";
@@ -115,6 +115,10 @@ function STLLoadPage(){
     //   setSettingOpen(true);
         setDirectionset(false);
     },[jigOpen]);
+
+    useEffect(()=>{
+        setGeometry([]);
+    },[]);
     return(
         <Container>
             <HeadContainer>
@@ -232,9 +236,13 @@ function STLLoadPage(){
                                     <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
                                     {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh position={state} showConnect={showConnect} boxRef={boxRef} connecStart={connStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY} setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={geo} setHoverd={setHovered} visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/>)) : null}
                                     
-                                   {geometry.length > 0 ? <Plane ref={planeRef} args={[15,15]} rotation-x={Math.PI/2} position={[0,planeY,0]}>
-                                        <meshStandardMaterial side={THREE.DoubleSide} opacity={0.1}/>
-                                    </Plane>: null}
+                                   {geometry.length > 0 ? 
+                                   <mesh ref={planeRef}>
+                                        <Plane args={[15,15]} rotation-x={Math.PI/2} position={[0,planeY,0]}>
+                                            <meshStandardMaterial transparent side={THREE.DoubleSide}  opacity={0.6} color="#aaaaaa"  />
+                                        </Plane>
+                                   </mesh>
+                                   : null}
                                 </mesh>
                                 
                             </group>
