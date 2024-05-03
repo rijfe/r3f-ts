@@ -28,12 +28,6 @@ function DetailList({isOpen, setGeo,setIsDrop, setJig, setIsOpen}:DetailListProp
         "Arum5x500L",
         "Arum5x500_V2",
         "Arum5x500_V2",
-        // "Arum5x500_V2",
-        // "Arum5x500_V2",
-        // "Arum5x500_V2",
-        // "Arum5x500_V2",
-        // "Arum5x500_V2",
-        // "Arum5x500_V2",
     ];
 
     useEffect(()=>{

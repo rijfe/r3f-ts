@@ -16,7 +16,6 @@ interface ConnectorProps {
     setNum: React.Dispatch<React.SetStateAction<number>>,
     x: number,
     angle: number
-    // boundingBox: THREE.Box3,
 }
 
 function Connector(props : ConnectorProps){
@@ -29,10 +28,6 @@ function Connector(props : ConnectorProps){
     useFrame(()=>{
         if(focus){
             const box = new THREE.Box3().setFromObject(props.meshRef.current);
-            // for(let v of newArr){
-            //     console.log(box.distanceToPoint(new THREE.Vector3(-0.6381727457046509, 3.910205841064453, -4.367683410644531)));
-            // }
-            // console.log(cylinderRef.current.position);
         }
     });
 
@@ -53,7 +48,6 @@ function Connector(props : ConnectorProps){
             position={[props.x,5,0]}
             onDoubleClick={(e)=>{
                 e.stopPropagation();
-                // console.log(cylinderRef.current.geometry.attributes.position.array);
                 setting(cylinderRef);
                 props.setVisible(!props.visible);
                 props.setHoverd(true);

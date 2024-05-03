@@ -34,6 +34,7 @@ const useStore = create((set:any)=>({target: null, setTarget: (target : any)=>se
 const test = useLoader.preload(STLLoader, ["/models/5X500L V2-CAD BLOCK JIG_형상추가.stl"]);
 function STLLoadPage(){
     const groupRef = useRef<THREE.Group>(null!);
+    const htmlRef = useRef<THREE.Group>(null!);
     const ref = useRef(null!);
     const cameraRef = useRef<THREE.OrthographicCamera>(null!);
     const controlRef = useRef(null!);
@@ -56,9 +57,6 @@ function STLLoadPage(){
     const [conDis, setConDis] = useState<number>(0.0);
     const [conCut, setConCut] = useState<number>(50.0);
 
-    const [color, setColor] = useState<Array<string>>([]);
-    const [cp, setCp] = useState<THREE.Vector3Tuple[]>([]);
-
     const [open, setOpen] = useState<boolean>(false);
     const [partOpen, setPartOpen] = useState<boolean>(false);
     const [settingOpen, setSettingOpen] = useState<boolean>(false);
@@ -70,9 +68,8 @@ function STLLoadPage(){
     const [hovered, setHovered] = useState<boolean>(false);
     const [jigVisible, setJigVisible] = useState<boolean>(true);
     const planeRef = useRef<THREE.Mesh>(null!);
-    const [cpArr, setCpArr] = useState<Array<any>>([]);
+
     const [type, setType] = useState<String>("Ellipse");
-    const point = useRecoilValue(getPointState);
     
 
     const [geometry, setGeometry] = useState<Array<BufferGeometry>>([]);
@@ -143,10 +140,8 @@ function STLLoadPage(){
                                 event.preventDefault();
                             }}
                             onDrop={(e)=>{e.preventDefault(); handleDrop(e);}}
-                            // onContextMenu={(e)=>{console.log(e); }}
                             style={{zIndex:30}}
                             orthographic
-                            // camera={camera}
                             camera={{
                                 left:-8000,
                                 right: 8000,
@@ -156,21 +151,12 @@ function STLLoadPage(){
                                 near:-8000,
                                 far:2000,
                             }}
-                        >   
+                        >     
+                            {jigGeometry ?<ViewList jigRef={groupRef} htmlRef={htmlRef} lightRef2={lightHelper2} lightRef={lightHelper1} cameraRef={cameraRef} controlRef={controlRef}/>:null}
 
-                            {/* <Camera cameraRef={cameraRef}/> */}
-                            
-                            {jigGeometry ?<ViewList lightRef2={lightHelper2} lightRef={lightHelper1} cameraRef={cameraRef} controlRef={controlRef}/>:null}
-
-                            
-                            {/* <directionalLight intensity={0.6} position={[0,1,0]}/> */}
-                            {/* <directionalLight intensity={0.6} position={[0,-1,0]}/> */}
-                            {/* <directionalLight intensity={0.6} position={[1,0,0]}/> */}
-                            {/* <directionalLight intensity={0.6} position={[-1,0,0]}/> */}
                             <directionalLight ref={lightHelper1} intensity={0.7} position={[10,0,40]} rotation-y={-Math.PI/4}/>
                             <directionalLight ref={lightHelper2} intensity={0.7} position={[-10,0,40]} rotation-y={Math.PI/4}/>
-                            {/* <directionalLight ref={lightHelper2} intensity={0.7} position={[-1,1,1]} /> */}
-                            {/* <directionalLight intensity={0.6} position={[0,0,-1]}/> */}                            
+                  
                             <group ref={groupRef}>
                                 {jigOpen  ?
                                     <mesh 
@@ -244,9 +230,9 @@ function STLLoadPage(){
                                 >
                                     <boxGeometry args={[15,18,15]}/>
                                     <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
-                                    {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh position={state} showConnect={showConnect} boxRef={boxRef} connecStart={connStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY} setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={geo} setHoverd={setHovered}  setCp={setCp}  visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/>)) : null}
-                                    {/* {showConnect ? type === "Rectangle" ? <Connector top={2} bottom={2} height={4} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd}/> : <RectangleConnector/>: null} */}
-                                   {geometry.length > 0 ? <Plane ref={planeRef} args={[14,12]} rotation-x={Math.PI/2} position={[0,planeY,0]}>
+                                    {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh position={state} showConnect={showConnect} boxRef={boxRef} connecStart={connStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY} setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={geo} setHoverd={setHovered} visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/>)) : null}
+                                    
+                                   {geometry.length > 0 ? <Plane ref={planeRef} args={[15,15]} rotation-x={Math.PI/2} position={[0,planeY,0]}>
                                         <meshStandardMaterial side={THREE.DoubleSide} opacity={0.1}/>
                                     </Plane>: null}
                                 </mesh>

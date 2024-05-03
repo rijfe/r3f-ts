@@ -1,7 +1,6 @@
 import * as THREE from "three";
-import { useFrame, useThree } from "@react-three/fiber";
 import { Line, Text, Cone } from "@react-three/drei";
-import { useEffect, useRef, useState } from "react";
+import { useRef} from "react";
 
 interface AxesHelperProps {
     size: number,
@@ -11,10 +10,6 @@ interface AxesHelperProps {
 
 function AxesHelper(props:AxesHelperProps){
     const ref = useRef<THREE.Group>(null!);
-
-    // useFrame(()=>{
-    //     props.position=new THREE.Vector3(80,-30,0);
-    // });
     
     return(
         <group ref={ref} position={[10,-20,0]}>

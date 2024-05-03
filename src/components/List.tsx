@@ -1,10 +1,8 @@
 import styled from "styled-components";
-import { useState } from "react";
 import { BufferGeometry } from "three";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 
 import testLogo from "../img/free-icon-plus-sign-3114793.png";
-import { useLoader } from "@react-three/fiber";
 
 
 interface ListProps{

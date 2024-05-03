@@ -3,15 +3,13 @@ import styled from "styled-components";
 import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/cannon";
 import { OrbitControls } from "@react-three/drei";
-import { useNavigate } from "react-router-dom";
-import { ChromePicker } from "react-color";
 
 import Plane from "../components/Plane";
 import Cube from "../components/Cube";
 import HeadContainer from "../components/HeadContainer";
 
 function FallingCubePage(){
-    const navigate = useNavigate();
+
     const [ready, setReady] = useState<boolean>(false);
     const [state, setState] = useState<number>(1);
 
@@ -36,12 +34,6 @@ function FallingCubePage(){
                 </Physics>
                 <OrbitControls/>
             </Canvas>
-            {/* <RestartBtn onClick={()=>{
-                    setState(state+1);
-                    setReady(false);
-                }}>
-                    ReStart
-            </RestartBtn> */}
         </FallingCubePageContainer>
     );
 }

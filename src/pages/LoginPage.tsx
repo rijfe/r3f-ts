@@ -1,12 +1,19 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import { directionSet } from "../store/directionState";
 
 function LoginPage(){
     const navigate = useNavigate();
 
     const [id, setId] = useState<string>("");
     const [pwd, setPwd] = useState<string>("");
+    const [dircetionS, setDirectionSet] = useRecoilState(directionSet);
+
+    useEffect(()=>{
+        setDirectionSet(false);
+    },[]);
 
     return(
         <LoginPageContainer>
@@ -24,9 +31,9 @@ function LoginPage(){
                 </InputBoxContainer>
                 <LogintBtnContainer>
                     <LoginBtn onClick={()=>{
-                        // if(id === "김영우" && pwd === "123") navigate("/main");
-                        // else window.alert("ID와 비밀번호를 확인해주세요.");
-                        navigate("/main");
+                        if(id === "123" && pwd === "123") navigate("/main");
+                        else window.alert("ID와 비밀번호를 확인해주세요.");
+                        // navigate("/main");
                     }}>LOGIN</LoginBtn>
                     @ 아름덴티스트리
                 </LogintBtnContainer>

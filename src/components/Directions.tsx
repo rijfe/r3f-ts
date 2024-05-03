@@ -17,7 +17,7 @@ function Directions(){
                 <BtnBox>
                     <img 
                         src={plusLogo}
-                        style={{width: "4rem", height:"4rem", marginLeft:"1rem"}}
+                        style={{width: "4rem", height:"4rem", marginLeft:"1rem", marginBottom:"1rem"}}
                         onClick={()=>{
                             setDirection("yes");
                         }}
@@ -77,5 +77,5 @@ const BtnBox = styled.div`
     height:20%;
     display:flex;
     flex-direction:row;
-    align-items: center;
+    align-items: end;
 `;

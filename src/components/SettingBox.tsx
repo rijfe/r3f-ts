@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { useState } from "react";
 
 import Curves from "./Curves";
 import Connectors from "./Connectors";
