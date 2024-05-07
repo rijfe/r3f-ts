@@ -34,8 +34,16 @@ function HeadContainer(props:any){
             </Content>
             <UserContent>
                 <UserInfo>
-                    {userId}님 환영합니다.
+                    {userId}님
+                    
                 </UserInfo>
+                <LogoutBtn
+                    onClick={()=>{
+                        navigate(-1);
+                    }}
+                >
+                    Log Out
+                </LogoutBtn>
             </UserContent>
         </Header>
     );
@@ -90,4 +98,19 @@ const UserContent = styled.div`
 const UserInfo = styled.p`
     font-size: 2rem;
     margin-right:1rem;
+    display:flex;
+    flex-direction:row;
+`;
+
+const LogoutBtn = styled.div`
+    width: 8rem;
+    height: 70%;
+    display:flex;
+    justify-content: center;
+    align-items:center;
+    background-color: #0000aa;
+    border-radius:1rem;
+    color:white;
+    font-size:1.5rem;
+    margin-right: 2rem;
 `;

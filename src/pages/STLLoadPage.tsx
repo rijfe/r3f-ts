@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { useState, useRef,useEffect, Suspense } from "react";
+import { useState, useRef,useEffect, RefObject } from "react";
 import { useNavigate } from "react-router-dom";
 import { Canvas, ThreeEvent, useThree, useFrame,useLoader } from "@react-three/fiber";
-import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Box, TransformControls, Plane, useHelper, Cylinder} from "@react-three/drei";
+import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Box, TransformControls, Plane, useHelper, Cylinder, Html} from "@react-three/drei";
 import { BufferGeometry } from "three";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from "three";
@@ -41,6 +41,7 @@ function STLLoadPage(){
     const lightHelper1 = useRef<THREE.DirectionalLight>(null!);
     const lightHelper2 = useRef<THREE.DirectionalLight>(null!);
     const boxRef = useRef(null!);
+    const boxRef2 = useRef(null!);
 
     const [isEnter, setIsEnter] = useState<boolean>(false);
     const [isDrop, setIsDrop] = useState<boolean>(false);
@@ -50,6 +51,7 @@ function STLLoadPage(){
 
     const [offset, setOffset] = useState<number>(5.0);
     const [planeY, setPlaneY] = useState<number>(5.0);
+    const [planeY5, setPlaneY5] = useState<number>(5.0);
     const [conWid, setConWid] = useState<number>(2.0);
     const [conHei, setConHei] = useState<number>(4.0);
     const [conAngle, setConAngle] = useState<number>(4.0);
@@ -64,13 +66,16 @@ function STLLoadPage(){
     const [showConnect, setShowConnect] = useState<boolean>(false);
     const [connStart, setConnStart] = useState<boolean>(false);
 
+    const [connectOn5, setConnectOn5] = useState<boolean>(false);
+    const [showConnect5, setShowConnect5] = useState<boolean>(false);
+    const [connStart5, setConnStart5] = useState<boolean>(false);
+
     const [visible, setVisible] = useState<boolean>(false);
     const [hovered, setHovered] = useState<boolean>(false);
     const [jigVisible, setJigVisible] = useState<boolean>(true);
     const planeRef = useRef<THREE.Mesh>(null!);
 
     const [type, setType] = useState<String>("Ellipse");
-    
 
     const [geometry, setGeometry] = useState<Array<BufferGeometry>>([]);
     const [jigGeometry, setJigGeometry] = useState<BufferGeometry>(null!);
@@ -78,6 +83,15 @@ function STLLoadPage(){
 
     const dirSet = useRecoilValue(getDirectionSet);
     const [dircetionS, setDirectionset] = useRecoilState(directionSet);
+
+    const [posName, setPosName] = useState<String>("");
+
+    interface geoProps{
+        pos: String,
+        file: BufferGeometry
+    };
+
+    const [test, setTest] = useState<Array<geoProps>>([]);
 
     const handleDrop = (event : React.DragEvent) =>{
         event.preventDefault();
@@ -109,12 +123,16 @@ function STLLoadPage(){
 
     const { target, setTarget } = useStore();
 
-    // const camera = new THREE.OrthographicCamera(-1,1,-1,1,0.1,2000);
+    const camera = new THREE.OrthographicCamera(-8000,8000,-8000,8000,-8000,2000);
 
     useEffect(()=>{
-    //   setSettingOpen(true);
+
         setDirectionset(false);
     },[jigOpen]);
+
+    useEffect(()=>{
+        console.log(test);
+    },[test]);
 
     useEffect(()=>{
         setGeometry([]);
@@ -128,7 +146,7 @@ function STLLoadPage(){
                 <ListItem setIsSetOpen={setSettingOpen} isSetOpen={settingOpen} handleUpload={handleUpload} setIsOpen={setOpen} setIsPartOpen={setPartOpen} isOpen={open} isPartOpen={partOpen}/>
                 <DetailList isOpen={open} setGeo={setJigGeometry} setJig={setJigOpen} setIsDrop={setIsDrop} setIsOpen={setOpen}/>
                 <PartList isPartOpen={partOpen} lineNum={2}/>
-                <SettingBox setConnStart={setConnStart} num={settingNum} setNum={setSettingNum} type={type} setType={setType} isSettingOpen={settingOpen} boffset={offset} setBoffset={setOffset} width={conWid} setWidth={setConWid} height={conHei} setHeight={setConHei} angle={conAngle} setAngle={setConAngle} rotation={conRota} setRotation={setConRota} distance={conDis} setDistance={setConDis} cutting={conCut} setCutting={setConCut}/>
+                <SettingBox pos={posName} setPos={setPosName} setPosObj={setTest} setConnStart={setConnStart5} num={settingNum} setNum={setSettingNum} type={type} setType={setType} isSettingOpen={settingOpen} boffset={offset} setBoffset={setOffset} width={conWid} setWidth={setConWid} height={conHei} setHeight={setConHei} angle={conAngle} setAngle={setConAngle} rotation={conRota} setRotation={setConRota} distance={conDis} setDistance={setConDis} cutting={conCut} setCutting={setConCut}/>
     
                 {isDrop ? 
                     <>
@@ -234,18 +252,82 @@ function STLLoadPage(){
                                 >
                                     <boxGeometry args={[15,18,15]}/>
                                     <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
-                                    {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh position={state} showConnect={showConnect} boxRef={boxRef} connecStart={connStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY} setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={geo} setHoverd={setHovered} visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/>)) : null}
                                     
-                                   {geometry.length > 0 ? 
-                                   <mesh ref={planeRef}>
-                                        <Plane args={[15,15]} rotation-x={Math.PI/2} position={[0,planeY,0]}>
-                                            <meshStandardMaterial transparent side={THREE.DoubleSide}  opacity={0.6} color="#aaaaaa"  />
-                                        </Plane>
-                                   </mesh>
+                                    {test.length > 0 ? test.map((ele)=>{
+                                        if(ele["pos"] === "pos4"){
+                                            return(<LoadMesh position={state} showConnect={showConnect} boxRef={boxRef} connecStart={connStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY5} setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={ele["file"]} setHoverd={setHovered} visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/>);
+                                        }
+                                        
+                                    }) :null}
+                                   {test.length > 0 ? 
+                                   test.map((ele)=>{
+                                        if(ele["pos"] === "pos4"){
+                                            return(
+                                                <mesh ref={planeRef}>
+                                                    <Plane args={[15,15]} rotation-x={Math.PI/2} position={[0,planeY5,0]}>
+                                                        <meshStandardMaterial transparent side={THREE.DoubleSide}  opacity={0.6} color="#aaaaaa"  />
+                                                    </Plane>
+                                                </mesh>
+                                            );
+                                        }
+                                    
+                                    }) 
                                    : null}
+                                   <AxesHelper position={new THREE.Vector3(0,8.9,0)} visible={false} size={3}/>
+                                </mesh>
+
+                                <mesh 
+                                    ref={boxRef2}
+                                    position={[0,7.4,0]} 
+                                    scale={0.4}
+                                    onPointerOver={()=>{
+                                        setShowConnect5(true);
+                                    }}
+                                    onPointerOut={()=>{
+                                        setShowConnect5(false);
+                                    }}
+                                    onClick={()=>{
+                                        if(connStart){
+                                            setConnectOn5(true);
+                                            setShowConnect5(false);
+                                            setConnStart5(false);
+                                        }
+                                        
+                                    }}
+                                    onPointerMove={(e)=>{
+                                        if(connStart && geometry.length > 0){
+                                            
+                                            setState(e.clientX / window.innerWidth *2 -1);
+                                        }
+                                    }}
+                                >
+                                    <boxGeometry args={[15,18,15]}/>
+                                    <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
+                                    {test.length > 0 ? test.map((ele)=>{
+                                        if(ele["pos"] === "pos5"){
+                                            return(<LoadMesh position={state} showConnect={showConnect5} boxRef={boxRef2} connecStart={connStart5} setConnecOn={setConnectOn5} setConnecStart={setConnStart5} setOffset={setPlaneY} setNum={setSettingNum} type={type}  connectOn={connectOn5} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={ele["file"]} setHoverd={setHovered} visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/>);
+                                        }
+                                        
+                                    }) :null}
+                                   {test.length > 0 ? 
+                                    test.map((ele)=>{
+                                        if(ele["pos"] === "pos5"){
+                                            return(
+                                                <mesh ref={planeRef}>
+                                                    <Plane args={[15,15]} rotation-x={Math.PI/2} position={[0,planeY,0]}>
+                                                        <meshStandardMaterial transparent  opacity={0.6} color="#aaaaaa"  />
+                                                    </Plane>
+                                                </mesh>
+                                            );
+                                        }
+                                    
+                                    }) 
+                                   : null}
+                                   <AxesHelper position={new THREE.Vector3(0,8.9,0)} visible={false} size={3}/>
                                 </mesh>
                                 
                             </group>
+                        
                             <AxesHelper position={new THREE.Vector3(40,-30,0)} visible={true} size={15}/>
                             <OrbitControls ref={controlRef} dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.8}  mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
                             {target && visible &&

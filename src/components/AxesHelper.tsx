@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { Line, Text, Cone } from "@react-three/drei";
-import { useRef} from "react";
+import { useEffect, useRef, useState} from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { Flex, Box } from "@react-three/flex";
 
 interface AxesHelperProps {
     size: number,
@@ -10,9 +12,11 @@ interface AxesHelperProps {
 
 function AxesHelper(props:AxesHelperProps){
     const ref = useRef<THREE.Group>(null!);
-    
+    const [screenPosition, setScreenPosition] = useState<THREE.Vector3>(new THREE.Vector3());
+    const { camera, scene } = useThree();
+
     return(
-        <group ref={ref} position={[10,-20,0]}>
+        <group ref={ref} >
             <Line
                 points={[new THREE.Vector3(0,0,0),new THREE.Vector3(props.size,0,0)]}
                 color="#9a0000"
@@ -24,6 +28,7 @@ function AxesHelper(props:AxesHelperProps){
                 args={[1,2]}
                 position={[56.1,-30,0]}
                 rotation-z ={-Math.PI/2}
+                visible={props.visible}
             >
                 <meshStandardMaterial color={"#ff0000"} side={THREE.DoubleSide}/>
             </Cone>
@@ -37,6 +42,7 @@ function AxesHelper(props:AxesHelperProps){
             <Cone
                 args={[1,2]}
                 position={[40,-14.47,0]}
+                visible={props.visible}
             >
                 <meshStandardMaterial color={"#00ff00"} side={THREE.DoubleSide}/>
             </Cone>
@@ -51,6 +57,7 @@ function AxesHelper(props:AxesHelperProps){
                 args={[1,2]}
                 position={[40,-30,16.2]}
                 rotation-x={Math.PI/2}
+                visible={props.visible}
             >
                 <meshStandardMaterial color={"#0000ff"} side={THREE.DoubleSide}/>
             </Cone>

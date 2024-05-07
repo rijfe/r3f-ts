@@ -26,7 +26,8 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef}:
             lightRef.current.position.lerp(camera.position, 0.1);
             lightRef2.current.position.lerp(camera.position, 0.1);
         }
-        
+        // htmlRef.current.position.lerp(camera.position,0.1);
+        htmlRef.current.updateMatrix();
     });
  
     return (
