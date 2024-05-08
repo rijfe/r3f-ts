@@ -164,14 +164,14 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr} : PartListProps){
                 style={{height:`${lineNum*4.5}%`}}
             >
                 <PartBox style={{height:`${100/lineNum}%`}}>
-                    <Part onClick={(e)=>{setPosName("pos1");}}><PartDeco>pos1</PartDeco></Part>
-                    <Part onClick={(e)=>{setPosName("pos2");}}><PartDeco>pos2</PartDeco></Part>
-                    <Part onClick={(e)=>{setPosName("pos3");}}><PartDeco>pos3</PartDeco></Part>
-                    <Part onClick={(e)=>{}}><PartDeco>pos4</PartDeco></Part>
-                    <Part onClick={(e)=>{}}><PartDeco>pos5</PartDeco></Part>
+                    <Part onClick={(e)=>{setPosName("pos1");}}><PartDeco className={posName === "pos1" ? "pos":""}>pos1</PartDeco></Part>
+                    <Part onClick={(e)=>{setPosName("pos2");}}><PartDeco className={posName === "pos2" ? "pos":""}>pos2</PartDeco></Part>
+                    <Part onClick={(e)=>{setPosName("pos3");}}><PartDeco className={posName === "pos3" ? "pos":""}>pos3</PartDeco></Part>
+                    <Part onClick={(e)=>{}}><PartDeco className={posName === "pos4" ? "pos":""}>pos4</PartDeco></Part>
+                    <Part onClick={(e)=>{}}><PartDeco className={posName === "pos5" ? "pos":""}>pos5</PartDeco></Part>
                 </PartBox>
                 <PartBox style={{height:`${100/lineNum}%`}}>
-                    <Part onClick={(e)=>{setPosName("pos6");}}><PartDeco>pos6</PartDeco></Part>
+                    <Part onClick={(e)=>{setPosName("pos6");}}><PartDeco className={posName === "pos6" ? "pos":""}>pos6</PartDeco></Part>
                 </PartBox>
             </PartContainer>
             <BlankContainer></BlankContainer>
@@ -255,6 +255,9 @@ const PartDeco = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    &.pos{
+        border: 0.2rem solid #ff0000;
+    }
     &:hover{
         border-bottom: 0.2rem solid #ff0000;
     }
