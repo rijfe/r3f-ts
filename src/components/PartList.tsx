@@ -24,7 +24,7 @@ function PartList({isPartOpen, lineNum, setPosArr} : PartListProps){
             title: "Dumy1",
             material: "Dumy_Block",
             w: 15.0,
-            h: 32.0,
+            h: 18.0,
             d: 15.0,
             visible: false
         },
