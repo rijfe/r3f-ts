@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
-import { getUserInfo } from "../store/UserInfo";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { getUserInfo, userInfo } from "../store/UserInfo";
 
 function HeadContainer(props:any){
     const navigate = useNavigate();
     const userId = useRecoilValue(getUserInfo);
-    
+    const [user, setUser] = useRecoilState(userInfo);
 
     useEffect(()=>{
  
@@ -17,7 +17,10 @@ function HeadContainer(props:any){
         <Header>
             <Content>
                <HeaderTitle>
-                    R3F
+                    <TitleBox>
+                        R3F
+                    </TitleBox>
+                   
                 </HeaderTitle>
 
                 <PageBox onClick={()=>{navigate('/main', {replace:true});}}>
@@ -40,6 +43,7 @@ function HeadContainer(props:any){
                 <LogoutBtn
                     onClick={()=>{
                         navigate(-1);
+                        setUser("");
                     }}
                 >
                     Log Out
@@ -64,6 +68,14 @@ const HeaderTitle = styled.h1`
     font-weight: 900;
     font-size: 3rem;
     margin-right: 5rem;
+`;
+
+const TitleBox = styled.div`
+    width: 5rem;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;
 
 const PageBox = styled.div`

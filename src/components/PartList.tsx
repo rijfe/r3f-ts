@@ -13,10 +13,11 @@ interface posProps{
 interface PartListProps {
     isPartOpen : boolean,
     lineNum: number,
+    posArr: posProps[],
     setPosArr: React.Dispatch<React.SetStateAction<posProps[]>>,
 }
 
-function PartList({isPartOpen, lineNum, setPosArr} : PartListProps){
+function PartList({isPartOpen, lineNum, setPosArr, posArr} : PartListProps){
     const [posName, setPosName] = useState<String>("");
 
     const dumyData = [
@@ -178,7 +179,7 @@ function PartList({isPartOpen, lineNum, setPosArr} : PartListProps){
                 <BlankContainer/>
                 <ListOverflow>
                     {dumyData.map((ele, idx)=>(
-                        <ListCard posName={posName} setPosArr={setPosArr} key={idx} title={ele.title} material={ele.material} w={ele.w} h={ele.h} d={ele.d} visible={ele.visible}/>
+                        <ListCard posArr={posArr} posName={posName} setPosArr={setPosArr} key={idx} title={ele.title} material={ele.material} w={ele.w} h={ele.h} d={ele.d} visible={ele.visible}/>
                     ))}
                     <BlankContainer/>
                 </ListOverflow>

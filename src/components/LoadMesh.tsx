@@ -116,7 +116,7 @@ function LoadMesh({ geometry, type,connectOn, position, boxRef, showConnect, vis
                     // event.stopPropagation();
                     setting(meshAllRef);
                     setVisible(!visible);
-                    
+                    setFocus(!focus);
                     setSetting(!isSettingOpen);
                 }}
                 onPointerOver={()=>{

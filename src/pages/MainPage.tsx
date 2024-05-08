@@ -1,16 +1,26 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { useNavigate } from "react-router-dom";
 
 import Box from "../components/Box";
 import HeadContainer from "../components/HeadContainer";
+import { useRecoilValue } from "recoil";
+import { getUserInfo } from "../store/UserInfo";
 
 function MainPage(){
     const navigate = useNavigate();
-
+    const userId = useRecoilValue(getUserInfo);
     const [num, setNum] = useState<number>(1);
     const [num2, setNum2] = useState<number>(1);
+
+    useEffect(()=>{
+        
+        if(userId === ""){
+            window.alert("login 해주세요.");
+            navigate(-1);
+        }
+    },[]);
 
     return(
         <MainPageContainer>

@@ -16,6 +16,7 @@ interface ListCardProps{
     d: number,
     visible: boolean,
     posName:String,
+    posArr: posProps[],
     setPosArr: React.Dispatch<React.SetStateAction<posProps[]>>,
 }
 
@@ -27,26 +28,38 @@ function ListCard(props:ListCardProps){
         <ListBox
             onDoubleClick={()=>{
                 let pArr : [number, number, number] = [0,0,0];
-                if(props.posName === "pos6"){
-                    pArr = [8,7.4,0];
+                let idx = props.posArr.findIndex(item => item.pos === props.posName);
+                let newArr = [...props.posArr];
+
+                if(idx === -1){
+                    if(props.posName === "pos6"){
+                        pArr = [8,7.4,0];
+                    }
+                    if(props.posName === "pos1"){
+                        pArr = [8,-7.4,0];
+                    }
+                    if(props.posName === "pos2"){
+                        pArr = [0,-7.4,0];
+                    }
+                    if(props.posName === "pos3"){
+                        pArr = [-8,-7.4,0];
+                    }
+                    let data:posProps = {
+                        pos: props.posName,
+                        w: props.w,
+                        h: props.h,
+                        d: props.d,
+                        position: pArr,
+                    };
+                    props.setPosArr(prev=>[...prev, data]);
+                }        
+                else{
+                    newArr[idx].w = props.w;
+                    newArr[idx].d = props.d;
+                    newArr[idx].h = props.h;
+
+                    props.setPosArr(newArr);
                 }
-                if(props.posName === "pos1"){
-                    pArr = [8,-7.4,0];
-                }
-                if(props.posName === "pos2"){
-                    pArr = [0,-7.4,0];
-                }
-                if(props.posName === "pos3"){
-                    pArr = [-8,-7.4,0];
-                }
-                let data:posProps = {
-                    pos: props.posName,
-                    w: props.w,
-                    h: props.h,
-                    d: props.d,
-                    position: pArr,
-                };
-                props.setPosArr(prev=>[...prev, data])
             }}
         >
             <ListTitle>

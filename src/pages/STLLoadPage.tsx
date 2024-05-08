@@ -93,7 +93,7 @@ function STLLoadPage(){
 
     const dirSet = useRecoilValue(getDirectionSet);
     const [dircetionS, setDirectionset] = useRecoilState(directionSet);
-
+    // const [dircetionS5, setDirectionset5] = useRecoilState(directionSet);
     const [posName, setPosName] = useState<String>("");
 
     interface geoProps{
@@ -155,6 +155,7 @@ function STLLoadPage(){
     },[test]);
 
     useEffect(()=>{
+
         setGeometry([]);
     },[]);
     return(
@@ -165,7 +166,7 @@ function STLLoadPage(){
             <Bodycontainer >
                 <ListItem setIsSetOpen={setSettingOpen} isSetOpen={settingOpen} handleUpload={handleUpload} setIsOpen={setOpen} setIsPartOpen={setPartOpen} isOpen={open} isPartOpen={partOpen}/>
                 <DetailList isOpen={open} setGeo={setJigGeometry} setJig={setJigOpen} setIsDrop={setIsDrop} setIsOpen={setOpen}/>
-                <PartList setPosArr={setPosArr} isPartOpen={partOpen} lineNum={2}/>
+                <PartList posArr={posArr} setPosArr={setPosArr} isPartOpen={partOpen} lineNum={2}/>
                 <SettingBox pos={posName} setPos={setPosName} setPosObj={setTest} setConnStart={conPos === "pos4" ? setConnStart : setConnStart5} num={settingNum} setNum={setSettingNum} type={conPos === "pos4"? type: type5} setType={conPos === "pos4"? setType : setType5} isSettingOpen={settingOpen} boffset={conPos === "pos4"? offset : offset5} setBoffset={conPos === "pos4"? setOffset : setOffset5} width={conPos === "pos4"? conWid : conWid5} setWidth={conPos === "pos4"? setConWid : setConWid5} height={conPos === "pos4"? conHei : conHei5} setHeight={conPos === "pos4"? setConHei : setConHei5} angle={conPos === "pos4"? conAngle : conAngle5} setAngle={conPos === "pos4"? setConAngle : setConAngle5} rotation={conPos === "pos4"? conRota : conRota5} setRotation={conPos === "pos4"? setConRota : setConRota5} distance={conPos === "pos4"? conDis : conDis5} setDistance={conPos === "pos4"?setConDis : setConDis5} cutting={conPos === "pos4"? conCut : conCut5} setCutting={conPos === "pos4"? setConCut : setConCut5}/>
     
                 {isDrop ? 
@@ -357,7 +358,7 @@ function STLLoadPage(){
                                                 <boxGeometry args={[ele.w,ele.h,ele.d]}/>
                                                 <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
                                             
-                                            {/* <AxesHelper position={new THREE.Vector3(0,8.9,0)} visible={false} size={3}/> */}
+                                            {ele.pos === "pos6" ? <AxesHelper position={new THREE.Vector3(0,8.9,0)} visible={false} size={3}/> : <AxesHelper position={new THREE.Vector3(0,-8.9,0)} visible={false} size={3}/>}
                                             </mesh>
                                         );
                                     })
