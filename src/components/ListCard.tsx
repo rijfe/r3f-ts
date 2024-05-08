@@ -1,12 +1,22 @@
 import styled from "styled-components";
 
+interface posProps{
+    pos: String,
+    w: number,
+    h: number,
+    d: number,
+    position: [number, number, number]
+};
+
 interface ListCardProps{
     title: string,
     material: string,
     w: number,
     h: number,
     d: number,
-    visible: boolean
+    visible: boolean,
+    posName:String,
+    setPosArr: React.Dispatch<React.SetStateAction<posProps[]>>,
 }
 
 function ListCard(props:ListCardProps){
@@ -14,7 +24,31 @@ function ListCard(props:ListCardProps){
         props.visible ? 
             <ListBox></ListBox> 
         :
-        <ListBox>
+        <ListBox
+            onDoubleClick={()=>{
+                let pArr : [number, number, number] = [0,0,0];
+                if(props.posName === "pos6"){
+                    pArr = [8,7.4,0];
+                }
+                if(props.posName === "pos1"){
+                    pArr = [8,-7.4,0];
+                }
+                if(props.posName === "pos2"){
+                    pArr = [0,-7.4,0];
+                }
+                if(props.posName === "pos3"){
+                    pArr = [-8,-7.4,0];
+                }
+                let data:posProps = {
+                    pos: props.posName,
+                    w: props.w,
+                    h: props.h,
+                    d: props.d,
+                    position: pArr,
+                };
+                props.setPosArr(prev=>[...prev, data])
+            }}
+        >
             <ListTitle>
                 <p style={{fontSize:"2rem", fontWeight:500, marginLeft:4}}>{props.title}</p>
             </ListTitle>

@@ -1,12 +1,24 @@
 import styled from "styled-components";
 import ListCard from "./ListCard";
+import { useState } from "react";
+
+interface posProps{
+    pos: String,
+    w: number,
+    h: number,
+    d: number,
+    position: [number, number, number]
+};
 
 interface PartListProps {
     isPartOpen : boolean,
     lineNum: number,
+    setPosArr: React.Dispatch<React.SetStateAction<posProps[]>>,
 }
 
-function PartList({isPartOpen, lineNum} : PartListProps){
+function PartList({isPartOpen, lineNum, setPosArr} : PartListProps){
+    const [posName, setPosName] = useState<String>("");
+
     const dumyData = [
         {
             title: "Dumy1",
@@ -151,14 +163,14 @@ function PartList({isPartOpen, lineNum} : PartListProps){
                 style={{height:`${lineNum*4.5}%`}}
             >
                 <PartBox style={{height:`${100/lineNum}%`}}>
-                    <Part onClick={(e)=>{}}><PartDeco>pos1</PartDeco></Part>
-                    <Part onClick={(e)=>{}}><PartDeco>pos2</PartDeco></Part>
-                    <Part onClick={(e)=>{}}><PartDeco>pos3</PartDeco></Part>
+                    <Part onClick={(e)=>{setPosName("pos1");}}><PartDeco>pos1</PartDeco></Part>
+                    <Part onClick={(e)=>{setPosName("pos2");}}><PartDeco>pos2</PartDeco></Part>
+                    <Part onClick={(e)=>{setPosName("pos3");}}><PartDeco>pos3</PartDeco></Part>
                     <Part onClick={(e)=>{}}><PartDeco>pos4</PartDeco></Part>
                     <Part onClick={(e)=>{}}><PartDeco>pos5</PartDeco></Part>
                 </PartBox>
                 <PartBox style={{height:`${100/lineNum}%`}}>
-                    <Part onClick={(e)=>{}}><PartDeco>pos6</PartDeco></Part>
+                    <Part onClick={(e)=>{setPosName("pos6");}}><PartDeco>pos6</PartDeco></Part>
                 </PartBox>
             </PartContainer>
             <BlankContainer></BlankContainer>
@@ -166,7 +178,7 @@ function PartList({isPartOpen, lineNum} : PartListProps){
                 <BlankContainer/>
                 <ListOverflow>
                     {dumyData.map((ele, idx)=>(
-                        <ListCard key={idx} title={ele.title} material={ele.material} w={ele.w} h={ele.h} d={ele.d} visible={ele.visible}/>
+                        <ListCard posName={posName} setPosArr={setPosArr} key={idx} title={ele.title} material={ele.material} w={ele.w} h={ele.h} d={ele.d} visible={ele.visible}/>
                     ))}
                     <BlankContainer/>
                 </ListOverflow>
