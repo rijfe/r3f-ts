@@ -50,6 +50,7 @@ function STLLoadPage(){
     const [settingNum, setSettingNum] = useState<number>(1);
 
     const [offset, setOffset] = useState<number>(5.0);
+    const [offset5, setOffset5] = useState<number>(5.0);
     const [planeY, setPlaneY] = useState<number>(5.0);
     const [planeY5, setPlaneY5] = useState<number>(5.0);
     const [conWid, setConWid] = useState<number>(2.0);
@@ -58,6 +59,12 @@ function STLLoadPage(){
     const [conRota, setConRota] = useState<number>(0.0);
     const [conDis, setConDis] = useState<number>(0.0);
     const [conCut, setConCut] = useState<number>(50.0);
+    const [conWid5, setConWid5] = useState<number>(2.0);
+    const [conHei5, setConHei5] = useState<number>(4.0);
+    const [conAngle5, setConAngle5] = useState<number>(4.0);
+    const [conRota5, setConRota5] = useState<number>(0.0);
+    const [conDis5, setConDis5] = useState<number>(0.0);
+    const [conCut5, setConCut5] = useState<number>(50.0);
 
     const [open, setOpen] = useState<boolean>(false);
     const [partOpen, setPartOpen] = useState<boolean>(false);
@@ -75,7 +82,10 @@ function STLLoadPage(){
     const [jigVisible, setJigVisible] = useState<boolean>(true);
     const planeRef = useRef<THREE.Mesh>(null!);
 
+    const [conPos, setConPos] = useState<string>("");
+
     const [type, setType] = useState<String>("Ellipse");
+    const [type5, setType5] = useState<String>("Ellipse");
 
     const [geometry, setGeometry] = useState<Array<BufferGeometry>>([]);
     const [jigGeometry, setJigGeometry] = useState<BufferGeometry>(null!);
@@ -146,7 +156,7 @@ function STLLoadPage(){
                 <ListItem setIsSetOpen={setSettingOpen} isSetOpen={settingOpen} handleUpload={handleUpload} setIsOpen={setOpen} setIsPartOpen={setPartOpen} isOpen={open} isPartOpen={partOpen}/>
                 <DetailList isOpen={open} setGeo={setJigGeometry} setJig={setJigOpen} setIsDrop={setIsDrop} setIsOpen={setOpen}/>
                 <PartList isPartOpen={partOpen} lineNum={2}/>
-                <SettingBox pos={posName} setPos={setPosName} setPosObj={setTest} setConnStart={setConnStart5} num={settingNum} setNum={setSettingNum} type={type} setType={setType} isSettingOpen={settingOpen} boffset={offset} setBoffset={setOffset} width={conWid} setWidth={setConWid} height={conHei} setHeight={setConHei} angle={conAngle} setAngle={setConAngle} rotation={conRota} setRotation={setConRota} distance={conDis} setDistance={setConDis} cutting={conCut} setCutting={setConCut}/>
+                <SettingBox pos={posName} setPos={setPosName} setPosObj={setTest} setConnStart={conPos === "pos4" ? setConnStart : setConnStart5} num={settingNum} setNum={setSettingNum} type={conPos === "pos4"? type: type5} setType={conPos === "pos4"? setType : setType5} isSettingOpen={settingOpen} boffset={conPos === "pos4"? offset : offset5} setBoffset={conPos === "pos4"? setOffset : setOffset5} width={conPos === "pos4"? conWid : conWid5} setWidth={conPos === "pos4"? setConWid : setConWid5} height={conPos === "pos4"? conHei : conHei5} setHeight={conPos === "pos4"? setConHei : setConHei5} angle={conPos === "pos4"? conAngle : conAngle5} setAngle={conPos === "pos4"? setConAngle : setConAngle5} rotation={conPos === "pos4"? conRota : conRota5} setRotation={conPos === "pos4"? setConRota : setConRota5} distance={conPos === "pos4"? conDis : conDis5} setDistance={conPos === "pos4"?setConDis : setConDis5} cutting={conPos === "pos4"? conCut : conCut5} setCutting={conPos === "pos4"? setConCut : setConCut5}/>
     
                 {isDrop ? 
                     <>
@@ -236,6 +246,7 @@ function STLLoadPage(){
                                         setShowConnect(false);
                                     }}
                                     onClick={()=>{
+                                        setConPos("pos4");
                                         if(connStart){
                                             setConnectOn(true);
                                             setShowConnect(false);
@@ -251,7 +262,7 @@ function STLLoadPage(){
                                     }}
                                 >
                                     <boxGeometry args={[15,18,15]}/>
-                                    <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
+                                    <meshStandardMaterial transparent={true}side={THREE.DoubleSide} opacity={0.3} color="#2156f8" />
                                     
                                     {test.length > 0 ? test.map((ele)=>{
                                         if(ele["pos"] === "pos4"){
@@ -264,9 +275,9 @@ function STLLoadPage(){
                                         if(ele["pos"] === "pos4"){
                                             return(
                                                 <mesh ref={planeRef}>
-                                                    <Plane args={[15,15]} rotation-x={Math.PI/2} position={[0,planeY5,0]}>
+                                                    <Box args={[15,0.1,15]} rotation-y={-Math.PI/2} position={[0,planeY5,0]}>
                                                         <meshStandardMaterial transparent side={THREE.DoubleSide}  opacity={0.6} color="#aaaaaa"  />
-                                                    </Plane>
+                                                    </Box>
                                                 </mesh>
                                             );
                                         }
@@ -287,7 +298,8 @@ function STLLoadPage(){
                                         setShowConnect5(false);
                                     }}
                                     onClick={()=>{
-                                        if(connStart){
+                                        setConPos("pos5")
+                                        if(connStart5){
                                             setConnectOn5(true);
                                             setShowConnect5(false);
                                             setConnStart5(false);
@@ -305,7 +317,7 @@ function STLLoadPage(){
                                     <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
                                     {test.length > 0 ? test.map((ele)=>{
                                         if(ele["pos"] === "pos5"){
-                                            return(<LoadMesh position={state} showConnect={showConnect5} boxRef={boxRef2} connecStart={connStart5} setConnecOn={setConnectOn5} setConnecStart={setConnStart5} setOffset={setPlaneY} setNum={setSettingNum} type={type}  connectOn={connectOn5} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={ele["file"]} setHoverd={setHovered} visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/>);
+                                            return(<LoadMesh position={state} showConnect={showConnect5} boxRef={boxRef2} connecStart={connStart5} setConnecOn={setConnectOn5} setConnecStart={setConnStart5} setOffset={setPlaneY} setNum={setSettingNum} type={type5}  connectOn={connectOn5} offset={offset5} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={ele["file"]} setHoverd={setHovered} visible={visible} setVisible={setVisible} useStore={useStore} width={conWid5} height={conHei5} angle={conAngle5} rotation={conRota5} distance={conDis5} cutting={conCut5}/>);
                                         }
                                         
                                     }) :null}
@@ -315,7 +327,7 @@ function STLLoadPage(){
                                             return(
                                                 <mesh ref={planeRef}>
                                                     <Plane args={[15,15]} rotation-x={Math.PI/2} position={[0,planeY,0]}>
-                                                        <meshStandardMaterial transparent  opacity={0.6} color="#aaaaaa"  />
+                                                        <meshStandardMaterial transparent side={THREE.DoubleSide} opacity={0.6} color="#aaaaaa"  />
                                                     </Plane>
                                                 </mesh>
                                             );

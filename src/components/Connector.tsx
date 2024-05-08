@@ -51,10 +51,15 @@ function Connector(props : ConnectorProps){
                 setting(cylinderRef);
                 props.setVisible(!props.visible);
                 props.setHoverd(true);
-                setFocus(!focus);
+                
                 props.setSetting(true);
-                props.setNum(5);
+                
             }}
+            onClick={(e)=>{
+                e.stopPropagation();
+                setFocus(!focus);
+                props.setNum(5);
+            }}  
         >
             <meshStandardMaterial ref={mateRef} color={focus ? "#fcf000":"#00ffff"}/>
         </Cylinder>

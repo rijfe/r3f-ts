@@ -116,7 +116,7 @@ function LoadMesh({ geometry, type,connectOn, position, boxRef, showConnect, vis
                     // event.stopPropagation();
                     setting(meshAllRef);
                     setVisible(!visible);
-                    setFocus(!focus);
+                    
                     setSetting(!isSettingOpen);
                 }}
                 onPointerOver={()=>{
@@ -131,6 +131,9 @@ function LoadMesh({ geometry, type,connectOn, position, boxRef, showConnect, vis
                         setHoverd(false);
                         setting(meshRef);
                     }
+                }}
+                onClick={(e)=>{
+                    setFocus(!focus);
                 }}
                 position={[0,0,0]}                    
             >
