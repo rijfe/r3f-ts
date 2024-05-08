@@ -72,14 +72,14 @@ function SettingBox({isSettingOpen, type, setPosObj, pos,setPos, setConnStart,se
 
             <PosContainer>
                 <PosBox style={{height:`${100/2}%`}}>
-                    <Pos onClick={(e)=>{setPos("pos1");}}><PosDeco>pos1</PosDeco></Pos>
-                    <Pos onClick={(e)=>{setPos("pos2");}}><PosDeco>pos2</PosDeco></Pos>
-                    <Pos onClick={(e)=>{setPos("pos3");}}><PosDeco>pos3</PosDeco></Pos>
-                    <Pos onClick={(e)=>{setPos("pos4");}}><PosDeco>pos4</PosDeco></Pos>
-                    <Pos onClick={(e)=>{setPos("pos5");}}><PosDeco>pos5</PosDeco></Pos>
+                    <Pos onClick={(e)=>{setPos("pos1");}}><PosDeco className={pos === "pos1" ? "pos" : ""}>pos1</PosDeco></Pos>
+                    <Pos onClick={(e)=>{setPos("pos2");}}><PosDeco className={pos === "pos2" ? "pos" : ""}>pos2</PosDeco></Pos>
+                    <Pos onClick={(e)=>{setPos("pos3");}}><PosDeco className={pos === "pos3" ? "pos" : ""}>pos3</PosDeco></Pos>
+                    <Pos onClick={(e)=>{setPos("pos4");}}><PosDeco className={pos === "pos4" ? "pos" : ""}>pos4</PosDeco></Pos>
+                    <Pos onClick={(e)=>{setPos("pos5");}}><PosDeco className={pos === "pos5" ? "pos" : ""}>pos5</PosDeco></Pos>
                 </PosBox>
                 <PosBox style={{height:`${100/2}%`}}>
-                    <Pos onClick={(e)=>{}}><PosDeco>pos6</PosDeco></Pos>
+                    <Pos onClick={(e)=>{setPos("pos6");}}><PosDeco className={pos === "pos6" ? "pos" : ""}>pos6</PosDeco></Pos>
                 </PosBox>
             </PosContainer>
             <BlankContainer/>
@@ -200,6 +200,9 @@ const PosDeco = styled.div`
     align-items: center;
     &:hover{
         border-bottom: 0.2rem solid #ff0000;
+    }
+    &.pos{
+        border: 0.2rem solid #ff0000;
     }
 `; 
 
