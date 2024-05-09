@@ -6,6 +6,16 @@ import Connector from "./Connector";
 import RectangleConnector from "./RectangleConnector";
 import { directionState, directionPoint,directionSet } from "../store/directionState";
 import DirectionArrow from "./DirectionArrow";
+import { MeshData } from "./MeshData";
+
+interface posProps{
+    pos: String,
+    w: number,
+    h: number,
+    d: number,
+    position: [number, number, number],
+    data: MeshData,
+};
 
 interface loadMesh{
     geometry: any,
@@ -18,6 +28,7 @@ interface loadMesh{
     offset: number,
     connectOn: boolean,
     showConnect: boolean,
+    idx:number,
     type: String,
     width: number,
     height : number,
@@ -31,10 +42,12 @@ interface loadMesh{
     connecStart:boolean,
     setConnecStart: React.Dispatch<React.SetStateAction<boolean>>,
     setConnecOn: React.Dispatch<React.SetStateAction<boolean>>,
-    position:number
+    position:number,
+    setPosArr: React.Dispatch<React.SetStateAction<posProps[]>>,
+    posArr:posProps[]
 }
 
-function LoadMesh({ geometry, type,connectOn, position, boxRef, showConnect, visible, setVisible, setHoverd, offset, setOffset,useStore, setSetting, isSettingOpen, width, height, connecStart, setConnecOn, angle, setNum} : loadMesh){
+function LoadMesh({ geometry, type,connectOn,setPosArr, position, boxRef,idx,posArr, showConnect, visible, setVisible, setHoverd, offset, setOffset,useStore, setSetting, isSettingOpen, width, height, connecStart, setConnecOn, angle, setNum} : loadMesh){
     const meshRef = useRef<THREE.Mesh>(null!);
     const meshAllRef = useRef<THREE.Mesh>(null!);
     const edgeRef = useRef<THREE.Mesh>(null!);
@@ -55,6 +68,7 @@ function LoadMesh({ geometry, type,connectOn, position, boxRef, showConnect, vis
     const newArr: THREE.Vector3[] = [];
     const vector3 : THREE.Vector3[] = [];
     const world = useMemo(()=> new THREE.Vector3(), []);
+
 
     useFrame(()=>{
         const boxCenter = boxRef.getWorldPosition(world);
@@ -96,6 +110,7 @@ function LoadMesh({ geometry, type,connectOn, position, boxRef, showConnect, vis
             setCenterZ(center.z);
             setFocus(false);
             setOffset(offset+boundingBox.max.y*0.3);
+            
 
             setBox3(boundingBox);
         }
@@ -103,7 +118,12 @@ function LoadMesh({ geometry, type,connectOn, position, boxRef, showConnect, vis
     }, [geometry,offset]);
 
     useEffect(() => {
-        if(curY != 0) setOffset(offset+curY+1);
+        if(curY != 0){ 
+            setOffset(offset+curY+1);
+            let newArr = [...posArr];
+            newArr[idx].data.planeY=offset+curY+1;
+            setPosArr(newArr);
+        }
 
     }, [focus]);
 

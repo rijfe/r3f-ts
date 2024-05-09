@@ -348,7 +348,7 @@ function STLLoadPage(){
                                    <AxesHelper position={new THREE.Vector3(0,8.9,0)} visible={false} size={3}/>
                                 </mesh> */}
                                 {posArr.length > 0 ?
-                                    posArr.map((ele)=>{
+                                    posArr.map((ele,idx)=>{
                                         return(
                                             <mesh 
                                                 ref={elem=>(boxRef.current[Number(ele.pos.split("s")[1])] = elem)}
@@ -361,6 +361,7 @@ function STLLoadPage(){
                                                     setShowConnect(false);
                                                 }}
                                                 onClick={()=>{
+                                                    setPlaneY5(ele.data.planeY);
                                                     if(connStart){
                                                         setConnectOn(true);
                                                         setShowConnect(false);
@@ -377,7 +378,7 @@ function STLLoadPage(){
                                             >
                                                 <boxGeometry args={[ele.w,ele.h,ele.d]}/>
                                                 <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
-                                                {ele.data.file != null ?<LoadMesh position={state} showConnect={showConnect} boxRef={boxRef.current[Number(ele.pos.split("s")[1])]} connecStart={connStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY5} setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={ele.data.file} setHoverd={setHovered} visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/> :null}
+                                                {ele.data.file != null ?<LoadMesh posArr={posArr} position={state} showConnect={ele.data.showConnect} boxRef={boxRef.current[Number(ele.pos.split("s")[1])]} setPosArr={setPosArr} idx={idx} connecStart={ele.data.conStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY5} setNum={setSettingNum} type={ele.data.type}  connectOn={ele.data.connectOn} offset={ele.data.offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={ele.data.file} setHoverd={setHovered} visible={visible} setVisible={setVisible} useStore={useStore} width={ele.data.conWid} height={ele.data.conHei} angle={ele.data.conAngle} rotation={ele.data.conRotation} distance={ele.data.conDis} cutting={ele.data.conCut}/> :null}
                                                 {Number(ele.pos.split("s")[1]) >= 4 ? <AxesHelper position={new THREE.Vector3(0,8.9,0)} visible={false} size={3}/> : <AxesHelper position={new THREE.Vector3(0,-8.9,0)} visible={false} size={3}/>}
                                                 <mesh ref={planeRef}>
                                                     <Plane args={[15,15]} rotation-x={Math.PI/2} position={[0,ele.data.planeY,0]}>
