@@ -29,6 +29,7 @@ import { off } from "process";
 import RectangleConnector from "../components/RectangleConnector";
 import { directionSet, getDirectionSet } from "../store/directionState";
 import DirectionArrow from "../components/DirectionArrow";
+import { MeshData } from "../components/MeshData";
 
 const useStore = create((set:any)=>({target: null, setTarget: (target : any)=>set({target}) }));
 const test = useLoader.preload(STLLoader, ["/models/5X500L V2-CAD BLOCK JIG_형상추가.stl"]);
@@ -73,10 +74,6 @@ function STLLoadPage(){
     const [showConnect, setShowConnect] = useState<boolean>(false);
     const [connStart, setConnStart] = useState<boolean>(false);
 
-    const [connectOn5, setConnectOn5] = useState<boolean>(false);
-    const [showConnect5, setShowConnect5] = useState<boolean>(false);
-    const [connStart5, setConnStart5] = useState<boolean>(false);
-
     const [visible, setVisible] = useState<boolean>(false);
     const [hovered, setHovered] = useState<boolean>(false);
     const [jigVisible, setJigVisible] = useState<boolean>(true);
@@ -109,7 +106,8 @@ function STLLoadPage(){
         w: number,
         h: number,
         d: number,
-        position: [number, number, number]
+        position: [number, number, number],
+        data: MeshData
     };
 
     const [posArr, setPosArr] = useState<Array<posProps>>([]);
@@ -168,7 +166,7 @@ function STLLoadPage(){
                 <ListItem setIsSetOpen={setSettingOpen} isSetOpen={settingOpen} handleUpload={handleUpload} setIsOpen={setOpen} setIsPartOpen={setPartOpen} isOpen={open} isPartOpen={partOpen}/>
                 <DetailList isOpen={open} setGeo={setJigGeometry} setJig={setJigOpen} setIsDrop={setIsDrop} setIsOpen={setOpen}/>
                 <PartList posArr={posArr} setPosArr={setPosArr} isPartOpen={partOpen} lineNum={2}/>
-                <SettingBox posObj={test} pos={posName} setPos={setPosName} setPosObj={setTest} setConnStart={conPos === "pos4" ? setConnStart : setConnStart5} num={settingNum} setNum={setSettingNum} type={conPos === "pos4"? type: type5} setType={conPos === "pos4"? setType : setType5} isSettingOpen={settingOpen} boffset={conPos === "pos4"? offset : offset5} setBoffset={conPos === "pos4"? setOffset : setOffset5} width={conPos === "pos4"? conWid : conWid5} setWidth={conPos === "pos4"? setConWid : setConWid5} height={conPos === "pos4"? conHei : conHei5} setHeight={conPos === "pos4"? setConHei : setConHei5} angle={conPos === "pos4"? conAngle : conAngle5} setAngle={conPos === "pos4"? setConAngle : setConAngle5} rotation={conPos === "pos4"? conRota : conRota5} setRotation={conPos === "pos4"? setConRota : setConRota5} distance={conPos === "pos4"? conDis : conDis5} setDistance={conPos === "pos4"?setConDis : setConDis5} cutting={conPos === "pos4"? conCut : conCut5} setCutting={conPos === "pos4"? setConCut : setConCut5}/>
+                <SettingBox posObj={posArr} pos={posName} setPos={setPosName} setPosObj={setPosArr} setConnStart={setConnStart} num={settingNum} setNum={setSettingNum} type={type} setType={setType} isSettingOpen={settingOpen} boffset={offset} setBoffset={setOffset} width={conWid} setWidth={setConWid} height={conHei} setHeight={setConHei} angle={conAngle} setAngle={setConAngle} rotation={conRota} setRotation={setConRota} distance={conDis} setDistance={setConDis} cutting={conCut} setCutting={setConCut}/>
     
                 {isDrop ? 
                     <>
@@ -247,7 +245,7 @@ function STLLoadPage(){
                                     {geometry.length > 0 ? geometry.map((geo, idx)=>(<LoadMesh position={state} showConnect={showConnect} boxRef={boxRef} connecStart={connStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY} setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={geo} setHoverd={setHovered}  setCp={setCp}  visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/>)) : null}
                                 </mesh> */}
                                 
-                                <mesh 
+                                {/* <mesh 
                                     ref={boxRef}
                                     position={[-8,7.4,0]} 
                                     scale={0.4}
@@ -297,9 +295,9 @@ function STLLoadPage(){
                                     }) 
                                    : null}
                                    <AxesHelper position={new THREE.Vector3(0,8.9,0)} visible={false} size={3}/>
-                                </mesh>
+                                </mesh> */}
 
-                                <mesh 
+                                {/* <mesh 
                                     ref={boxRef2}
                                     position={[0,7.4,0]} 
                                     scale={0.4}
@@ -348,18 +346,19 @@ function STLLoadPage(){
                                     }) 
                                    : null}
                                    <AxesHelper position={new THREE.Vector3(0,8.9,0)} visible={false} size={3}/>
-                                </mesh>
+                                </mesh> */}
                                 {posArr.length > 0 ?
                                     posArr.map((ele)=>{
                                         return(
                                             <mesh 
+                                                ref={boxRef}
                                                 position={ele.position} 
                                                 scale={0.4}
                                             >
                                                 <boxGeometry args={[ele.w,ele.h,ele.d]}/>
                                                 <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
-                                            
-                                            {ele.pos === "pos6" ? <AxesHelper position={new THREE.Vector3(0,8.9,0)} visible={false} size={3}/> : <AxesHelper position={new THREE.Vector3(0,-8.9,0)} visible={false} size={3}/>}
+                                                {ele.data.file != null ?<LoadMesh position={state} showConnect={showConnect} boxRef={boxRef} connecStart={connStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY5} setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={ele.data.file} setHoverd={setHovered} visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/> :null}
+                                            {Number(ele.pos.split("s")[1]) >= 4 ? <AxesHelper position={new THREE.Vector3(0,8.9,0)} visible={false} size={3}/> : <AxesHelper position={new THREE.Vector3(0,-8.9,0)} visible={false} size={3}/>}
                                             </mesh>
                                         );
                                     })

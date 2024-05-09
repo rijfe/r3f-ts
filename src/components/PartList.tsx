@@ -1,13 +1,15 @@
 import styled from "styled-components";
 import ListCard from "./ListCard";
 import { useState } from "react";
+import { MeshData } from "./MeshData";
 
 interface posProps{
     pos: String,
     w: number,
     h: number,
     d: number,
-    position: [number, number, number]
+    position: [number, number, number],
+    data: MeshData,
 };
 
 interface PartListProps {
@@ -167,8 +169,8 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr} : PartListProps){
                     <Part onClick={(e)=>{setPosName("pos1");}}><PartDeco className={posName === "pos1" ? "pos":""}>pos1</PartDeco></Part>
                     <Part onClick={(e)=>{setPosName("pos2");}}><PartDeco className={posName === "pos2" ? "pos":""}>pos2</PartDeco></Part>
                     <Part onClick={(e)=>{setPosName("pos3");}}><PartDeco className={posName === "pos3" ? "pos":""}>pos3</PartDeco></Part>
-                    <Part onClick={(e)=>{}}><PartDeco className={posName === "pos4" ? "pos":""}>pos4</PartDeco></Part>
-                    <Part onClick={(e)=>{}}><PartDeco className={posName === "pos5" ? "pos":""}>pos5</PartDeco></Part>
+                    <Part onClick={(e)=>{setPosName("pos4");}}><PartDeco className={posName === "pos4" ? "pos":""}>pos4</PartDeco></Part>
+                    <Part onClick={(e)=>{setPosName("pos5");}}><PartDeco className={posName === "pos5" ? "pos":""}>pos5</PartDeco></Part>
                 </PartBox>
                 <PartBox style={{height:`${100/lineNum}%`}}>
                     <Part onClick={(e)=>{setPosName("pos6");}}><PartDeco className={posName === "pos6" ? "pos":""}>pos6</PartDeco></Part>

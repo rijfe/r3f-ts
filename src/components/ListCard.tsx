@@ -1,11 +1,14 @@
 import styled from "styled-components";
+import { MeshData } from "./MeshData";
+import { BufferGeometry } from "three";
 
 interface posProps{
     pos: String,
     w: number,
     h: number,
     d: number,
-    position: [number, number, number]
+    position: [number, number, number],
+    data: MeshData,
 };
 
 interface ListCardProps{
@@ -44,12 +47,20 @@ function ListCard(props:ListCardProps){
                     if(props.posName === "pos3"){
                         pArr = [-8,-7.4,0];
                     }
+                    if(props.posName === "pos4"){
+                        pArr = [-8,7.4,0];
+                    }
+                    if(props.posName === "pos5"){
+                        pArr = [0,7.4,0];
+                    }
+                    let mesh = new MeshData(false, false, false, 2, 4, 4,0,0,50,5,5,'',null,"");
                     let data:posProps = {
                         pos: props.posName,
                         w: props.w,
                         h: props.h,
                         d: props.d,
                         position: pArr,
+                        data: mesh
                     };
                     props.setPosArr(prev=>[...prev, data]);
                 }        

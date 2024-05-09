@@ -8,10 +8,14 @@ import { useState } from "react";
 import plusLogo from "../img/free-icon-plus-sign-3114793.png";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { BufferGeometry } from "three";
+import { MeshData } from "./MeshData";
 interface geoProps{
     pos: String,
-    file: BufferGeometry,
-    fileName: string,
+    w: number,
+    h: number,
+    d: number,
+    position: [number, number, number],
+    data: MeshData
 };
 interface SettingProps {
     isSettingOpen : boolean,
@@ -58,14 +62,17 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
                 window.alert("잘못된 파일 형식입니다.");
             }
             else{
-                loader.load(URL.createObjectURL(file), geo=>{
-                    let data: geoProps = {
-                        pos: pos,
-                        file: geo,
-                        fileName: file.name
-                    }
-                    setPosObj(prev => [...prev,data]);
-                });
+                let idx = posObj.findIndex(item=>item.pos===pos);
+                if(idx != -1){
+                    let newArr = [...posObj];
+                    
+                    loader.load(URL.createObjectURL(file), geo=>{
+                        newArr[idx].data.file = geo;
+                        newArr[idx].data.fileName = file.name;
+                        setPosObj(newArr);
+                    });
+                }
+                
             }
         }
         
@@ -80,7 +87,7 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
                     img
                 </PosFileImgContainer>
                 <PosFileNameContainer>
-                    <h1 style={{fontSize:"1.3rem", overflow:"hidden", fontWeight:"bold"}}>{posObj[idx].fileName}</h1>
+                    <h1 style={{fontSize:"1.3rem", overflow:"hidden", fontWeight:"bold"}}>{posObj[idx].data.FileName}</h1>
                 </PosFileNameContainer>
             </PosFileInfoContainer>
         );
