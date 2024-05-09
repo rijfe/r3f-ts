@@ -10,7 +10,8 @@ import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { BufferGeometry } from "three";
 interface geoProps{
     pos: String,
-    file: BufferGeometry
+    file: BufferGeometry,
+    fileName: string,
 };
 interface SettingProps {
     isSettingOpen : boolean,
@@ -25,6 +26,7 @@ interface SettingProps {
     type: String,
     pos: String,
     setPosObj: React.Dispatch<React.SetStateAction<Array<geoProps>>>,
+    posObj:geoProps[],
     setWidth: React.Dispatch<React.SetStateAction<number>>,
     setHeight: React.Dispatch<React.SetStateAction<number>>,
     setAngle: React.Dispatch<React.SetStateAction<number>>,
@@ -39,7 +41,7 @@ interface SettingProps {
     
 }
 
-function SettingBox({isSettingOpen, type, setPosObj, pos,setPos, setConnStart,setType, boffset, setBoffset, width, height, angle, distance, cutting,rotation, setAngle, setDistance, setCutting, setHeight, setRotation, setWidth, num, setNum} : SettingProps){
+function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnStart,setType, boffset, setBoffset, width, height, angle, distance, cutting,rotation, setAngle, setDistance, setCutting, setHeight, setRotation, setWidth, num, setNum} : SettingProps){
 
 
     const handleUpload = ({ target }:any) => {
@@ -50,6 +52,7 @@ function SettingBox({isSettingOpen, type, setPosObj, pos,setPos, setConnStart,se
 
     const loading = (file:File) =>{
         const loader = new STLLoader();
+        console.log(file);
         if(file){
             if(!file.name.includes("stl")){
                 window.alert("잘못된 파일 형식입니다.");
@@ -58,13 +61,29 @@ function SettingBox({isSettingOpen, type, setPosObj, pos,setPos, setConnStart,se
                 loader.load(URL.createObjectURL(file), geo=>{
                     let data: geoProps = {
                         pos: pos,
-                        file: geo
+                        file: geo,
+                        fileName: file.name
                     }
                     setPosObj(prev => [...prev,data]);
                 });
             }
         }
         
+    };
+
+    const PosFileInfo = () =>{
+        let idx = posObj.findIndex(item=>item.pos===pos);
+        
+        return idx === -1 ? null : (
+            <PosFileInfoContainer>
+                <PosFileImgContainer>
+                    img
+                </PosFileImgContainer>
+                <PosFileNameContainer>
+                    <h1 style={{fontSize:"1.3rem", overflow:"hidden", fontWeight:"bold"}}>{posObj[idx].fileName}</h1>
+                </PosFileNameContainer>
+            </PosFileInfoContainer>
+        );
     };
 
     return (
@@ -85,7 +104,10 @@ function SettingBox({isSettingOpen, type, setPosObj, pos,setPos, setConnStart,se
             <BlankContainer/>
             <FileContainer>
                 <FileInfo>
-
+                    <BlankContainer/>
+                    <BlankContainer/>
+                    <BlankContainer/>
+                    <PosFileInfo/>
                 </FileInfo>
                 <BtnContainer>
                     <img 
@@ -209,6 +231,9 @@ const PosDeco = styled.div`
 const FileInfo = styled.div`
     width:100%;
     height: 80%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
 `;
 
 const BtnContainer = styled.div`
@@ -222,4 +247,28 @@ const BtnContainer = styled.div`
 
 const FileInput = styled.input`
     display:none;
+`;
+
+const PosFileInfoContainer = styled.div`
+    width: 95%;
+    height: 20%;
+    border: 0.2rem solid #ff0000;
+    display:flex;
+    flex-direction:row;
+`;
+
+const PosFileImgContainer = styled.div`
+    width:20%;
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items: center;
+`;
+
+const PosFileNameContainer = styled.div`
+    width:80%;
+    height:100%;
+    display:flex;
+    justify-content:start;
+    align-items: center;
 `;
