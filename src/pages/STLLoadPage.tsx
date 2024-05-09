@@ -165,7 +165,7 @@ function STLLoadPage(){
             <Bodycontainer >
                 <ListItem setIsSetOpen={setSettingOpen} isSetOpen={settingOpen} handleUpload={handleUpload} setIsOpen={setOpen} setIsPartOpen={setPartOpen} isOpen={open} isPartOpen={partOpen}/>
                 <DetailList isOpen={open} setGeo={setJigGeometry} setJig={setJigOpen} setIsDrop={setIsDrop} setIsOpen={setOpen}/>
-                <PartList posArr={posArr} setPosArr={setPosArr} isPartOpen={partOpen} lineNum={2}/>
+                <PartList posArr={posArr} setPosArr={setPosArr} isPartOpen={partOpen} lineNum={2} setStaPosName={setPosName}/>
                 <SettingBox posObj={posArr} pos={posName} setPos={setPosName} setPosObj={setPosArr} setConnStart={setConnStart} num={settingNum} setNum={setSettingNum} type={type} setType={setType} isSettingOpen={settingOpen} boffset={offset} setBoffset={setOffset} width={conWid} setWidth={setConWid} height={conHei} setHeight={setConHei} angle={conAngle} setAngle={setConAngle} rotation={conRota} setRotation={setConRota} distance={conDis} setDistance={setConDis} cutting={conCut} setCutting={setConCut}/>
     
                 {isDrop ? 
@@ -335,14 +335,25 @@ function STLLoadPage(){
                                                 position={ele.position} 
                                                 scale={0.4}
                                                 onPointerOver={()=>{
+                                                    let newArr = [...posArr];
+                                                    newArr[idx].data.showConnect=true;
+                                                    setPosArr(newArr);
                                                     setShowConnect(true);
                                                 }}
                                                 onPointerOut={()=>{
+                                                    let newArr = [...posArr];
+                                                    newArr[idx].data.showConnect=false;
+                                                    setPosArr(newArr);
                                                     setShowConnect(false);
                                                 }}
                                                 onClick={()=>{
                                                     setPosName(ele.pos);
-                                                    if(connStart){
+                                                    if(ele.data.conStart){
+                                                        let newArr = [...posArr];
+                                                        newArr[idx].data.showConnect=false;
+                                                        newArr[idx].data.connectOn = true;
+                                                        newArr[idx].data.conStart = false;
+                                                        setPosArr(newArr);
                                                         setConnectOn(true);
                                                         setShowConnect(false);
                                                         setConnStart(false);
@@ -361,7 +372,7 @@ function STLLoadPage(){
                                                 {ele.data.file != null ?<LoadMesh posArr={posArr} position={state} showConnect={ele.data.showConnect} boxRef={boxRef.current[Number(ele.pos.split("s")[1])]} setPosArr={setPosArr} idx={idx} connecStart={ele.data.conStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY5} setNum={setSettingNum} type={ele.data.type}  connectOn={ele.data.connectOn} offset={ele.data.offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={ele.data.file} setHoverd={setHovered} visible={visible} setVisible={setVisible} useStore={useStore} width={ele.data.conWid} height={ele.data.conHei} angle={ele.data.conAngle} rotation={ele.data.conRotation} distance={ele.data.conDis} cutting={ele.data.conCut}/> :null}
                                                 {Number(ele.pos.split("s")[1]) >= 4 ? <AxesHelper position={new THREE.Vector3(0,8.9,0)} visible={false} size={3}/> : <AxesHelper position={new THREE.Vector3(0,-8.9,0)} visible={false} size={3}/>}
                                                 <mesh ref={planeRef}>
-                                                    <Plane args={[15,15]} rotation-x={Math.PI/2} position={[0,ele.data.planeY,0]}>
+                                                    <Plane args={[ele.w,ele.d]} rotation-x={Math.PI/2} position={[0,ele.data.planeY,0]}>
                                                         <meshStandardMaterial transparent side={THREE.DoubleSide} opacity={0.6} color="#aaaaaa"  />
                                                     </Plane>
                                                 </mesh>

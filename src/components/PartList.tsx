@@ -17,9 +17,10 @@ interface PartListProps {
     lineNum: number,
     posArr: posProps[],
     setPosArr: React.Dispatch<React.SetStateAction<posProps[]>>,
+    setStaPosName: React.Dispatch<string>,
 }
 
-function PartList({isPartOpen, lineNum, setPosArr, posArr} : PartListProps){
+function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartListProps){
     const [posName, setPosName] = useState<String>("");
 
     const dumyData = [
@@ -166,14 +167,14 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr} : PartListProps){
                 style={{height:`${lineNum*4.5}%`}}
             >
                 <PartBox style={{height:`${100/lineNum}%`}}>
-                    <Part onClick={(e)=>{setPosName("pos1");}}><PartDeco className={posName === "pos1" ? "pos":""}>pos1</PartDeco></Part>
-                    <Part onClick={(e)=>{setPosName("pos2");}}><PartDeco className={posName === "pos2" ? "pos":""}>pos2</PartDeco></Part>
-                    <Part onClick={(e)=>{setPosName("pos3");}}><PartDeco className={posName === "pos3" ? "pos":""}>pos3</PartDeco></Part>
-                    <Part onClick={(e)=>{setPosName("pos4");}}><PartDeco className={posName === "pos4" ? "pos":""}>pos4</PartDeco></Part>
-                    <Part onClick={(e)=>{setPosName("pos5");}}><PartDeco className={posName === "pos5" ? "pos":""}>pos5</PartDeco></Part>
+                    <Part onClick={(e)=>{setPosName("pos1"); setStaPosName("pos1");}}><PartDeco className={posName === "pos1" ? "pos":""}>pos1</PartDeco></Part>
+                    <Part onClick={(e)=>{setPosName("pos2"); setStaPosName("pos2");}}><PartDeco className={posName === "pos2" ? "pos":""}>pos2</PartDeco></Part>
+                    <Part onClick={(e)=>{setPosName("pos3"); setStaPosName("pos3");}}><PartDeco className={posName === "pos3" ? "pos":""}>pos3</PartDeco></Part>
+                    <Part onClick={(e)=>{setPosName("pos4"); setStaPosName("pos4");}}><PartDeco className={posName === "pos4" ? "pos":""}>pos4</PartDeco></Part>
+                    <Part onClick={(e)=>{setPosName("pos5"); setStaPosName("pos5");}}><PartDeco className={posName === "pos5" ? "pos":""}>pos5</PartDeco></Part>
                 </PartBox>
                 <PartBox style={{height:`${100/lineNum}%`}}>
-                    <Part onClick={(e)=>{setPosName("pos6");}}><PartDeco className={posName === "pos6" ? "pos":""}>pos6</PartDeco></Part>
+                    <Part onClick={(e)=>{setPosName("pos6"); setStaPosName("pos6");}}><PartDeco className={posName === "pos6" ? "pos":""}>pos6</PartDeco></Part>
                 </PartBox>
             </PartContainer>
             <BlankContainer></BlankContainer>

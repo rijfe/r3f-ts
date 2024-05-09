@@ -110,13 +110,13 @@ function LoadMesh({ geometry, type,connectOn,setPosArr, position, boxRef,idx,pos
             setCenterZ(center.z);
             setFocus(false);
             setOffset(offset+boundingBox.max.y*0.3);
-            let newArr = [...posArr];
-            newArr[idx].data.offset=offset+boundingBox.max.y*0.3;
-            setPosArr(newArr);
+            // let newArr = [...posArr];
+            // newArr[idx].data.offset=offset+boundingBox.max.y*0.3;
+            // setPosArr(newArr);
             setBox3(boundingBox);
         }
     
-    }, [geometry,offset]);
+    }, [geometry]);
 
     useEffect(() => {
         if(curY != 0){ 

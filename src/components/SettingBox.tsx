@@ -79,7 +79,7 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
     };
 
     useEffect(()=>{
-        
+        idx = posObj.findIndex(item=>item.pos===pos);
     },[pos]);
 
     const PosFileInfo = () =>{
@@ -141,9 +141,9 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
             </SettingPartContainer>
             <BlankContainer/>
             <SettingDetailContainer>
-                {num === 1 ? <Curves idx={idx} posObj={posObj} setPosObj={setPosObj} boffset={posObj.length != 0 ?posObj[idx].data.offset:boffset} setBoffset={setBoffset}/> : null}
+                {num === 1 ? <Curves idx={idx} posObj={posObj} setPosObj={setPosObj} boffset={posObj.length > 0 && idx != -1?posObj[idx].data.offset:boffset} setBoffset={setBoffset}/> : null}
                 {num === 2 ? <Directions/> : null}
-                {num === 5 ? <Connectors setConnStart={setConnStart} type={type} setType={setType} width={width} height={height} rotation={rotation} angle={angle} distance={distance} cutting={cutting} setAngle={setAngle} setCutting={setCutting} setDistance={setDistance} setHeight={setHeight} setRotation={setRotation} setWidth={setWidth}/> : null}
+                {num === 5 ? <Connectors idx={idx} posObj={posObj} setPosObj={setPosObj} setConnStart={setConnStart} type={type} setType={setType} width={width} height={height} rotation={rotation} angle={angle} distance={distance} cutting={cutting} setAngle={setAngle} setCutting={setCutting} setDistance={setDistance} setHeight={setHeight} setRotation={setRotation} setWidth={setWidth}/> : null}
             </SettingDetailContainer>
         </Container>
     );
