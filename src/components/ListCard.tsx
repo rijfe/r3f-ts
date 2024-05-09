@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { MeshData } from "./MeshData";
 import { BufferGeometry } from "three";
+import { useRef } from "react";
 
 interface posProps{
     pos: String,
@@ -24,12 +25,14 @@ interface ListCardProps{
 }
 
 function ListCard(props:ListCardProps){
+    let ref = useRef();
     return (
         props.visible ? 
             <ListBox></ListBox> 
         :
         <ListBox
             onDoubleClick={()=>{
+                
                 let pArr : [number, number, number] = [0,0,0];
                 let idx = props.posArr.findIndex(item => item.pos === props.posName);
                 let newArr = [...props.posArr];
@@ -53,7 +56,7 @@ function ListCard(props:ListCardProps){
                     if(props.posName === "pos5"){
                         pArr = [0,7.4,0];
                     }
-                    let mesh = new MeshData(false, false, false, 2, 4, 4,0,0,50,5,5,'',null,"");
+                    let mesh = new MeshData(false, false, false, 2, 4, 4,0,0,50,5,5,'',null,"","Ellipse" );
                     let data:posProps = {
                         pos: props.posName,
                         w: props.w,

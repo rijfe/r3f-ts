@@ -1,5 +1,5 @@
 import { BufferGeometry } from "three";
-
+import { useRef } from "react";
 export class MeshData{
     showConnect: boolean = false;
     connectOn: boolean = false;
@@ -15,6 +15,7 @@ export class MeshData{
     pos:string;
     file: BufferGeometry | null;
     fileName: string;
+    type: string;    
 
     constructor(
         showConnect:boolean,
@@ -31,6 +32,7 @@ export class MeshData{
         pos:string,
         file: BufferGeometry | null,
         fileName: string,
+        type: string
     ){
         this.showConnect = showConnect;
         this.connectOn = connectOn;
@@ -45,7 +47,8 @@ export class MeshData{
         this.planeY = planeY;
         this.pos = pos;
         this.file = file;
-        this.fileName = fileName;
+        this.fileName = fileName;        
+        this.type = type;
     }
 
     set Pos(v:string){
@@ -65,6 +68,14 @@ export class MeshData{
     }
     get File():BufferGeometry | null{
         return this.file;
+    }
+
+    set Type(v: string){
+        this.type = v;
+    }
+
+    get Type():string{
+        return this.type;
     }
 
     set ConWid(v:number){

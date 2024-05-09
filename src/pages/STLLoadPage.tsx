@@ -41,7 +41,7 @@ function STLLoadPage(){
     const controlRef = useRef(null!);
     const lightHelper1 = useRef<THREE.DirectionalLight>(null!);
     const lightHelper2 = useRef<THREE.DirectionalLight>(null!);
-    const boxRef = useRef(null!);
+    const boxRef = useRef<any>([]);
     const boxRef2 = useRef(null!);
 
     const [isEnter, setIsEnter] = useState<boolean>(false);
@@ -351,14 +351,39 @@ function STLLoadPage(){
                                     posArr.map((ele)=>{
                                         return(
                                             <mesh 
-                                                ref={boxRef}
+                                                ref={elem=>(boxRef.current[Number(ele.pos.split("s")[1])] = elem)}
                                                 position={ele.position} 
                                                 scale={0.4}
+                                                onPointerOver={()=>{
+                                                    setShowConnect(true);
+                                                }}
+                                                onPointerOut={()=>{
+                                                    setShowConnect(false);
+                                                }}
+                                                onClick={()=>{
+                                                    if(connStart){
+                                                        setConnectOn(true);
+                                                        setShowConnect(false);
+                                                        setConnStart(false);
+                                                    }
+                                                    
+                                                }}
+                                                onPointerMove={(e)=>{
+                                                    if(connStart && geometry.length > 0){
+                                                        
+                                                        setState(e.clientX / window.innerWidth *2 -1);
+                                                    }
+                                                }}
                                             >
                                                 <boxGeometry args={[ele.w,ele.h,ele.d]}/>
                                                 <meshStandardMaterial transparent={true} opacity={0.3} color="#2156f8" side={THREE.DoubleSide}/>
-                                                {ele.data.file != null ?<LoadMesh position={state} showConnect={showConnect} boxRef={boxRef} connecStart={connStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY5} setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={ele.data.file} setHoverd={setHovered} visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/> :null}
-                                            {Number(ele.pos.split("s")[1]) >= 4 ? <AxesHelper position={new THREE.Vector3(0,8.9,0)} visible={false} size={3}/> : <AxesHelper position={new THREE.Vector3(0,-8.9,0)} visible={false} size={3}/>}
+                                                {ele.data.file != null ?<LoadMesh position={state} showConnect={showConnect} boxRef={boxRef.current[Number(ele.pos.split("s")[1])]} connecStart={connStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY5} setNum={setSettingNum} type={type}  connectOn={connectOn} offset={offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={ele.data.file} setHoverd={setHovered} visible={visible} setVisible={setVisible} useStore={useStore} width={conWid} height={conHei} angle={conAngle} rotation={conRota} distance={conDis} cutting={conCut}/> :null}
+                                                {Number(ele.pos.split("s")[1]) >= 4 ? <AxesHelper position={new THREE.Vector3(0,8.9,0)} visible={false} size={3}/> : <AxesHelper position={new THREE.Vector3(0,-8.9,0)} visible={false} size={3}/>}
+                                                <mesh ref={planeRef}>
+                                                    <Plane args={[15,15]} rotation-x={Math.PI/2} position={[0,ele.data.planeY,0]}>
+                                                        <meshStandardMaterial transparent side={THREE.DoubleSide} opacity={0.6} color="#aaaaaa"  />
+                                                    </Plane>
+                                                </mesh>
                                             </mesh>
                                         );
                                     })

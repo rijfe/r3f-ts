@@ -57,13 +57,14 @@ function LoadMesh({ geometry, type,connectOn, position, boxRef, showConnect, vis
     const world = useMemo(()=> new THREE.Vector3(), []);
 
     useFrame(()=>{
-        const boxCenter = boxRef.current.getWorldPosition(world);
+        const boxCenter = boxRef.getWorldPosition(world);
+        
         const boundary = {
             minX : boxCenter.x-4.5, maxX:boxCenter.x+4.5, minY:boxCenter.y-9, maxY: boxCenter.y+9, minZ: boxCenter.z-6, maxZ: boxCenter.z+6
         };
         if(meshAllRef.current){
             const allBoundingBox = new THREE.Box3().setFromObject(meshAllRef.current);
-            const box = new THREE.Box3().setFromObject(boxRef.current);
+            const box = new THREE.Box3().setFromObject(boxRef);
             const center = meshRef.current.getWorldPosition(world);
             if(center.x -3 < boundary.minX || center.x+3 > boundary.maxX 
             || center.y -7 < boundary.minY || center.y +7 > boundary.maxY 
