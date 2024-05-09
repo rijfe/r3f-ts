@@ -214,26 +214,6 @@ function STLLoadPage(){
                                         <meshStandardMaterial color={"#ffffff"} opacity={0} side={THREE.DoubleSide} />
                                     </mesh>
                                 :null}
-                                {/* <mesh position={[19.5,-18.47,0]}>
-                                    <boxGeometry args={[14,18,12]}/>
-                                    <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
-                                </mesh>
-                                <mesh position={[19.5,18.47,0]}>
-                                    <boxGeometry args={[14,18,12]}/>
-                                    <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
-                                </mesh>
-                                <mesh position={[0,-18.47,0]}>
-                                    <boxGeometry args={[14,18,12]}/>
-                                    <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
-                                </mesh>
-                                <mesh position={[0,18.47,0]}>
-                                    <boxGeometry args={[14,18,12]}/>
-                                    <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
-                                </mesh>
-                                <mesh position={[-19.5,-18.47,0]}>
-                                    <boxGeometry args={[14,18,12]}/>
-                                    <meshStandardMaterial transparent={true} opacity={0.5} color="#2196f3" side={THREE.DoubleSide}/>
-                                </mesh> */}
                                 {/* <mesh ref={boxRef} scale={0.4}>
                                     <Cylinder 
                                         args={[48,48,16,128]}
@@ -361,7 +341,7 @@ function STLLoadPage(){
                                                     setShowConnect(false);
                                                 }}
                                                 onClick={()=>{
-                                                    setPlaneY5(ele.data.planeY);
+                                                    setPosName(ele.pos);
                                                     if(connStart){
                                                         setConnectOn(true);
                                                         setShowConnect(false);

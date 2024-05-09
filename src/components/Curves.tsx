@@ -1,11 +1,24 @@
 import styled from "styled-components";
+import { MeshData } from "./MeshData";
+
+interface geoProps{
+    pos: String,
+    w: number,
+    h: number,
+    d: number,
+    position: [number, number, number],
+    data: MeshData
+};
 
 interface CurvesProps{
     boffset: number,
     setBoffset: React.Dispatch<React.SetStateAction<number>>,
+    setPosObj: React.Dispatch<React.SetStateAction<Array<geoProps>>>,
+    posObj:geoProps[],
+    idx: number,
 }
 
-function Curves({boffset, setBoffset}:CurvesProps){
+function Curves({boffset, setBoffset, posObj, setPosObj, idx}:CurvesProps){
     return(
         <CurvesContainer>
             <TitleContainer>
@@ -51,6 +64,9 @@ function Curves({boffset, setBoffset}:CurvesProps){
                     <OffsetSettingBox>
                         <OffsetInput 
                             onChange={(e)=>{
+                                let newArr = [...posObj];
+                                newArr[idx].data.offset = Number(e.target.value);
+                                setPosObj(newArr);
                                 setBoffset(Number(e.target.value));
                                 e.preventDefault();
                             }}
