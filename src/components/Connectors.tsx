@@ -261,6 +261,7 @@ function Connectors(props : ConnectorsProps){
                             src={Addlogo} 
                             style={{width: "2rem", height:"2rem"}}
                             onClick={()=>{
+                                if(props.posObj[props.idx].data.file == null) return;
                                 let newArr = [...props.posObj];
 
                                 newArr[props.idx].data.conStart = true;
