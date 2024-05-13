@@ -3,11 +3,15 @@ import * as THREE from "three";
 import { useRecoilValue } from "recoil";
 import { getDirectionPoint } from "../store/directionState";
 
-function DirectionArrow(){
+interface ArrowProps{
+    point : [number,number,number]
+}
+
+function DirectionArrow(props:ArrowProps){
     const [x,y,z] = useRecoilValue(getDirectionPoint);
     return (
         <group
-            rotation={[x,y,z]}  
+            rotation={props.point}  
             position={[0,0,7]}
         >
             <Line

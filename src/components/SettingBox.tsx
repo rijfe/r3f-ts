@@ -84,7 +84,7 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
 
     const PosFileInfo = () =>{
 
-        return idx === -1 ? null : (
+        return idx === -1 ? null : posObj[idx].data.fileName != ""? (
             <PosFileInfoContainer>
                 <PosFileImgContainer>
                     img
@@ -93,7 +93,7 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
                     <h1 style={{fontSize:"1.3rem", overflow:"hidden", fontWeight:"bold"}}>{posObj[idx].data.FileName}</h1>
                 </PosFileNameContainer>
             </PosFileInfoContainer>
-        );
+        ):null;
     };
 
     return (

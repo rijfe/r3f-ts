@@ -133,7 +133,7 @@ function Connectors(props : ConnectorsProps){
                                 props.setPosObj(newArr);
                                 props.setWidth(Number(e.target.value))
                             }}
-                            value={props.width}
+                            value={props.posObj[props.idx].data.conWid}
                         />
                     </DetailValueBox>
                 </DetailSettingBox>
@@ -150,7 +150,7 @@ function Connectors(props : ConnectorsProps){
                                 props.setPosObj(newArr);
                                 props.setHeight(Number(e.target.value))
                             }}
-                            value={props.height}
+                            value={props.posObj[props.idx].data.conHei}
                         />
                     </DetailValueBox>
                 </DetailSettingBox>
@@ -167,7 +167,7 @@ function Connectors(props : ConnectorsProps){
                                 props.setPosObj(newArr);
                                 props.setAngle(Number(e.target.value))
                             }}
-                            value={props.angle}
+                            value={props.posObj[props.idx].data.conAngle}
                         />
                     </DetailValueBox>
                 </DetailSettingBox>
@@ -184,7 +184,7 @@ function Connectors(props : ConnectorsProps){
                                 props.setPosObj(newArr);
                                 props.setRotation(Number(e.target.value))
                             }}
-                            value={props.rotation}
+                            value={props.posObj[props.idx].data.conRotation}
                         />
                     </DetailValueBox>
                 </DetailSettingBox>
@@ -201,7 +201,7 @@ function Connectors(props : ConnectorsProps){
                                 props.setPosObj(newArr);
                                 props.setDistance(Number(e.target.value))
                             }}
-                            value={props.distance}
+                            value={props.posObj[props.idx].data.conDis}
                         />
                     </DetailValueBox>
                 </DetailSettingBox>
@@ -218,7 +218,7 @@ function Connectors(props : ConnectorsProps){
                                 props.setPosObj(newArr);
                                 props.setCutting(Number(e.target.value))
                             }}
-                            value={props.cutting}
+                            value={props.posObj[props.idx].data.conCut}
                         />
                     </DetailValueBox>
                 </DetailSettingBox>

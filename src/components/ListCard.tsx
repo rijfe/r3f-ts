@@ -56,7 +56,7 @@ function ListCard(props:ListCardProps){
                     if(props.posName === "pos5"){
                         pArr = [0,7.4,0];
                     }
-                    let mesh = new MeshData(false, false, false, 2, 4, 4,0,0,50,5,5,'',null,"","Ellipse" );
+                    let mesh = new MeshData(false, false, false, 2, 4, 4,0,0,50,5,5,'',null,"","Ellipse", false, [0,0,0]);
                     let data:posProps = {
                         pos: props.posName,
                         w: props.w,

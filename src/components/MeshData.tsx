@@ -15,7 +15,9 @@ export class MeshData{
     pos:string;
     file: BufferGeometry | null;
     fileName: string;
-    type: string;    
+    type: string;
+    dirState:boolean;
+    dirPoint : [number, number, number];    
 
     constructor(
         showConnect:boolean,
@@ -32,7 +34,9 @@ export class MeshData{
         pos:string,
         file: BufferGeometry | null,
         fileName: string,
-        type: string
+        type: string,
+        dirState:boolean,
+        dirPoint : [number, number, number], 
     ){
         this.showConnect = showConnect;
         this.connectOn = connectOn;
@@ -49,6 +53,21 @@ export class MeshData{
         this.file = file;
         this.fileName = fileName;        
         this.type = type;
+        this.dirState = dirState;
+        this.dirPoint = dirPoint;
+    }
+
+    set DirState(v:boolean){
+        this.dirState = v;
+    }
+    set DirPoint(v: [number,number,number]){
+        this.dirPoint = v;
+    }
+    get DirState(){
+        return this.dirState;
+    }
+    get DirPoint(){
+        return this.dirPoint;
     }
 
     set Pos(v:string){
