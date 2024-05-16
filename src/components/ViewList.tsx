@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import * as THREE from "three";
 import gsap from "gsap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 
@@ -17,7 +17,7 @@ interface ViewListProps{
 function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef}: ViewListProps){
     const [curView, setCurView] = useState<number>(1);
     
-    const {camera} = useThree();
+    const {camera, viewport} = useThree();
 
     useFrame(()=>{
         if(controlRef.current) controlRef.current.update();
@@ -29,9 +29,17 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef}:
         // htmlRef.current.position.lerp(camera.position,0.1);
         htmlRef.current.updateMatrix();
     });
+
+    // useEffect(()=>{
+    //     const groupRef = htmlRef.current;
+    //     camera.add(groupRef);
+    //     return ()=>{
+    //         camera.remove(groupRef);
+    //     };
+    // },[camera,htmlRef.current]);
  
     return (
-        <group ref={htmlRef}>
+        <group ref={htmlRef} >
             <Html
                 as="div"
                 className="viewlist"

@@ -15,7 +15,8 @@ interface ConnectorProps {
     setSetting: React.Dispatch<React.SetStateAction<boolean>>,
     setNum: React.Dispatch<React.SetStateAction<number>>,
     x: number,
-    angle: number
+    angle: number,
+    posName: String
 }
 
 function Connector(props : ConnectorProps){
@@ -24,6 +25,8 @@ function Connector(props : ConnectorProps){
     const newArr: any = [];
     const mateRef = useRef(null!);
     const setting = props.useStore((state:any)=>state.setTarget);
+
+    const [y,setY] = useState<number>(5);
 
     useFrame(()=>{
         if(focus){
@@ -41,11 +44,16 @@ function Connector(props : ConnectorProps){
         }
     },[cylinderRef, focus]);
 
+    useEffect(()=>{
+        if(props.posName === "pos1"||props.posName === "pos2"||props.posName === "pos3") setY(-5);
+    },[]);
+
     return (
         <Cylinder
             ref={cylinderRef}
             args={[props.top+props.angle/10, props.bottom, props.height]}
-            position={[props.x,5,0]}
+            position={[props.x,y,0]}
+            rotation-x={y===-5 ? Math.PI : 0}
             onDoubleClick={(e)=>{
                 e.stopPropagation();
                 setting(cylinderRef);

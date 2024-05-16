@@ -45,10 +45,11 @@ interface loadMesh{
     position:number,
     setPosArr: React.Dispatch<React.SetStateAction<posProps[]>>,
     posArr:posProps[],
-    posName: String
+    posName: String,
+    billRef: React.MutableRefObject<THREE.Group<THREE.Object3DEventMap>>
 }
 
-function LoadMesh({ geometry, type,connectOn,setPosArr,posName, position, boxRef,idx,posArr, showConnect, visible, setVisible, setHoverd, offset, setOffset,useStore, setSetting, isSettingOpen, width, height, connecStart, setConnecOn, angle, setNum} : loadMesh){
+function LoadMesh({ geometry, type,connectOn,billRef,setPosArr,posName, position, boxRef,idx,posArr, showConnect, visible, setVisible, setHoverd, offset, setOffset,useStore, setSetting, isSettingOpen, width, height, connecStart, setConnecOn, angle, setNum} : loadMesh){
     const meshRef = useRef<THREE.Mesh>(null!);
     const meshAllRef = useRef<THREE.Mesh>(null!);
     const edgeRef = useRef<THREE.Mesh>(null!);
@@ -93,6 +94,7 @@ function LoadMesh({ geometry, type,connectOn,setPosArr,posName, position, boxRef
              if(curY !== meshAllRef.current.position.y){
                 setCurY(meshAllRef.current.position.y);
             }
+            
         }
 
         if(dircetion == 'yes' && posArr[idx].pos === posName){
@@ -102,6 +104,7 @@ function LoadMesh({ geometry, type,connectOn,setPosArr,posName, position, boxRef
             setPosArr(newArr);
             setDirectionState("no");
         }
+        // billRef.current.quaternion.copy(camera.quaternion);
     })
     useEffect(() => {
         if (!geometry || !meshRef.current) return;
@@ -125,7 +128,10 @@ function LoadMesh({ geometry, type,connectOn,setPosArr,posName, position, boxRef
         if(curY != 0){ 
             setOffset(offset+curY+1);
             let newArr = [...posArr];
-            newArr[idx].data.planeY=offset+curY+1;
+            if(newArr[idx].position[1] < 0){
+                newArr[idx].data.planeY=offset-curY+1;
+            }
+            else newArr[idx].data.planeY=offset+curY+1;
             setPosArr(newArr);
         }
 
@@ -165,8 +171,8 @@ function LoadMesh({ geometry, type,connectOn,setPosArr,posName, position, boxRef
                 <meshStandardMaterial ref={mateRef} color={focus ? "#fcf000" : "#ffffff"} side={THREE.DoubleSide}/>
                 {posArr[idx].data.dirState ? <DirectionArrow point={posArr[idx].data.dirPoint}/> :null}
             </mesh>
-            {connectOn ? type === "Ellipse" ? <Connector angle={angle} x={position} setNum={setNum} setSetting={setSetting} meshRef={meshRef} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}
-            {connecStart &&showConnect  ? type === "Ellipse" ? <Connector angle={angle}  x={position} setNum={setNum} setSetting={setSetting} meshRef={meshRef} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}
+            {connectOn ? type === "Ellipse" ? <Connector posName={posName} angle={angle} x={position} setNum={setNum} setSetting={setSetting} meshRef={meshRef} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}
+            {connecStart &&showConnect  ? type === "Ellipse" ? <Connector posName={posName} angle={angle}  x={position} setNum={setNum} setSetting={setSetting} meshRef={meshRef} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}
             
         </mesh>
     );

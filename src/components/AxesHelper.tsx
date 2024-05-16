@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Line, Text, Cone } from "@react-three/drei";
+import { Line, Text, Cone, Billboard } from "@react-three/drei";
 import { useEffect, useRef, useState} from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Flex, Box } from "@react-three/flex";
@@ -7,16 +7,38 @@ import { Flex, Box } from "@react-three/flex";
 interface AxesHelperProps {
     size: number,
     position: THREE.Vector3,
-    visible: boolean
+    visible: boolean,
+    axesRef: React.MutableRefObject<THREE.Group>,
 }
 
 function AxesHelper(props:AxesHelperProps){
     const ref = useRef<THREE.Group>(null!);
+    const billRef = useRef<THREE.Group<THREE.Object3DEventMap>>(null!);
     const [screenPosition, setScreenPosition] = useState<THREE.Vector3>(new THREE.Vector3());
-    const { camera, scene } = useThree();
+    const [px, setPx] = useState<number>(0);
+    const [py, setPy] = useState<number>(0);
+ 
+    const { camera, scene, viewport } = useThree();
+
+    useFrame(()=>{
+        // ref.current.quaternion.copy(camera.quaternion);
+        // ref.current.setRotationFromQuaternion(camera.quaternion);
+        setPx(viewport.width/3.2);
+        setPy(-viewport.height/3.6);
+    });
+    useEffect(()=>{
+        console.log(viewport);
+        const groupRef = ref.current;
+        console.log(groupRef);
+        // camera.add(groupRef);
+        // return ()=>{
+        //     camera.remove(groupRef);
+        // };
+    },[camera,ref.current]);
 
     return(
-        <group ref={ref} >
+        <group ref={ref}>
+        
             <Line
                 points={[new THREE.Vector3(0,0,0),new THREE.Vector3(props.size,0,0)]}
                 color="#9a0000"
