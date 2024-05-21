@@ -124,7 +124,8 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
                         src={plusLogo}
                         style={{width:"3rem", height:"3rem"}}
                         onClick={()=>{
-                            document.getElementById("files")?.click();
+                            if(idx === -1) alert("소재를 먼저 선택해주세요.");
+                            else document.getElementById("files")?.click();
                         }}
                     />
                     <FileInput type="file" id="files" onChange={handleUpload}/>

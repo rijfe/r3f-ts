@@ -129,7 +129,7 @@ function LoadMesh({ geometry, type,connectOn,billRef,setPosArr,posName, position
             setOffset(offset+curY+1);
             let newArr = [...posArr];
             if(newArr[idx].position[1] < 0){
-                newArr[idx].data.planeY=offset-curY+1;
+                newArr[idx].data.planeY=offset-curY;
             }
             else newArr[idx].data.planeY=offset+curY+1;
             setPosArr(newArr);
@@ -171,8 +171,8 @@ function LoadMesh({ geometry, type,connectOn,billRef,setPosArr,posName, position
                 <meshStandardMaterial ref={mateRef} color={focus ? "#fcf000" : "#ffffff"} side={THREE.DoubleSide}/>
                 {posArr[idx].data.dirState ? <DirectionArrow point={posArr[idx].data.dirPoint}/> :null}
             </mesh>
-            {connectOn ? type === "Ellipse" ? <Connector posName={posName} angle={angle} x={position} setNum={setNum} setSetting={setSetting} meshRef={meshRef} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}
-            {connecStart &&showConnect  ? type === "Ellipse" ? <Connector posName={posName} angle={angle}  x={position} setNum={setNum} setSetting={setSetting} meshRef={meshRef} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}
+            {connectOn ? type === "Ellipse" ? <Connector posName={posName} angle={angle} x={position} setNum={setNum} setSetting={setSetting} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}
+            {connecStart &&showConnect  ? type === "Ellipse" ? <Connector posName={posName} angle={angle}  x={position} setNum={setNum} setSetting={setSetting} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}
             
         </mesh>
     );

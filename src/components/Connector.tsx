@@ -11,7 +11,6 @@ interface ConnectorProps {
     visible: boolean,
     setVisible :  React.Dispatch<React.SetStateAction<boolean>>,
     setHoverd :  React.Dispatch<React.SetStateAction<boolean>>,
-    meshRef : any,
     setSetting: React.Dispatch<React.SetStateAction<boolean>>,
     setNum: React.Dispatch<React.SetStateAction<number>>,
     x: number,
@@ -28,11 +27,11 @@ function Connector(props : ConnectorProps){
 
     const [y,setY] = useState<number>(5);
 
-    useFrame(()=>{
-        if(focus){
-            const box = new THREE.Box3().setFromObject(props.meshRef.current);
-        }
-    });
+    // useFrame(()=>{
+    //     if(focus){
+    //         const box = new THREE.Box3().setFromObject(props.meshRef.current);
+    //     }
+    // });
 
     useEffect(()=>{
         if(cylinderRef.current){

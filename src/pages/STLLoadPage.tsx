@@ -30,6 +30,7 @@ import RectangleConnector from "../components/RectangleConnector";
 import { directionSet, getDirectionSet } from "../store/directionState";
 import DirectionArrow from "../components/DirectionArrow";
 import { MeshData } from "../components/MeshData";
+import StaticAxes from "../components/StaticAxes";
 
 const useStore = create((set:any)=>({target: null, setTarget: (target : any)=>set({target}) }));
 const test = useLoader.preload(STLLoader, ["/models/5X500L V2-CAD BLOCK JIG_형상추가.stl"]);
@@ -266,8 +267,8 @@ function STLLoadPage(){
                                     })
                                 :null}
                             </group>
+                            <StaticAxes/>
                             
-                            <AxesHelper axesRef={axesRef} position={new THREE.Vector3(40,-30,0)} visible={true} size={15}/>
                             <OrbitControls ref={controlRef} dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.8} minZoom={5} mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
                             {target && visible &&
                                 <TransformControls 
@@ -367,4 +368,3 @@ const FileImg = styled.img`
     height: 13rem;
     margin-bottom:2rem;
 `;
-
