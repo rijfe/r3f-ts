@@ -9,6 +9,8 @@ import plusLogo from "../img/free-icon-plus-sign-3114793.png";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { BufferGeometry } from "three";
 import { MeshData } from "./MeshData";
+import { useRecoilValue } from "recoil";
+import { getPosNum } from "../store/PosNum";
 interface geoProps{
     pos: String,
     w: number,
@@ -47,7 +49,9 @@ interface SettingProps {
 
 function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnStart,setType, boffset, setBoffset, width, height, angle, distance, cutting,rotation, setAngle, setDistance, setCutting, setHeight, setRotation, setWidth, num, setNum} : SettingProps){
     let idx = posObj.findIndex(item=>item.pos===pos);
-
+    const pn = useRecoilValue(getPosNum);
+    const [arr, setArr] = useState<Array<string>>([]);
+    const [ready, setReady] = useState<boolean>(false);
     const handleUpload = ({ target }:any) => {
         const file = target.files[0]
         console.log(target.files);
@@ -96,20 +100,38 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
         ):null;
     };
 
+    const MakePart = () =>{
+        for(let i=1; i<=pn; i++){
+            if(!arr.includes(`pos${i}`)) setArr(pre => [...pre, `pos${i}`]);    
+        }
+        setReady(true);
+    }
+
+    useEffect(()=>{
+        setArr([]);
+        
+    },[pn])
+    useEffect(()=>{
+        MakePart();
+    },[isSettingOpen])
+
     return (
         <Container className={isSettingOpen ? "setting" : ""}>
 
-            <PosContainer>
-                <PosBox style={{height:`${100/2}%`}}>
-                    <Pos onClick={(e)=>{setPos("pos1");}}><PosDeco className={pos === "pos1" ? "pos" : ""}>pos1</PosDeco></Pos>
-                    <Pos onClick={(e)=>{setPos("pos2");}}><PosDeco className={pos === "pos2" ? "pos" : ""}>pos2</PosDeco></Pos>
-                    <Pos onClick={(e)=>{setPos("pos3");}}><PosDeco className={pos === "pos3" ? "pos" : ""}>pos3</PosDeco></Pos>
-                    <Pos onClick={(e)=>{setPos("pos4");}}><PosDeco className={pos === "pos4" ? "pos" : ""}>pos4</PosDeco></Pos>
-                    <Pos onClick={(e)=>{setPos("pos5");}}><PosDeco className={pos === "pos5" ? "pos" : ""}>pos5</PosDeco></Pos>
+            <PosContainer
+                style={{height:`${(10/pn >= 2 ? 1:2) *4.5}%`}}
+            >
+                <PosBox style={{height:`${100/(10/pn >= 2 ? 1:2)}%`}}>
+                    {ready ? arr.map((ele,idx)=>{
+                        return (idx<5 ? <Pos onClick={(e)=>{setPos(ele);}}><PosDeco className={pos === ele ? "pos" : ""}>{ele}</PosDeco></Pos>:null);
+                    }) : null}
+                    
                 </PosBox>
-                <PosBox style={{height:`${100/2}%`}}>
-                    <Pos onClick={(e)=>{setPos("pos6");}}><PosDeco className={pos === "pos6" ? "pos" : ""}>pos6</PosDeco></Pos>
-                </PosBox>
+               {10/pn < 2 ?  <PosBox style={{height:`${100/2}%`}}>
+                    {ready ? arr.map((ele,idx)=>{
+                        return (idx>=5 ? <Pos onClick={(e)=>{setPos(ele);}}><PosDeco className={pos === ele ? "pos" : ""}>{ele}</PosDeco></Pos>:null);
+                    }) : null}
+                </PosBox>:null}
             </PosContainer>
             <BlankContainer/>
             <FileContainer>
@@ -168,7 +190,7 @@ const Container = styled.div`
 
 const PosContainer = styled.div`
     width:  100%;
-    height: 8%;
+
     background: #D8D8D8;
 `;
 
