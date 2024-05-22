@@ -108,13 +108,15 @@ function DetailList({isOpen, setGeo,setIsDrop, setJig, setIsOpen}:DetailListProp
                 no :1,
                 title : "(5X300)_Master_Disk",
                 content: "Milling",
-                jig: "300_O_TYPE.stl"
+                jig: "300_O_TYPE.stl",
+                pos: 1
             },
             {
                 no :2,
                 title : "(5X300)_Ceramic_Glass",
                 content: "Grinding",
-                jig: "300_CG_TYPE.stl"
+                jig: "300_CG_TYPE.stl",
+                pos: 6
             },
         ],
         "Arum5x300Pro":[
@@ -186,7 +188,8 @@ function DetailList({isOpen, setGeo,setIsDrop, setJig, setIsOpen}:DetailListProp
                 no :5,
                 title : "(5X450)_AT_Premill_OCC",
                 content: "Premilled",
-                jig: "5X450_Premill_OCC.stl"
+                jig: "5X450_Premill_OCC.stl",
+                pos:10
             },
             {
                 no :6,
@@ -278,7 +281,7 @@ function DetailList({isOpen, setGeo,setIsDrop, setJig, setIsOpen}:DetailListProp
             return(
                 <>
                     {machineData.map((ele,idx)=>(
-                        <List key={idx} idx={idx} no={0} title={ele} chapter={chapter} jig="" setIsOpen={setIsOpen} setJig={setJig} content="no" num={num} setNum={setNum} setMachine={setMachine} setChapter={setChapter} setGeo={setGeo} setIsDrop={setIsDrop}/>
+                        <List key={idx} idx={idx} no={0} title={ele} chapter={chapter} jig="" setIsOpen={setIsOpen} setJig={setJig} content="no" num={num} setNum={setNum} setMachine={setMachine} setChapter={setChapter} setGeo={setGeo} setIsDrop={setIsDrop} posN={0}/>
                     ))}
                 </>
             )
@@ -287,7 +290,7 @@ function DetailList({isOpen, setGeo,setIsDrop, setJig, setIsOpen}:DetailListProp
             return (
                 <>
                     {machineJigData[machine].map((ele : any, idx:number)=>(
-                        <List key={idx} idx={idx} no={ele.no} title={ele.title} jig={ele.jig} chapter={chapter} setIsOpen={setIsOpen} setJig={setJig} content={ele.content} num={num} setNum={setNum} setMachine={setMachine} setChapter={setChapter} setGeo={setGeo} setIsDrop={setIsDrop}/>
+                        <List key={idx} idx={idx} no={ele.no} title={ele.title} jig={ele.jig} chapter={chapter} setIsOpen={setIsOpen} setJig={setJig} content={ele.content} num={num} setNum={setNum} setMachine={setMachine} setChapter={setChapter} setGeo={setGeo} setIsDrop={setIsDrop} posN={ele.pos}/>
                     ))}
                 </>
                 

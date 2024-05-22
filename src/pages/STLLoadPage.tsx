@@ -31,6 +31,7 @@ import { directionSet, getDirectionSet } from "../store/directionState";
 import DirectionArrow from "../components/DirectionArrow";
 import { MeshData } from "../components/MeshData";
 import StaticAxes from "../components/StaticAxes";
+import { getPosNum } from "../store/PosNum";
 
 const useStore = create((set:any)=>({target: null, setTarget: (target : any)=>set({target}) }));
 const test = useLoader.preload(STLLoader, ["/models/5X500L V2-CAD BLOCK JIG_형상추가.stl"]);
@@ -69,6 +70,7 @@ function STLLoadPage(){
     const [connectOn, setConnectOn] = useState<boolean>(false);
     const [showConnect, setShowConnect] = useState<boolean>(false);
     const [connStart, setConnStart] = useState<boolean>(false);
+    const [lightMove, setLightMove] = useState<boolean>(false);
 
     const [visible, setVisible] = useState<boolean>(false);
     const [hovered, setHovered] = useState<boolean>(false);
@@ -153,6 +155,9 @@ function STLLoadPage(){
 
         setGeometry([]);
     },[]);
+
+    const num = useRecoilValue(getPosNum);
+
     return(
         <Container>
             <HeadContainer>
@@ -161,7 +166,7 @@ function STLLoadPage(){
             <Bodycontainer >
                 <ListItem setIsSetOpen={setSettingOpen} isSetOpen={settingOpen} handleUpload={handleUpload} setIsOpen={setOpen} setIsPartOpen={setPartOpen} isOpen={open} isPartOpen={partOpen}/>
                 <DetailList isOpen={open} setGeo={setJigGeometry} setJig={setJigOpen} setIsDrop={setIsDrop} setIsOpen={setOpen}/>
-                <PartList posArr={posArr} setPosArr={setPosArr} isPartOpen={partOpen} lineNum={2} setStaPosName={setPosName}/>
+                <PartList posArr={posArr} setPosArr={setPosArr} isPartOpen={partOpen} lineNum={10/num >= 2 ? 1 : 2} setStaPosName={setPosName}/>
                 <SettingBox posObj={posArr} pos={posName} setPos={setPosName} setPosObj={setPosArr} setConnStart={setConnStart} num={settingNum} setNum={setSettingNum} type={type} setType={setType} isSettingOpen={settingOpen} boffset={offset} setBoffset={setOffset} width={conWid} setWidth={setConWid} height={conHei} setHeight={setConHei} angle={conAngle} setAngle={setConAngle} rotation={conRota} setRotation={setConRota} distance={conDis} setDistance={setConDis} cutting={conCut} setCutting={setConCut}/>
     
                 {isDrop ? 
@@ -177,6 +182,14 @@ function STLLoadPage(){
                             onDragOver={(event:React.DragEvent)=>{
                                 event.preventDefault();
                             }}
+                            onContextMenu={(e)=>{
+                                setLightMove(true);
+                            }}
+                            onMouseDown={(e)=>{
+                                if(e.button === 1){
+                                    setLightMove(false);
+                                }
+                            }}
                             onDrop={(e)=>{e.preventDefault(); handleDrop(e);}}
                             style={{zIndex:30}}
                             orthographic
@@ -190,10 +203,10 @@ function STLLoadPage(){
                                 far:2000,
                             }}
                         >     
-                            {jigGeometry ?<ViewList jigRef={groupRef} htmlRef={htmlRef} lightRef2={lightHelper2} lightRef={lightHelper1} cameraRef={cameraRef} controlRef={controlRef}/>:null}
+                            {jigGeometry ?<ViewList state={lightMove} jigRef={groupRef} htmlRef={htmlRef} lightRef2={lightHelper2} lightRef={lightHelper1} cameraRef={cameraRef} controlRef={controlRef}/>:null}
 
-                            <directionalLight ref={lightHelper1} intensity={0.7} position={[10,0,40]} rotation-y={-Math.PI/4}/>
-                            <directionalLight ref={lightHelper2} intensity={0.7} position={[-10,0,40]} rotation-y={Math.PI/4}/>
+                            <directionalLight ref={lightHelper1} intensity={0.8}  />
+                            <directionalLight ref={lightHelper2} intensity={0.8}  />
                   
                             <group ref={groupRef}>
                                 {jigOpen  ?
@@ -267,7 +280,7 @@ function STLLoadPage(){
                                     })
                                 :null}
                             </group>
-                            <StaticAxes/>
+                            {jigOpen ? <StaticAxes/> : null}
                             
                             <OrbitControls ref={controlRef} dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.8} minZoom={5} mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
                             {target && visible &&
@@ -285,11 +298,11 @@ function STLLoadPage(){
                             
                         </Canvas>
                     <Loader/>
-                    <LineBtn onClick={()=>{
+                    {/* <LineBtn onClick={()=>{
                         setJigVisible(!jigVisible);
                     }}>
                         {jigVisible ? <img src={inVisibleLogo} style={{width:"4rem", height:"4rem"}} alt="Save Line" title="Save Line"/> : <img src={visibleLogo} style={{width:"4rem", height:"4rem"}} alt="Add Line" title="Add Line"/>}
-                    </LineBtn>
+                    </LineBtn> */}
                 </>
                 :
                 <FileUploadBox 

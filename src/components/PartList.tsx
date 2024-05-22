@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import ListCard from "./ListCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MeshData } from "./MeshData";
+import { useRecoilValue } from "recoil";
+import { getPosNum } from "../store/PosNum";
 
 interface posProps{
     pos: String,
@@ -22,7 +24,8 @@ interface PartListProps {
 
 function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartListProps){
     const [posName, setPosName] = useState<String>("");
-
+    const [arr, setArr] = useState<Array<string>>([]);
+    const [ready, setReady] = useState<boolean>(false);
     const dumyData = [
         {
             title: "Dumy1",
@@ -161,21 +164,35 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
             visible: true
         },
     ];
+    const num = useRecoilValue(getPosNum);
+    const MakePart = () =>{
+        for(let i=1; i<=num; i++){
+            if(!arr.includes(`pos${i}`)) setArr(pre => [...pre, `pos${i}`]);    
+        }
+        setReady(true);
+    }
+    useEffect(()=>{
+        setArr([]);
+        
+    },[num])
+    useEffect(()=>{
+        MakePart();
+    },[isPartOpen])
     return (
         <PartListContainer className = {isPartOpen ? "part":""}>
             <PartContainer
                 style={{height:`${lineNum*4.5}%`}}
             >
                 <PartBox style={{height:`${100/lineNum}%`}}>
-                    <Part onClick={(e)=>{setPosName("pos1"); setStaPosName("pos1");}}><PartDeco className={posName === "pos1" ? "pos":""}>pos1</PartDeco></Part>
-                    <Part onClick={(e)=>{setPosName("pos2"); setStaPosName("pos2");}}><PartDeco className={posName === "pos2" ? "pos":""}>pos2</PartDeco></Part>
-                    <Part onClick={(e)=>{setPosName("pos3"); setStaPosName("pos3");}}><PartDeco className={posName === "pos3" ? "pos":""}>pos3</PartDeco></Part>
-                    <Part onClick={(e)=>{setPosName("pos4"); setStaPosName("pos4");}}><PartDeco className={posName === "pos4" ? "pos":""}>pos4</PartDeco></Part>
-                    <Part onClick={(e)=>{setPosName("pos5"); setStaPosName("pos5");}}><PartDeco className={posName === "pos5" ? "pos":""}>pos5</PartDeco></Part>
+                    {ready ? arr.map((ele,idx)=>{
+                        return (idx<5 ? <Part onClick={(e)=>{setPosName(ele); setStaPosName(ele);}}><PartDeco className={posName === ele ? "pos":""}>{ele}</PartDeco></Part>:null);
+                    }) : null}                  
                 </PartBox>
-                <PartBox style={{height:`${100/lineNum}%`}}>
-                    <Part onClick={(e)=>{setPosName("pos6"); setStaPosName("pos6");}}><PartDeco className={posName === "pos6" ? "pos":""}>pos6</PartDeco></Part>
-                </PartBox>
+                {lineNum > 1 ?<PartBox style={{height:`${100/lineNum}%`}}>
+                    {ready ? arr.map((ele,idx)=>{
+                        return (idx>=5 ? <Part onClick={(e)=>{setPosName(ele); setStaPosName(ele);}}><PartDeco className={posName === ele ? "pos":""}>{ele}</PartDeco></Part>:null);
+                    }) : null}  
+                </PartBox> : null}
             </PartContainer>
             <BlankContainer></BlankContainer>
             <ListContainer>

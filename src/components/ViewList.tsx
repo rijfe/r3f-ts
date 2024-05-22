@@ -3,7 +3,7 @@ import * as THREE from "three";
 import gsap from "gsap";
 import { useEffect, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Html } from "@react-three/drei";
+import { Html} from "@react-three/drei";
 
 interface ViewListProps{
     cameraRef: React.MutableRefObject<THREE.OrthographicCamera>,
@@ -12,31 +12,29 @@ interface ViewListProps{
     lightRef2: React.MutableRefObject<THREE.DirectionalLight>,
     htmlRef: React.MutableRefObject<THREE.Group>,
     jigRef:React.MutableRefObject<THREE.Group>,
+    state: boolean
 }
 
-function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef}: ViewListProps){
+function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, state}: ViewListProps){
     const [curView, setCurView] = useState<number>(1);
     
     const {camera, viewport} = useThree();
-
+    
     useFrame(()=>{
         if(controlRef.current) controlRef.current.update();
-
+        
         if(lightRef.current && lightRef2.current){
             lightRef.current.position.lerp(camera.position, 0.1);
             lightRef2.current.position.lerp(camera.position, 0.1);
         }
-        // htmlRef.current.position.lerp(camera.position,0.1);
+        
+        htmlRef.current.position.lerp(camera.position,0.3);
         htmlRef.current.updateMatrix();
     });
 
-    // useEffect(()=>{
-    //     const groupRef = htmlRef.current;
-    //     camera.add(groupRef);
-    //     return ()=>{
-    //         camera.remove(groupRef);
-    //     };
-    // },[camera,htmlRef.current]);
+    useEffect(()=>{
+    
+    },[state]);
  
     return (
         <group ref={htmlRef} >
@@ -467,11 +465,11 @@ export default ViewList;
 
 const ViewListContainer = styled.div`
     width: 6rem;
-    height:50%;
+    height:100%;
     border: 1px solid;
     position: absolute;
-    right:2rem;
-    top:20rem;
+    right:0;
+    top:0;
     z-index: 10;
     display: flex;
     flex-direction: column;

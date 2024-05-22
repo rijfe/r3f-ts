@@ -3,6 +3,8 @@ import { BufferGeometry } from "three";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 
 import testLogo from "../img/free-icon-plus-sign-3114793.png";
+import { useRecoilState } from "recoil";
+import { posNum } from "../store/PosNum";
 
 
 interface ListProps{
@@ -19,11 +21,12 @@ interface ListProps{
     setIsDrop: React.Dispatch<React.SetStateAction<boolean>>,
     setJig: React.Dispatch<React.SetStateAction<boolean>>,
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
-    idx:number
+    idx:number,
+    posN: number
 }
 
-function List({no,title,content, num,idx, setNum, chapter, jig,setChapter ,setMachine,setGeo, setIsDrop, setJig, setIsOpen}:ListProps){
-
+function List({no,title,content, num,idx, setNum, chapter, jig,setChapter ,setMachine,setGeo, setIsDrop, setJig, setIsOpen, posN}:ListProps){
+    const [pos,setPos] = useRecoilState(posNum);
     return (
         idx > 8 ? <BlankItemBox></BlankItemBox>
         :<ListItemBox onDoubleClick={(e)=>{
@@ -42,6 +45,7 @@ function List({no,title,content, num,idx, setNum, chapter, jig,setChapter ,setMa
                     setIsOpen(false);
                     setIsDrop(true);
                     setJig(true);
+                    setPos(posN);
                 }
                 setNum(num+1);
             }}

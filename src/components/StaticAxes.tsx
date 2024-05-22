@@ -6,13 +6,13 @@ import * as THREE from "three";
 function StaticAxes({renderPriority=1, matrix = new THREE.Matrix4()}){
     const mesh = useRef<THREE.Mesh>(null!);
     const {camera, viewport} = useThree();
-    console.log(viewport);
+    
     useFrame(()=>{
         matrix.copy(camera.matrix).invert();
         mesh.current.quaternion.setFromRotationMatrix(matrix);
         if (mesh.current) {
-            // Set the object position to be at the bottom-right of the viewport
-            mesh.current.position.set(viewport.width, -viewport.height, 0); // Adjust the offset as needed
+            
+            mesh.current.position.set(viewport.width, -viewport.height, 0); 
           }
     });
 
@@ -27,7 +27,7 @@ function StaticAxes({renderPriority=1, matrix = new THREE.Matrix4()}){
                 zoom={2}
                 near={-50}
             />
-            <Axes ref={mesh} position={[viewport.width/2-0.5,-viewport.height,0]}/>
+            <Axes ref={mesh} position={[viewport.width,-viewport.height,0]}/>
         </Hud>
     );
 }
@@ -58,7 +58,7 @@ const Axes = forwardRef(({position}:any,fref)=>{
             </Cone>
             <Line
                 points={[new THREE.Vector3(0,0,0),new THREE.Vector3(0,30,0)]}
-                color={"#00ff00"}
+                color={"#009a00"}
                 lineWidth={3}
                 side={THREE.DoubleSide}
             />
@@ -66,7 +66,7 @@ const Axes = forwardRef(({position}:any,fref)=>{
                 args={[3,6]}
                 position={[0,32,0]}
             >
-                <meshStandardMaterial color={"#00ff00"} side={THREE.DoubleSide}/>
+                <meshStandardMaterial color={"#009a00"} side={THREE.DoubleSide}/>
             </Cone>
             <Line
                 points={[new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,30)]}
