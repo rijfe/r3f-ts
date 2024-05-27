@@ -31,7 +31,9 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
     const [ready, setReady] = useState<boolean>(false);
     const [state, setState] = useState<number>(1);
     const [click, setClick] = useState<string>("");
-    const [idx, setIdx] = useState<number>(0);
+    const [w, setW] = useState<number>(0);
+    const [h, setH] = useState<number>(0);
+    const [d, setD] = useState<number>(0);
     const dumyData = [
         {
             title: "Dumy1",
@@ -198,7 +200,7 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
                 <BlankContainer/>
                 {state <= 1 ?<ListOverflow>
                     {dumyData.map((ele, idx)=>(
-                        <ListCard setClick={setClick} click={click} setState={setState} posArr={posArr} posName={posName} setPosArr={setPosArr} key={idx} title={ele.title} material={ele.material} w={ele.w} h={ele.h} d={ele.d} visible={ele.visible}/>
+                        <ListCard setD={setD} setH={setH} setW={setW} setClick={setClick} click={click} setState={setState} posArr={posArr} posName={posName} setPosArr={setPosArr} key={idx} title={ele.title} material={ele.material} w={ele.w} h={ele.h} d={ele.d} visible={ele.visible}/>
                     ))}
                     <BlankContainer/>
                 </ListOverflow> 
@@ -224,10 +226,57 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
                     </Button>
                     <Button
                         onClick={()=>{
-                            setState(2);
+                            
+                            if(state === 2){
+                                let pArr : [number, number, number] = [0,0,0];
+                                let idx = posArr.findIndex(item => item.pos === posName);
+                                let newArr = [...posArr];
+
+                                if(idx === -1){
+                                    if(posName === "pos6"){
+                                        pArr = [8,7.4,0];
+                                    }
+                                    if(posName === "pos1"){
+                                        pArr = [8,-7.4,0];
+                                    }
+                                    if(posName === "pos2"){
+                                        pArr = [0,-7.4,0];
+                                    }
+                                    if(posName === "pos3"){
+                                        pArr = [-8,-7.4,0];
+                                    }
+                                    if(posName === "pos4"){
+                                        pArr = [-8,7.4,0];
+                                    }
+                                    if(posName === "pos5"){
+                                        pArr = [0,7.4,0];
+                                    }
+                                    let mesh = new MeshData(false, false, false, 2, 4, 4,0,0,50,5,5,'',null,"","Ellipse", false, [0,0,0]);
+                                    let data:posProps= {
+                                        pos: posName,
+                                        w: w,
+                                        h: h,
+                                        d: d,
+                                        position: pArr,
+                                        data: mesh
+                                    };
+                                    setPosArr(prev=>[...prev, data]);
+                                }        
+                                else{
+                                    newArr[idx].w = w;
+                                    newArr[idx].d = d;
+                                    newArr[idx].h = h;
+
+                                    setPosArr(newArr);
+                                }
+                            }
+                            else{
+                                setState(2);
+                                
+                            }
                         }}
                     >
-                        <img src={Arrow} style={{width:"3rem", height:"3rem" }}/>
+                        <img src={Arrow} style={state > 1 ? {width:"2rem", height:"2rem",transform:"rotate(90deg)" } : {width:"3rem", height:"3rem" }}/>
                     </Button>
             </Buttoncontainer>
         </PartListContainer>

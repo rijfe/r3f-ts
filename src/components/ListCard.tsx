@@ -25,6 +25,9 @@ interface ListCardProps{
     setPosArr: React.Dispatch<React.SetStateAction<posProps[]>>,
     setState: React.Dispatch<React.SetStateAction<number>>,
     setClick: React.Dispatch<React.SetStateAction<string>>,
+    setW: React.Dispatch<React.SetStateAction<number>>,
+    setH: React.Dispatch<React.SetStateAction<number>>,
+    setD: React.Dispatch<React.SetStateAction<number>>,
 }
 
 function ListCard(props:ListCardProps){
@@ -36,7 +39,9 @@ function ListCard(props:ListCardProps){
         :
         <ListBox
             onClick={()=>{
-                
+                props.setH(props.h);
+                props.setW(props.w);
+                props.setD(props.d);
                 props.setClick(props.title);
             }}
             onDoubleClick={()=>{

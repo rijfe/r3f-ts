@@ -54,13 +54,13 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
     const [ready, setReady] = useState<boolean>(false);
     const handleUpload = ({ target }:any) => {
         const file = target.files[0]
-        console.log(target.files);
+       
         loading(file);
     };
 
     const loading = (file:File) =>{
         const loader = new STLLoader();
-        console.log(file);
+        
         if(file){
             if(!file.name.includes("stl")){
                 window.alert("잘못된 파일 형식입니다.");
@@ -75,6 +75,7 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
                         newArr[idx].data.fileName = file.name;
                         setPosObj(newArr);
                     });
+                    console.log(file.webkitRelativePath);
                 }
                 
             }
@@ -147,10 +148,14 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
                         style={{width:"3rem", height:"3rem"}}
                         onClick={()=>{
                             if(idx === -1) alert("소재를 먼저 선택해주세요.");
-                            else document.getElementById("files")?.click();
+                            else {
+                                document.getElementById("files")?.click();
+                                
+                            }
                         }}
                     />
-                    <FileInput type="file" id="files" onChange={handleUpload}/>
+                    <FileInput type="file" id="files" onChange={handleUpload} accept=".stl, .xml, .pts, .constructionInfo"/>
+                    
                 </BtnContainer>
                 
             </FileContainer>
