@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { MeshData } from "./MeshData";
 import { BufferGeometry } from "three";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 interface posProps{
     pos: String,
@@ -21,63 +21,72 @@ interface ListCardProps{
     visible: boolean,
     posName:String,
     posArr: posProps[],
+    click:string,
     setPosArr: React.Dispatch<React.SetStateAction<posProps[]>>,
+    setState: React.Dispatch<React.SetStateAction<number>>,
+    setClick: React.Dispatch<React.SetStateAction<string>>,
 }
 
 function ListCard(props:ListCardProps){
     let ref = useRef();
+    
     return (
         props.visible ? 
             <ListBox></ListBox> 
         :
         <ListBox
-            onDoubleClick={()=>{
+            onClick={()=>{
                 
-                let pArr : [number, number, number] = [0,0,0];
-                let idx = props.posArr.findIndex(item => item.pos === props.posName);
-                let newArr = [...props.posArr];
-
-                if(idx === -1){
-                    if(props.posName === "pos6"){
-                        pArr = [8,7.4,0];
-                    }
-                    if(props.posName === "pos1"){
-                        pArr = [8,-7.4,0];
-                    }
-                    if(props.posName === "pos2"){
-                        pArr = [0,-7.4,0];
-                    }
-                    if(props.posName === "pos3"){
-                        pArr = [-8,-7.4,0];
-                    }
-                    if(props.posName === "pos4"){
-                        pArr = [-8,7.4,0];
-                    }
-                    if(props.posName === "pos5"){
-                        pArr = [0,7.4,0];
-                    }
-                    let mesh = new MeshData(false, false, false, 2, 4, 4,0,0,50,5,5,'',null,"","Ellipse", false, [0,0,0]);
-                    let data:posProps = {
-                        pos: props.posName,
-                        w: props.w,
-                        h: props.h,
-                        d: props.d,
-                        position: pArr,
-                        data: mesh
-                    };
-                    props.setPosArr(prev=>[...prev, data]);
-                }        
-                else{
-                    newArr[idx].w = props.w;
-                    newArr[idx].d = props.d;
-                    newArr[idx].h = props.h;
-
-                    props.setPosArr(newArr);
-                }
+                props.setClick(props.title);
             }}
+            onDoubleClick={()=>{
+                props.setState(2);
+                // let pArr : [number, number, number] = [0,0,0];
+                // let idx = props.posArr.findIndex(item => item.pos === props.posName);
+                // let newArr = [...props.posArr];
+
+                // if(idx === -1){
+                //     if(props.posName === "pos6"){
+                //         pArr = [8,7.4,0];
+                //     }
+                //     if(props.posName === "pos1"){
+                //         pArr = [8,-7.4,0];
+                //     }
+                //     if(props.posName === "pos2"){
+                //         pArr = [0,-7.4,0];
+                //     }
+                //     if(props.posName === "pos3"){
+                //         pArr = [-8,-7.4,0];
+                //     }
+                //     if(props.posName === "pos4"){
+                //         pArr = [-8,7.4,0];
+                //     }
+                //     if(props.posName === "pos5"){
+                //         pArr = [0,7.4,0];
+                //     }
+                //     let mesh = new MeshData(false, false, false, 2, 4, 4,0,0,50,5,5,'',null,"","Ellipse", false, [0,0,0]);
+                //     let data:posProps = {
+                //         pos: props.posName,
+                //         w: props.w,
+                //         h: props.h,
+                //         d: props.d,
+                //         position: pArr,
+                //         data: mesh
+                //     };
+                //     props.setPosArr(prev=>[...prev, data]);
+                // }        
+                // else{
+                //     newArr[idx].w = props.w;
+                //     newArr[idx].d = props.d;
+                //     newArr[idx].h = props.h;
+
+                //     props.setPosArr(newArr);
+                // }
+            }}
+            className={props.click === props.title ? "click" : ""}
         >
-            <ListTitle>
-                <p style={{fontSize:"2rem", fontWeight:500, marginLeft:4}}>{props.title}</p>
+            <ListTitle className={props.click === props.title ? "click" : ""}>
+                <p style={{fontSize:"2rem", fontWeight:500, marginLeft:4, color:"white"}}>{props.title}</p>
             </ListTitle>
             <ListDetail>
                 <ListImg>img</ListImg>
@@ -97,6 +106,9 @@ const ListBox = styled.div`
     height: 10rem;
     margin-bottom:2rem;
     display:fixed;
+    &.click{
+       border:solid 2px #ff0000;
+    }
 `;
 
 const ListTitle = styled.div`
@@ -105,6 +117,9 @@ const ListTitle = styled.div`
     background: #a7a7a7;
     display:flex;
     align-items: center;
+    &.click{
+        background: #ff0000;
+    }
 `;
 
 const ListDetail = styled.div`

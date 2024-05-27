@@ -5,6 +5,9 @@ import { MeshData } from "./MeshData";
 import { useRecoilValue } from "recoil";
 import { getPosNum } from "../store/PosNum";
 
+import Arrow from '../img/free-icon-direction-arrow-4939761.png';
+import PartDetail from "./PartDetail";
+
 interface posProps{
     pos: String,
     w: number,
@@ -26,6 +29,9 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
     const [posName, setPosName] = useState<String>("");
     const [arr, setArr] = useState<Array<string>>([]);
     const [ready, setReady] = useState<boolean>(false);
+    const [state, setState] = useState<number>(1);
+    const [click, setClick] = useState<string>("");
+    const [idx, setIdx] = useState<number>(0);
     const dumyData = [
         {
             title: "Dumy1",
@@ -155,14 +161,7 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
             d: 8.0,
             visible: true
         },
-        {
-            title: "Dumy15",
-            material: "Dumy_Block",
-            w: 10.0,
-            h: 15.0,
-            d: 8.0,
-            visible: true
-        },
+
     ];
     const num = useRecoilValue(getPosNum);
     const MakePart = () =>{
@@ -190,22 +189,47 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
                 </PartBox>
                 {lineNum > 1 ?<PartBox style={{height:`${100/lineNum}%`}}>
                     {ready ? arr.map((ele,idx)=>{
-                        return (idx>=5 ? <Part onClick={(e)=>{setPosName(ele); setStaPosName(ele);}}><PartDeco className={posName === ele ? "pos":""}>{ele}</PartDeco></Part>:null);
+                        return (idx>=5 ? <Part onClick={(e)=>{setPosName(ele); setStaPosName(ele); }}><PartDeco className={posName === ele ? "pos":""}>{ele}</PartDeco></Part>:null);
                     }) : null}  
                 </PartBox> : null}
             </PartContainer>
             <BlankContainer></BlankContainer>
-            <ListContainer>
+            <ListContainer style={lineNum > 1 ? state <= 1 ? {height:"79.5%", overflow: "auto"} :{height:"79.5%"} :state <= 1 ? {height:"84%", overflow: "auto"} :{height:"84%"}}>
                 <BlankContainer/>
-                <ListOverflow>
+                {state <= 1 ?<ListOverflow>
                     {dumyData.map((ele, idx)=>(
-                        <ListCard posArr={posArr} posName={posName} setPosArr={setPosArr} key={idx} title={ele.title} material={ele.material} w={ele.w} h={ele.h} d={ele.d} visible={ele.visible}/>
+                        <ListCard setClick={setClick} click={click} setState={setState} posArr={posArr} posName={posName} setPosArr={setPosArr} key={idx} title={ele.title} material={ele.material} w={ele.w} h={ele.h} d={ele.d} visible={ele.visible}/>
                     ))}
                     <BlankContainer/>
-                </ListOverflow>
+                </ListOverflow> 
+                :<PartDetail/>
+                }
                 
                 {/* <ListCard title={"title"} material={"material"} w={1} h={1} d={1}/> */}
             </ListContainer>
+            <BlankContainer/>
+            <Buttoncontainer>
+                    <Button 
+                        style={state <= 1 ? {opacity:0.5} : {opacity:1}}
+                        onClick={()=>{
+                            if(state > 1){
+                                setState(1);
+                            }
+                        }}
+                    >
+                        <img 
+                            src={Arrow} 
+                            style={state <= 1 ?{width:"3rem", height:"3rem", transform:"rotate(180deg)", opacity:0.5} :{width:"3rem", height:"3rem", transform:"rotate(180deg)"}}
+                        />
+                    </Button>
+                    <Button
+                        onClick={()=>{
+                            setState(2);
+                        }}
+                    >
+                        <img src={Arrow} style={{width:"3rem", height:"3rem" }}/>
+                    </Button>
+            </Buttoncontainer>
         </PartListContainer>
     );
 }
@@ -241,8 +265,8 @@ const BlankContainer = styled.div`
 const ListContainer = styled.div`
     width:100%;
     background: #D8D8D8;
-    height:90%;
-    overflow-y: auto;
+    height:79.5%;
+    
 `;
 
 const ListOverflow = styled.div`
@@ -282,3 +306,20 @@ const PartDeco = styled.div`
         border-bottom: 0.2rem solid #ff0000;
     }
 `; 
+
+const Buttoncontainer = styled.div`
+    width:100%;
+    height:4%;
+    display: flex;
+    justify-content: space-between;
+`;
+
+const Button = styled.div`
+    width:48%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #a7a7a7;
+    border-radius: 0.4rem;
+`;

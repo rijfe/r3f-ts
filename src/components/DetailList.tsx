@@ -189,7 +189,7 @@ function DetailList({isOpen, setGeo,setIsDrop, setJig, setIsOpen}:DetailListProp
                 title : "(5X450)_AT_Premill_OCC",
                 content: "Premilled",
                 jig: "5X450_Premill_OCC.stl",
-                pos:10
+                pos:8
             },
             {
                 no :6,

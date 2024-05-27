@@ -119,7 +119,7 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
         <Container className={isSettingOpen ? "setting" : ""}>
 
             <PosContainer
-                style={{height:`${(10/pn >= 2 ? 1:2) *4.5}%`}}
+                style={{height:`${(10/pn >= 2 ? 1:2) *4}%`}}
             >
                 <PosBox style={{height:`${100/(10/pn >= 2 ? 1:2)}%`}}>
                     {ready ? arr.map((ele,idx)=>{
@@ -163,7 +163,9 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
                 <PartBox onClick={()=>{setNum(5);}}>5</PartBox>
             </SettingPartContainer>
             <BlankContainer/>
-            <SettingDetailContainer>
+            <SettingDetailContainer
+                style={{height:`${10/pn >= 2 ? 50:50}%`}}
+            >
                 {num === 1 ? <Curves idx={idx} posObj={posObj} setPosObj={setPosObj} boffset={posObj.length > 0 && idx != -1?posObj[idx].data.offset:boffset} setBoffset={setBoffset}/> : null}
                 {num === 2 ? <Directions/> : null}
                 {num === 5 ? <Connectors idx={idx} posObj={posObj} setPosObj={setPosObj} setConnStart={setConnStart} type={type} setType={setType} width={width} height={height} rotation={rotation} angle={angle} distance={distance} cutting={cutting} setAngle={setAngle} setCutting={setCutting} setDistance={setDistance} setHeight={setHeight} setRotation={setRotation} setWidth={setWidth}/> : null}
@@ -227,7 +229,6 @@ const BlankContainer = styled.div`
 
 const SettingDetailContainer = styled.div`
     width:100%;
-    height: 50%;
     background: #D8D8D8;
 `;
 

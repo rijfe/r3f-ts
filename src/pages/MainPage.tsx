@@ -70,7 +70,7 @@ function MainPage() {
                 <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
                 <Box ref={ref} state={state} position={[-1.2, 0, 0]} num={num} setNum={setNum} />
                 <Box ref={ref} state={state} position={[1.2, 0, 0]} num={num2} setNum={setNum2} />
-                <StaticAxes/>                  
+                             
                 <OrbitControls/>
             </Canvas>
         </MainPageContainer>

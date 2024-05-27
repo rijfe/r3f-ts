@@ -271,8 +271,8 @@ function STLLoadPage(){
                                                 {ele.data.file != null ?<LoadMesh billRef={billRef} posName={posName} posArr={posArr} position={state} showConnect={ele.data.showConnect} boxRef={boxRef.current[Number(ele.pos.split("s")[1])]} setPosArr={setPosArr} idx={idx} connecStart={ele.data.conStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY5} setNum={setSettingNum} type={ele.data.type}  connectOn={ele.data.connectOn} offset={ele.data.offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={ele.data.file} setHoverd={setHovered} visible={visible} setVisible={setVisible} useStore={useStore} width={ele.data.conWid} height={ele.data.conHei} angle={ele.data.conAngle} rotation={ele.data.conRotation} distance={ele.data.conDis} cutting={ele.data.conCut}/> :null}
                                                 {Number(ele.pos.split("s")[1]) >= 4 ? <AxesHelper axesRef={axesRef} position={new THREE.Vector3(0,8.9,0)} visible={false} size={3}/> : <AxesHelper axesRef={axesRef} position={new THREE.Vector3(0,-8.9,0)} visible={false} size={3}/>}
                                                 <mesh ref={planeRef}>
-                                                    <Plane args={[ele.w,ele.d]} rotation-x={Math.PI/2} position={ele.position[1]< 0 ? [0,-ele.data.planeY,0] :[0,ele.data.planeY,0]}>
-                                                        <meshStandardMaterial transparent side={THREE.DoubleSide} opacity={0.6} color="#aaaaaa"  />
+                                                    <Plane args={[ele.w,ele.d]} rotation-x={-Math.PI/2} position={ele.position[1]< 0 ? [0,-ele.data.planeY,0] :[0,ele.data.planeY,0]}>
+                                                        <meshStandardMaterial transparent side={THREE.DoubleSide} opacity={0.4} color="#000000"  />
                                                     </Plane>
                                                 </mesh>
                                             </mesh>

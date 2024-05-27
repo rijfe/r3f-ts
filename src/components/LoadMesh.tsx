@@ -131,7 +131,7 @@ function LoadMesh({ geometry, type,connectOn,billRef,setPosArr,posName, position
             if(newArr[idx].position[1] < 0){
                 newArr[idx].data.planeY=offset-curY;
             }
-            else newArr[idx].data.planeY=offset+curY+1;
+            else newArr[idx].data.planeY=offset+curY;
             setPosArr(newArr);
         }
 
