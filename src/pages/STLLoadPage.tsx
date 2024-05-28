@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState, useRef,useEffect, RefObject } from "react";
 import { useNavigate } from "react-router-dom";
 import { Canvas, ThreeEvent, useThree, useFrame,useLoader } from "@react-three/fiber";
-import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Box, TransformControls, Plane, useHelper, Cylinder, Html, Billboard, ScreenSpace, Edges} from "@react-three/drei";
+import { OrbitControls, Loader,  TransformControls, Plane, GizmoHelper, Edges, GizmoViewport} from "@react-three/drei";
 import { BufferGeometry } from "three";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from "three";
@@ -282,9 +282,12 @@ function STLLoadPage(){
                                     })
                                 :null}
                             </group>
-                            {jigOpen ? <StaticAxes/> : null}
-                            
-                            <OrbitControls ref={controlRef} dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.8} minZoom={5} mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
+                            {/* {jigOpen ? <StaticAxes/> : null} */}
+                            {/* <GizmoHelper /> */}
+                            <GizmoHelper alignment="bottom-right" margin={[120, 100]}>
+                                <GizmoViewport labelColor="white" axisHeadScale={1} />
+                            </GizmoHelper>
+                            <OrbitControls ref={controlRef}   makeDefault dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.8} minZoom={5} mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
                             {target && visible &&
                                 <TransformControls 
                                     object={target}

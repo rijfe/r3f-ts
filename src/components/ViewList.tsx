@@ -49,6 +49,7 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                     <ViewBtn onClick={(e)=>{
                         e.stopPropagation();
                         let tl = gsap.timeline();
+                        tl.clear();
                         if(curView !== 1){
                             if(curView === 2){
                                 tl.to(camera.position,{
@@ -56,14 +57,20 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                     x:40,
                                     y:0,
                                     z:0,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                                 tl.to(camera.position,{
                                     duration:0.5,
                                     x:0,
                                     y:0,
                                     z:40,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                             }
                             else{
@@ -72,7 +79,10 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                     x:0,
                                     y:0,
                                     z:40,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                             }
                         }
@@ -83,18 +93,22 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                     x:0,
                                     y:0,
                                     z:40,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                             }
                         }
                         setCurView(1);
-                        camera.lookAt(new THREE.Vector3(0,0,0));
+                        
                     }}>
                         1
                     </ViewBtn>
                     <ViewBtn onClick={(e)=>{
                         e.stopPropagation();
                         let tl = gsap.timeline();
+                        tl.clear();
                         if(curView !== 2){
                             if(curView === 1){
                                 tl.to(camera.position,{
@@ -102,14 +116,20 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                     x:-40,
                                     y:0,
                                     z:0,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                                 tl.to(camera.position,{
                                     duration:0.5,
                                     x:0,
                                     y:0,
                                     z:-40,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                             }
                             else{
@@ -119,21 +139,30 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                         x:0,
                                         y:0,
                                         z:40,
-                                        ease:"linear"
+                                        ease:"linear",
+                                        onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                     });
                                     tl.to(camera.position,{
                                         duration:0.4,
                                         x:-40,
                                         y:0,
                                         z:0,
-                                        ease:"linear"
+                                        ease:"linear",
+                                        onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                     });
                                     tl.to(camera.position,{
                                         duration:0.3,
                                         x:0,
                                         y:0,
                                         z:-40,
-                                        ease:"linear"
+                                        ease:"linear",
+                                        onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                     });
                                 }
                                 else if(curView === 6){
@@ -142,21 +171,30 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                         x:0,
                                         y:0,
                                         z:40,
-                                        ease:"linear"
+                                        ease:"linear",
+                                        onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                     });
                                     tl.to(camera.position,{
                                         duration:0.4,
                                         x:-40,
                                         y:0,
                                         z:0,
-                                        ease:"linear"
+                                        ease:"linear",
+                                        onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                     });
                                     tl.to(camera.position,{
                                         duration:0.3,
                                         x:0,
                                         y:0,
                                         z:-40,
-                                        ease:"linear"
+                                        ease:"linear",
+                                        onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                     });
                                 }
                                 else{
@@ -165,7 +203,10 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                         x:0,
                                         y:0,
                                         z:-40,
-                                        ease:"linear"
+                                        ease:"linear",
+                                        onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                     });
                                 }
                                 
@@ -178,7 +219,10 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                     x:0,
                                     y:0,
                                     z:-40,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                             }
                         }
@@ -189,6 +233,7 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                     <ViewBtn onClick={(e)=>{
                         e.stopPropagation();
                         let tl = gsap.timeline();
+                        tl.clear();
                         if(curView !== 3){
                             if(curView === 4){
                                 tl.to(camera.position,{
@@ -196,7 +241,10 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                     x:0,
                                     y:0,
                                     z:-40,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                                 tl.to(camera.rotation,{
                                     duration:0.3,
@@ -209,7 +257,10 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                     x:40,
                                     y:0,
                                     z:0,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                             }
                             else{
@@ -219,14 +270,20 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                         x:0,
                                         y:0,
                                         z:40,
-                                        ease:"linear"
+                                        ease:"linear",
+                                        onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                     });
                                     tl.to(camera.position,{
                                         duration:0.5,
                                         x:40,
                                         y:0,
                                         z:0,
-                                        ease:"linear"
+                                        ease:"linear",
+                                        onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                     });
                                 }
                                 else{
@@ -235,7 +292,10 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                         x:40,
                                         y:0,
                                         z:0,
-                                        ease:"linear"
+                                        ease:"linear",
+                                        onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                     });
                                 }
                                 
@@ -248,13 +308,16 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                     x:40,
                                     y:0,
                                     z:0,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                             }
                         }
                         setCurView(3);
                         // camera.position.set(40,0,0);
-                        camera.lookAt(new THREE.Vector3(0,0,0));
+                        
                     }}>
                         3
                     </ViewBtn>
@@ -268,14 +331,20 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                     x:0,
                                     y:0,
                                     z:40,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                                 tl.to(camera.position,{
                                     duration:0.5,
                                     x:-40,
                                     y:0,
                                     z:0,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                             }
                             else{
@@ -285,14 +354,20 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                         x:0,
                                         y:0,
                                         z:40,
-                                        ease:"linear"
+                                        ease:"linear",
+                                        onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                     });
                                     tl.to(camera.position,{
                                         duration:0.5,
                                         x:-40,
                                         y:0,
                                         z:0,
-                                        ease:"linear"
+                                        ease:"linear",
+                                        onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                     });
                                 }
                                 else{
@@ -301,7 +376,10 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                         x:-40,
                                         y:0,
                                         z:0,
-                                        ease:"linear"
+                                        ease:"linear",
+                                        onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                     });
                                 }
                             }
@@ -313,7 +391,10 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                     x:-40,
                                     y:0,
                                     z:0,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                             }
                         }
@@ -333,21 +414,30 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                     x:-40,
                                     y:0,
                                     z:0,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                                 tl.to(camera.position,{
                                     duration:0.5,
                                     x:0,
                                     y:0,
                                     z:40,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                                 tl.to(camera.position,{
                                     duration:0.5,
                                     x:0,
                                     y:40,
                                     z:0,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                             }
                             else{
@@ -356,14 +446,20 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                     x:0,
                                     y:0,
                                     z:40,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                                 tl.to(camera.position,{
                                     duration:0.5,
                                     x:0,
                                     y:40,
                                     z:0,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                             }
                         }
@@ -374,13 +470,16 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                     x:0,
                                     y:40,
                                     z:0,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                             }
                         }
                         setCurView(5);
                         
-                        camera.lookAt(new THREE.Vector3(0,0,0));
+                        
                     }}>
                         5
                     </ViewBtn>
@@ -394,21 +493,30 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                     x:-40,
                                     y:0,
                                     z:0,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                                 tl.to(camera.position,{
                                     duration:0.5,
                                     x:0,
                                     y:0,
                                     z:40,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                                 tl.to(camera.position,{
                                     duration:0.5,
                                     x:0,
                                     y:-40,
                                     z:0,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                             }
                             else{
@@ -417,14 +525,20 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                     x:0,
                                     y:0,
                                     z:40,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                                 tl.to(camera.position,{
                                     duration:0.5,
                                     x:0,
                                     y:-40,
                                     z:0,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                             }
                         }
@@ -435,12 +549,15 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                                     x:0,
                                     y:-40,
                                     z:0,
-                                    ease:"linear"
+                                    ease:"linear",
+                                    onUpdate: () => { 
+                                        camera.lookAt(0, 0, 0) // Look to a target during the animation
+                                    }, 
                                 });
                             }
                         }
                         setCurView(6);
-                        camera.lookAt(new THREE.Vector3(0,0,0));
+                        
                     }}>
                         6
                     </ViewBtn>
