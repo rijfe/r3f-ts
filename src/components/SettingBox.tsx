@@ -75,7 +75,7 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
                         newArr[idx].data.fileName = file.name;
                         setPosObj(newArr);
                     });
-                    console.log(file.webkitRelativePath);
+                    
                 }
                 
             }
@@ -154,8 +154,25 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
                             }
                         }}
                     />
-                    <FileInput type="file" id="files" onChange={handleUpload} accept=".stl, .xml, .pts, .constructionInfo"/>
-                    
+                    <FileInput type="file" id="files" onChange={handleUpload} accept=".stl, .xml, .pts, .constructionInfo" multiple/>
+                    <FileDelete
+                        onClick={()=>{
+                            if(idx != -1){
+                               if(window.confirm("정말 삭제하시겠습니까?")){
+                                    let newArr = [...posObj];
+                                    newArr[idx].data.file = null;
+                                    newArr[idx].data.fileName = '';
+                                    setPosObj(newArr);
+                                } 
+                            }
+                            
+                            
+                        }}
+                        style={idx != -1 ? posObj[idx].data.file != null ? {opacity:1}:{opacity:0.3}:{opacity:0.3}}
+                    >
+                        <FileDeleteIcon/>
+                    </FileDelete>
+                    <FileInput type="file" id="files" onChange={handleUpload} accept=".stl, .xml, .pts, .constructionInfo" multiple/>
                 </BtnContainer>
                 
             </FileContainer>
@@ -310,4 +327,17 @@ const PosFileNameContainer = styled.div`
     display:flex;
     justify-content:start;
     align-items: center;
+`;
+
+const FileDelete = styled.div`
+    width: 3rem;
+    height:3rem;
+    display:flex;
+    justify-content:center;
+`;
+
+const FileDeleteIcon = styled.div`
+    width: 90%;
+    height:50%;
+    border-bottom: solid 0.3rem black;
 `;
