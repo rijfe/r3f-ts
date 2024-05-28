@@ -114,10 +114,9 @@ function LoadMesh({ geometry, type,connectOn,billRef,setPosArr,posName, position
             const boundingBox = new THREE.Box3().setFromObject(meshRef.current);
             const center = boundingBox.getCenter(new THREE.Vector3());
             meshRef.current.geometry.center();
-            console.log(boundingBox.min.y);
-            console.log((boundingBox.max.y+boundingBox.min.y)/2);
+                        
             let newArr = [...posArr];
-            newArr[idx].data.planeY= offset+boundingBox.max.y*0.4;
+            newArr[idx].data.planeY= offset+boundingBox.max.y*0.3;
             
             setPosArr(newArr);
             setCenterZ(center.z);
@@ -137,9 +136,9 @@ function LoadMesh({ geometry, type,connectOn,billRef,setPosArr,posName, position
             setOffset(offset+curY+1);
             let newArr = [...posArr];
             if(newArr[idx].position[1] < 0){
-                newArr[idx].data.planeY=offset-curY-boundingBox.min.y*0.4;
+                newArr[idx].data.planeY=offset-curY-boundingBox.min.y*0.3;
             }
-            else newArr[idx].data.planeY=offset+boundingBox.max.y*0.4+curY;
+            else newArr[idx].data.planeY=offset+boundingBox.max.y*0.3+curY;
             setPosArr(newArr);
         }
 

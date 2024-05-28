@@ -209,7 +209,8 @@ function DetailList({isOpen, setGeo,setIsDrop, setJig, setIsOpen}:DetailListProp
                 no :2,
                 title : "(5X500L)_Master_O-type_Disk",
                 content: "Milling",
-                jig: "150-지그 1.stl"
+                jig: "5X500L V2-CAD BLOCK JIG_형상추가.stl",
+                pos: 6
             },
             {
                 no :3,

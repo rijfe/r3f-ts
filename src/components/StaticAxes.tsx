@@ -34,9 +34,14 @@ function StaticAxes({renderPriority=1, matrix = new THREE.Matrix4()}){
 
 const Axes = forwardRef(({position}:any,fref)=>{
     const ref = useRef<THREE.Mesh>(null!);
+    
 
-    useFrame((state, delta) => (ref.current.rotation.x += delta))
-    useImperativeHandle(fref, () => ref.current, [])
+    const {camera} = useThree();
+    useFrame((state, delta) => (
+        ref.current.rotation.x += delta
+    
+    ));
+    useImperativeHandle(fref, () => ref.current, []);
 
     return(
         <mesh
@@ -81,7 +86,6 @@ const Axes = forwardRef(({position}:any,fref)=>{
             >
                 <meshStandardMaterial color={"#0000ff"} side={THREE.DoubleSide}/>
             </Cone>
-
             <Text color="#9a0000" position={[40, 0, 0]} scale={8}>
                 X
             </Text>
