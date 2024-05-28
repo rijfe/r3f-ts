@@ -30,10 +30,10 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
     const [arr, setArr] = useState<Array<string>>([]);
     const [ready, setReady] = useState<boolean>(false);
     const [state, setState] = useState<number>(1);
-    const [click, setClick] = useState<string>("");
-    const [w, setW] = useState<number>(0);
-    const [h, setH] = useState<number>(0);
-    const [d, setD] = useState<number>(0);
+    const [click, setClick] = useState<string>("Dumy1");
+    const [w, setW] = useState<number>(15);
+    const [h, setH] = useState<number>(18);
+    const [d, setD] = useState<number>(15);
     const dumyData = [
         {
             title: "Dumy1",
@@ -261,6 +261,7 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
                                         data: mesh
                                     };
                                     setPosArr(prev=>[...prev, data]);
+                                    setState(1);
                                 }        
                                 else{
                                     newArr[idx].w = w;

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useState, useRef,useEffect, RefObject } from "react";
 import { useNavigate } from "react-router-dom";
 import { Canvas, ThreeEvent, useThree, useFrame,useLoader } from "@react-three/fiber";
-import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Box, TransformControls, Plane, useHelper, Cylinder, Html, Billboard, ScreenSpace} from "@react-three/drei";
+import { OrbitControls, CatmullRomLine,Loader, OrthographicCamera, Box, TransformControls, Plane, useHelper, Cylinder, Html, Billboard, ScreenSpace, Edges} from "@react-three/drei";
 import { BufferGeometry } from "three";
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from "three";
@@ -207,6 +207,7 @@ function STLLoadPage(){
 
                             <directionalLight ref={lightHelper1} intensity={0.8}  />
                             <directionalLight ref={lightHelper2} intensity={0.8}  />
+                            {/* <directionalLight position={[0,10,0]} intensity={0.8}  rotation-x={Math.PI/4}/> */}
                   
                             <group ref={groupRef}>
                                 {jigOpen  ?
@@ -246,7 +247,7 @@ function STLLoadPage(){
                                                 onClick={(e)=>{
                                                     // e.stopPropagation();
                                                     setPosName(ele.pos);
-                                                    console.log("what");
+                                                    
                                                     if(ele.data.conStart){
                                                         let newArr = [...posArr];
                                                         newArr[idx].data.showConnect=false;
@@ -271,8 +272,9 @@ function STLLoadPage(){
                                                 {ele.data.file != null ?<LoadMesh billRef={billRef} posName={posName} posArr={posArr} position={state} showConnect={ele.data.showConnect} boxRef={boxRef.current[Number(ele.pos.split("s")[1])]} setPosArr={setPosArr} idx={idx} connecStart={ele.data.conStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY5} setNum={setSettingNum} type={ele.data.type}  connectOn={ele.data.connectOn} offset={ele.data.offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={ele.data.file} setHoverd={setHovered} visible={visible} setVisible={setVisible} useStore={useStore} width={ele.data.conWid} height={ele.data.conHei} angle={ele.data.conAngle} rotation={ele.data.conRotation} distance={ele.data.conDis} cutting={ele.data.conCut}/> :null}
                                                 {Number(ele.pos.split("s")[1]) >= 4 ? <AxesHelper axesRef={axesRef} position={new THREE.Vector3(0,8.9,0)} visible={false} size={3}/> : <AxesHelper axesRef={axesRef} position={new THREE.Vector3(0,-8.9,0)} visible={false} size={3}/>}
                                                 <mesh ref={planeRef}>
-                                                    <Plane args={[ele.w,ele.d]} rotation-x={-Math.PI/2} position={ele.position[1]< 0 ? [0,-ele.data.planeY,0] :[0,ele.data.planeY,0]}>
-                                                        <meshStandardMaterial transparent side={THREE.DoubleSide} opacity={0.4} color="#000000"  />
+                                                    <Plane args={[ele.w,ele.d]} rotation-x={-Math.PI/2} position={ele.position[1]< 0 ? [0,-ele.data.planeY-0.01,0] :[0,ele.data.planeY+0.01,0]}>
+                                                        <meshStandardMaterial transparent side={THREE.DoubleSide} opacity={0.4} color="#a8a8a8"  depthTest={false}  depthWrite={false}/>
+                                                        <Edges />
                                                     </Plane>
                                                 </mesh>
                                             </mesh>

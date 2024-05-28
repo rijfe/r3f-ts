@@ -81,6 +81,7 @@ function LoadMesh({ geometry, type,connectOn,billRef,setPosArr,posName, position
         if(meshAllRef.current){
             const allBoundingBox = new THREE.Box3().setFromObject(meshAllRef.current);
             const box = new THREE.Box3().setFromObject(boxRef);
+            const boundingBox = new THREE.Box3().setFromObject(meshRef.current);
             const center = meshRef.current.getWorldPosition(world);
             if(center.x -3 < boundary.minX || center.x+3 > boundary.maxX 
             || center.y -7 < boundary.minY || center.y +7 > boundary.maxY 
@@ -92,6 +93,7 @@ function LoadMesh({ geometry, type,connectOn,billRef,setPosArr,posName, position
 
             }
              if(curY !== meshAllRef.current.position.y){
+                console.log(boundingBox.min.y);
                 setCurY(meshAllRef.current.position.y);
             }
             
@@ -112,10 +114,15 @@ function LoadMesh({ geometry, type,connectOn,billRef,setPosArr,posName, position
             const boundingBox = new THREE.Box3().setFromObject(meshRef.current);
             const center = boundingBox.getCenter(new THREE.Vector3());
             meshRef.current.geometry.center();
-           
+            console.log(boundingBox.min.y);
+            console.log((boundingBox.max.y+boundingBox.min.y)/2);
+            let newArr = [...posArr];
+            newArr[idx].data.planeY= offset+boundingBox.max.y*0.4;
+            
+            setPosArr(newArr);
             setCenterZ(center.z);
             setFocus(false);
-            setOffset(offset+boundingBox.max.y*0.3);
+            setOffset(offset+boundingBox.max.y);
             // let newArr = [...posArr];
             // newArr[idx].data.offset=offset+boundingBox.max.y*0.3;
             // setPosArr(newArr);
@@ -125,13 +132,14 @@ function LoadMesh({ geometry, type,connectOn,billRef,setPosArr,posName, position
     }, [geometry]);
 
     useEffect(() => {
+        const boundingBox = new THREE.Box3().setFromObject(meshRef.current);
         if(curY != 0){ 
             setOffset(offset+curY+1);
             let newArr = [...posArr];
             if(newArr[idx].position[1] < 0){
-                newArr[idx].data.planeY=offset-curY;
+                newArr[idx].data.planeY=offset-curY-boundingBox.min.y*0.4;
             }
-            else newArr[idx].data.planeY=offset+curY;
+            else newArr[idx].data.planeY=offset+boundingBox.max.y*0.4+curY;
             setPosArr(newArr);
         }
 
