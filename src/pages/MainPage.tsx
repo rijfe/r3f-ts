@@ -2,12 +2,13 @@ import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { useNavigate } from "react-router-dom";
+import * as THREE from 'three';
 
 import Box from "../components/Box";
 import HeadContainer from "../components/HeadContainer";
 import { useRecoilValue } from "recoil";
 import { getUserInfo } from "../store/UserInfo";
-import { Html, Hud, OrbitControls, View } from "@react-three/drei";
+import { Html, Hud, Merged, OrbitControls, View } from "@react-three/drei";
 import { BufferGeometry, MeshStandardMaterial } from "three";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import AxesHelper from "../components/AxesHelper";
@@ -64,12 +65,46 @@ function MainPage() {
                 </PageMoveBtn>
             </HeadContainer>
           
-            <Canvas >
+            <Canvas 
+                // orthographic
+                // camera={{
+                //     left:-8000,
+                //     right: 8000,
+                //     top:8000,
+                //     bottom: 8000,
+                //     zoom:8,
+                //     near:-8000,
+                //     far:2000,
+                // }}
+            >
                 <ambientLight intensity={Math.PI / 2} />
                 <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
                 <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
                 <Box ref={ref} state={state} position={[-1.2, 0, 0]} num={num} setNum={setNum} />
                 <Box ref={ref} state={state} position={[1.2, 0, 0]} num={num2} setNum={setNum2} />
+                {/* <group scale={0.4}>
+                    <mesh>
+                        <mesh >
+                            <cylinderGeometry args={[98,98,10,98]}/>
+                            <meshStandardMaterial transparent={true} opacity={0.3} color="#1188f1" side={THREE.DoubleSide} depthWrite={false}/>
+                        </mesh>
+                        <mesh position={[0,10,0]}>
+                            <cylinderGeometry args={[95,95,10,98]}/>
+                            <meshStandardMaterial transparent={true} opacity={0.3} color="#1188f1" side={THREE.DoubleSide} depthWrite={false}/>
+                        </mesh>
+                        <mesh position={[0,-10,0]}>
+                            <cylinderGeometry args={[95,95,10,98]}/>
+                            <meshStandardMaterial transparent={true} opacity={0.3} color="#1188f1" side={THREE.DoubleSide} depthWrite={false}/>
+                        </mesh>
+                        <meshStandardMaterial transparent={true} opacity={0.3} color="#1188f1" side={THREE.DoubleSide} />
+                    </mesh>
+                    
+                </group> */}
+                
+                
+                {/* <Merged>
+                    
+                </Merged> */}
                              
                 <OrbitControls/>
             </Canvas>

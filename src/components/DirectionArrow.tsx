@@ -4,7 +4,9 @@ import { useRecoilValue } from "recoil";
 import { getDirectionPoint } from "../store/directionState";
 
 interface ArrowProps{
-    point : [number,number,number]
+    point : [number,number,number],
+    x: number,
+    y: number
 }
 
 function DirectionArrow(props:ArrowProps){
@@ -12,7 +14,7 @@ function DirectionArrow(props:ArrowProps){
     return (
         <group
             rotation={props.point}  
-            position={[0,0,7]}
+            position={[props.x,props.y,7]}
         >
             <Line
                 color="#750000"

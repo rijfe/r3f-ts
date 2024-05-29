@@ -46,10 +46,12 @@ interface loadMesh{
     setPosArr: React.Dispatch<React.SetStateAction<posProps[]>>,
     posArr:posProps[],
     posName: String,
-    billRef: React.MutableRefObject<THREE.Group<THREE.Object3DEventMap>>
+    billRef: React.MutableRefObject<THREE.Group<THREE.Object3DEventMap>>,
+    setX: React.Dispatch<React.SetStateAction<number>>,
+    setY: React.Dispatch<React.SetStateAction<number>>,
 }
 
-function LoadMesh({ geometry, type,connectOn,billRef,setPosArr,posName, position, boxRef,idx,posArr, showConnect, visible, setVisible, setHoverd, offset, setOffset,useStore, setSetting, isSettingOpen, width, height, connecStart, setConnecOn, angle, setNum} : loadMesh){
+function LoadMesh({ geometry, type,connectOn,setX,setPosArr,posName, position, boxRef,idx,posArr, showConnect, visible, setVisible, setHoverd, offset, setOffset,useStore, setSetting, isSettingOpen, width, height, connecStart, setY, angle, setNum} : loadMesh){
     const meshRef = useRef<THREE.Mesh>(null!);
     const meshAllRef = useRef<THREE.Mesh>(null!);
     const edgeRef = useRef<THREE.Mesh>(null!);
@@ -97,7 +99,8 @@ function LoadMesh({ geometry, type,connectOn,billRef,setPosArr,posName, position
             }
             
         }
-
+        setX(meshAllRef.current.position.x);
+        setY(meshAllRef.current.position.y);
         if(dircetion == 'yes' && posArr[idx].pos === posName){
             let newArr = [...posArr];
             newArr[idx].data.dirPoint = [camera.rotation.x,camera.rotation.y,camera.rotation.z];
@@ -136,9 +139,9 @@ function LoadMesh({ geometry, type,connectOn,billRef,setPosArr,posName, position
             setOffset(offset+curY+1);
             let newArr = [...posArr];
             if(newArr[idx].position[1] < 0){
-                newArr[idx].data.planeY=offset-curY-boundingBox.min.y*0.3;
+                newArr[idx].data.planeY=offset-curY;
             }
-            else newArr[idx].data.planeY=offset+boundingBox.max.y*0.3+curY;
+            else newArr[idx].data.planeY=offset+curY;
             setPosArr(newArr);
         }
 

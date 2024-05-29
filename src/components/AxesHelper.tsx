@@ -27,9 +27,9 @@ function AxesHelper(props:AxesHelperProps){
         setPy(-viewport.height/3.6);
     });
     useEffect(()=>{
-        console.log(viewport);
+        
         const groupRef = ref.current;
-        console.log(groupRef);
+        
         // camera.add(groupRef);
         // return ()=>{
         //     camera.remove(groupRef);

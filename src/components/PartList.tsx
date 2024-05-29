@@ -31,9 +31,9 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
     const [ready, setReady] = useState<boolean>(false);
     const [state, setState] = useState<number>(1);
     const [click, setClick] = useState<string>("Dumy1");
-    const [w, setW] = useState<number>(15);
-    const [h, setH] = useState<number>(18);
-    const [d, setD] = useState<number>(15);
+    const [wd, setW] = useState<number>(15);
+    const [hd, setH] = useState<number>(18);
+    const [dd, setD] = useState<number>(15);
     const dumyData = [
         {
             title: "Dumy1",
@@ -186,7 +186,26 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
             >
                 <PartBox style={{height:`${100/lineNum}%`}}>
                     {ready ? arr.map((ele,idx)=>{
-                        return (idx<5 ? <Part onClick={(e)=>{setPosName(ele); setStaPosName(ele);}}><PartDeco className={posName === ele ? "pos":""}>{ele}</PartDeco></Part>:null);
+                        return (idx<5 ? <Part 
+                            onClick={(e)=>{setPosName(ele); setStaPosName(ele);}}
+                            onContextMenu={(e)=>{
+                                e.preventDefault();
+                                if(window.confirm("정말 삭제하시겠습니까?")){
+                                    let index = posArr.findIndex(item => item.pos === posName);
+                                    let newArr = [...posArr];
+                                    newArr[index].w = 0;
+                                    newArr[index].h = 0;
+                                    newArr[index].d = 0;
+                                    newArr[index].pos = "";
+                                    newArr[index].data.file = null;
+                                    newArr[index].data.fileName = '';
+                                    newArr[index].data.connectOn = false;
+                                    setPosArr(newArr);
+                                } 
+                            }}
+                            >
+                                <PartDeco className={posName === ele ? "pos":""}>{ele}</PartDeco>
+                                </Part>:null);
                     }) : null}                  
                 </PartBox>
                 {lineNum > 1 ?<PartBox style={{height:`${100/lineNum}%`}}>
@@ -251,12 +270,12 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
                                     if(posName === "pos5"){
                                         pArr = [0,7.4,0];
                                     }
-                                    let mesh = new MeshData(false, false, false, 2, 4, 4,0,0,50,3.5,5,'',null,"","Ellipse", false, [0,0,0]);
+                                    let mesh = new MeshData(false, false, false, 2, 4, 4,0,0,50,5,5,'',null,"","Ellipse", false, [0,0,0]);
                                     let data:posProps= {
                                         pos: posName,
-                                        w: w,
-                                        h: h,
-                                        d: d,
+                                        w: wd,
+                                        h: hd,
+                                        d: dd,
                                         position: pArr,
                                         data: mesh
                                     };
@@ -264,9 +283,9 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
                                     setState(1);
                                 }        
                                 else{
-                                    newArr[idx].w = w;
-                                    newArr[idx].d = d;
-                                    newArr[idx].h = h;
+                                    newArr[idx].w = wd;
+                                    newArr[idx].d = dd;
+                                    newArr[idx].h = hd;
 
                                     setPosArr(newArr);
                                 }
