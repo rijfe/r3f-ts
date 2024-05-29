@@ -93,8 +93,9 @@ function LoadMesh({ geometry, type,connectOn,billRef,setPosArr,posName, position
 
             }
              if(curY !== meshAllRef.current.position.y){
-                console.log(boundingBox.min.y);
+                
                 setCurY(meshAllRef.current.position.y);
+
             }
             
         }
@@ -132,6 +133,7 @@ function LoadMesh({ geometry, type,connectOn,billRef,setPosArr,posName, position
 
     useEffect(() => {
         const boundingBox = new THREE.Box3().setFromObject(meshRef.current);
+        const center = meshRef.current.getWorldPosition(world);
         if(curY != 0){ 
             setOffset(offset+curY+1);
             let newArr = [...posArr];
@@ -176,7 +178,7 @@ function LoadMesh({ geometry, type,connectOn,billRef,setPosArr,posName, position
                 position={[0,0,0]}                    
             >
                 <meshStandardMaterial ref={mateRef} color={focus ? "#fcf000" : "#ffffff"} side={THREE.DoubleSide}/>
-                {posArr[idx].data.dirState ? <DirectionArrow point={posArr[idx].data.dirPoint}/> :null}
+                
             </mesh>
             {connectOn ? type === "Ellipse" ? <Connector posName={posName} angle={angle} x={position} setNum={setNum} setSetting={setSetting} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}
             {connecStart &&showConnect  ? type === "Ellipse" ? <Connector posName={posName} angle={angle}  x={position} setNum={setNum} setSetting={setSetting} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}

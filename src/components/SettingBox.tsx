@@ -162,6 +162,7 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
                                     let newArr = [...posObj];
                                     newArr[idx].data.file = null;
                                     newArr[idx].data.fileName = '';
+                                    newArr[idx].data.connectOn = false;
                                     setPosObj(newArr);
                                 } 
                             }

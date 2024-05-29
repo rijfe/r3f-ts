@@ -277,13 +277,14 @@ function STLLoadPage(){
                                                         <Edges />
                                                     </Plane>
                                                 </mesh>
+                                                {ele.data.dirState ? <DirectionArrow point={ele.data.dirPoint}/> :null}
                                             </mesh>
                                         );
                                     })
                                 :null}
                             </group>
                             {/* {jigOpen ? <StaticAxes/> : null} */}
-                            {/* <GizmoHelper /> */}
+                            
                             <GizmoHelper alignment="bottom-right" margin={[120, 100]}>
                                 <GizmoViewport labelColor="white" axisHeadScale={1} />
                             </GizmoHelper>
@@ -303,11 +304,11 @@ function STLLoadPage(){
                             
                         </Canvas>
                     <Loader/>
-                    {/* <LineBtn onClick={()=>{
+                    <LineBtn onClick={()=>{
                         setJigVisible(!jigVisible);
                     }}>
                         {jigVisible ? <img src={inVisibleLogo} style={{width:"4rem", height:"4rem"}} alt="Save Line" title="Save Line"/> : <img src={visibleLogo} style={{width:"4rem", height:"4rem"}} alt="Add Line" title="Add Line"/>}
-                    </LineBtn> */}
+                    </LineBtn>
                 </>
                 :
                 <FileUploadBox 
@@ -359,8 +360,8 @@ const LineBtn = styled.div`
     align-items:center;
     width: 5rem;
     height: 5rem;
-    right:2rem;
-    top:8rem;
+    right:8rem;
+    top:5rem;
     z-index: 50;
     &:hover{
 
