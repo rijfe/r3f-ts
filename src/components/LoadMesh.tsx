@@ -56,13 +56,11 @@ function LoadMesh({ geometry, type,connectOn,billRef,setPosArr,posName, position
     const mateRef = useRef<THREE.MeshStandardMaterial>(null!);
 
     const [dircetion, setDirectionState] = useRecoilState(directionState);
-    const [dircetionP, setDirectionPoint] = useRecoilState(directionPoint);
-    const [dircetionS, setDirectionset] = useRecoilState(directionSet);
-
+  
     const { camera, raycaster, scene,gl } = useThree();
-    const [pEnter, setPEnter] = useState<boolean>(false);
-    const [curPoint, setCurPoint] = useState<THREE.Vector3>();
+    
     const [focus, setFocus] = useState<boolean>(false);
+    const [conF, setConF] = useState<boolean>(false);
     const [centerZ, setCenterZ] = useState<number>(0);
     const [curY, setCurY] = useState<number>(0);
     const [box3, setBox3] = useState<THREE.Box3>(null!);
@@ -153,21 +151,21 @@ function LoadMesh({ geometry, type,connectOn,billRef,setPosArr,posName, position
                 geometry={geometry} 
                 ref={meshRef}
                 onDoubleClick={(event)=>{
-                    // event.stopPropagation();
+                    event.stopPropagation();
                     setting(meshAllRef);
                     setVisible(!visible);
                     setFocus(!focus);
                     setSetting(!isSettingOpen);
                 }}
                 onPointerOver={()=>{
-                    if(focus){
+                    if(focus && !conF){
                         setHoverd(true);
                         setting(meshAllRef);
                     }
                     
                 }}
                 onPointerOut={()=>{
-                    if(focus){
+                    if(focus && !conF){
                         setHoverd(false);
                         setting(meshRef);
                     }
@@ -180,8 +178,8 @@ function LoadMesh({ geometry, type,connectOn,billRef,setPosArr,posName, position
                 <meshStandardMaterial ref={mateRef} color={focus ? "#fcf000" : "#ffffff"} side={THREE.DoubleSide}/>
                 
             </mesh>
-            {connectOn ? type === "Ellipse" ? <Connector posName={posName} angle={angle} x={position} setNum={setNum} setSetting={setSetting} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}
-            {connecStart &&showConnect  ? type === "Ellipse" ? <Connector posName={posName} angle={angle}  x={position} setNum={setNum} setSetting={setSetting} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}
+            {connectOn ? type === "Ellipse" ? <Connector conF={conF} setConF={setConF} posName={posName} angle={angle} x={position} setNum={setNum} setSetting={setSetting} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}
+            {connecStart &&showConnect  ? type === "Ellipse" ? <Connector conF={conF} setConF={setConF} posName={posName} angle={angle}  x={position} setNum={setNum} setSetting={setSetting} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}
             
         </mesh>
     );

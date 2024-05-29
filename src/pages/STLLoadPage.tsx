@@ -198,7 +198,7 @@ function STLLoadPage(){
                                 right: 8000,
                                 top:8000,
                                 bottom: 8000,
-                                zoom:5,
+                                zoom:8,
                                 near:-8000,
                                 far:2000,
                             }}
@@ -288,7 +288,7 @@ function STLLoadPage(){
                             <GizmoHelper alignment="bottom-right" margin={[120, 100]}>
                                 <GizmoViewport labelColor="white" axisHeadScale={1} />
                             </GizmoHelper>
-                            <OrbitControls ref={controlRef}   makeDefault dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.8} minZoom={5} mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
+                            <OrbitControls ref={controlRef}   makeDefault dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.8} maxZoom={50} minZoom={8} mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
                             {target && visible &&
                                 <TransformControls 
                                     object={target}

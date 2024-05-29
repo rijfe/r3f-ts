@@ -570,6 +570,19 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                     >
                         7
                     </ViewBtn>
+                    <ViewBtn
+                        onClick={()=>{
+                            gsap.to(camera, {
+                                zoom: 8,
+                                duration: 0.7,
+                                onUpdate: () => {
+                                  camera.updateProjectionMatrix();
+                                },
+                              });
+                        }}
+                    >
+                        8
+                    </ViewBtn>
                 </ViewListContainer>
             </Html>
         </group>

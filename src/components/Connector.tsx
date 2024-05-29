@@ -15,7 +15,9 @@ interface ConnectorProps {
     setNum: React.Dispatch<React.SetStateAction<number>>,
     x: number,
     angle: number,
-    posName: String
+    posName: String,
+    conF: boolean,
+    setConF : React.Dispatch<React.SetStateAction<boolean>>,
 }
 
 function Connector(props : ConnectorProps){
@@ -58,7 +60,7 @@ function Connector(props : ConnectorProps){
                 setting(cylinderRef);
                 props.setVisible(!props.visible);
                 props.setHoverd(true);
-                
+                props.setConF(!props.conF);
                 props.setSetting(true);
                 
             }}
