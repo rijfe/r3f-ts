@@ -124,7 +124,14 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
             >
                 <PosBox style={{height:`${100/(10/pn >= 2 ? 1:2)}%`}}>
                     {ready ? arr.map((ele,idx)=>{
-                        return (idx<5 ? <Pos onClick={(e)=>{setPos(ele);}}><PosDeco className={pos === ele ? "pos" : ""}>{ele}</PosDeco></Pos>:null);
+                        return (idx<5 ? <Pos onClick={(e)=>{setPos(ele);}}>
+                            <PosDeco 
+                                className={pos === ele ? "pos" : ""}
+                                style={posObj.findIndex(item => item.pos === ele)!= -1 ? {background:"#a7a7a7"}:{}}
+                            >
+                                {ele}
+                            </PosDeco>
+                        </Pos>:null);
                     }) : null}
                     
                 </PosBox>
@@ -273,7 +280,6 @@ const Pos = styled.div`
 const PosDeco = styled.div`
     width:85%;
     height: 85%;
-    background: #a7a7a7;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -281,7 +287,7 @@ const PosDeco = styled.div`
         border-bottom: 0.2rem solid #ff0000;
     }
     &.pos{
-        border: 0.2rem solid #ff0000;
+        border-bottom: 0.2rem solid #ff0000;
     }
 `; 
 

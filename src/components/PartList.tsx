@@ -203,8 +203,14 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
                                     setPosArr(newArr);
                                 } 
                             }}
+                            
                             >
-                                <PartDeco className={posName === ele ? "pos":""}>{ele}</PartDeco>
+                                <PartDeco 
+                                    className={posName === ele ? "pos":""}
+                                    style={posArr.findIndex(item => item.pos === ele)!= -1 ? {background:"#a7a7a7"}:{}}
+                                >
+                                        {ele}
+                                </PartDeco>
                                 </Part>:null);
                     }) : null}                  
                 </PartBox>
@@ -364,12 +370,12 @@ const Part = styled.div`
 const PartDeco = styled.div`
     width:85%;
     height: 85%;
-    background: #a7a7a7;
+    
     display: flex;
     justify-content: center;
     align-items: center;
     &.pos{
-        border: 0.2rem solid #ff0000;
+        border-bottom: 0.2rem solid #ff0000;
     }
     &:hover{
         border-bottom: 0.2rem solid #ff0000;
