@@ -119,14 +119,11 @@ function LoadMesh({ geometry, type,connectOn,setX,setPosArr,posName, position, b
                         
             let newArr = [...posArr];
             newArr[idx].data.planeY= offset+boundingBox.max.y*0.3;
-            
             setPosArr(newArr);
             setCenterZ(center.z);
             setFocus(false);
             setOffset(offset+boundingBox.max.y);
-            // let newArr = [...posArr];
-            // newArr[idx].data.offset=offset+boundingBox.max.y*0.3;
-            // setPosArr(newArr);
+            
             setBox3(boundingBox);
         }
     
@@ -139,13 +136,13 @@ function LoadMesh({ geometry, type,connectOn,setX,setPosArr,posName, position, b
             setOffset(offset+curY+1);
             let newArr = [...posArr];
             if(newArr[idx].position[1] < 0){
-                newArr[idx].data.planeY=offset-curY;
+                newArr[idx].data.planeY=offset-curY+1;
             }
-            else newArr[idx].data.planeY=offset+curY;
+            else newArr[idx].data.planeY=offset+curY+1;
             setPosArr(newArr);
         }
 
-    }, [focus]);
+    }, [curY,offset]);
 
     return( 
         <mesh ref={meshAllRef} >
@@ -174,7 +171,7 @@ function LoadMesh({ geometry, type,connectOn,setX,setPosArr,posName, position, b
                     }
                 }}
                 onClick={(e)=>{
-                    setFocus(!focus);
+                    // setFocus(!focus);
                 }}
                 position={[0,0,0]}                    
             >
