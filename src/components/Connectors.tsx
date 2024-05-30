@@ -281,7 +281,14 @@ function Connectors(props : ConnectorsProps){
                             src={Stoplogo} 
                             style={{width: "3rem", height:"3rem"}}
                         />
-                        <img 
+                        <img
+                        onClick={()=>{
+                            let newArr = [...props.posObj];
+
+                            newArr[props.idx].data.connectOn = false;
+                            props.setPosObj(newArr);
+                            
+                        }} 
                             src={DelLogo} 
                             style={{width: "2rem", height:"2rem"}}
                         />

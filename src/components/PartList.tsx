@@ -190,8 +190,10 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
                             onClick={(e)=>{setPosName(ele); setStaPosName(ele);}}
                             onContextMenu={(e)=>{
                                 e.preventDefault();
+                                setPosName(ele); 
+                                setStaPosName(ele);
                                 if(window.confirm("정말 삭제하시겠습니까?")){
-                                    let index = posArr.findIndex(item => item.pos === posName);
+                                    let index = posArr.findIndex(item => item.pos === ele);
                                     let newArr = [...posArr];
                                     newArr[index].w = 0;
                                     newArr[index].h = 0;
@@ -216,7 +218,27 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
                 </PartBox>
                 {lineNum > 1 ?<PartBox style={{height:`${100/lineNum}%`}}>
                     {ready ? arr.map((ele,idx)=>{
-                        return (idx>=5 ? <Part onClick={(e)=>{setPosName(ele); setStaPosName(ele); }}><PartDeco className={posName === ele ? "pos":""}>{ele}</PartDeco></Part>:null);
+                        return (idx>=5 ? <Part 
+                            onClick={(e)=>{setPosName(ele); setStaPosName(ele); }}
+                            onContextMenu={(e)=>{
+                                e.preventDefault();
+                                setPosName(ele); 
+                                setStaPosName(ele);
+                                if(window.confirm("정말 삭제하시겠습니까?")){
+                                    let index = posArr.findIndex(item => item.pos === ele);
+                                    let newArr = [...posArr];
+                                    newArr[index].w = 0;
+                                    newArr[index].h = 0;
+                                    newArr[index].d = 0;
+                                    newArr[index].pos = "";
+                                    newArr[index].data.file = null;
+                                    newArr[index].data.fileName = '';
+                                    newArr[index].data.connectOn = false;
+                                    setPosArr(newArr);
+                                } 
+                            }}
+                            >
+                                <PartDeco style={posArr.findIndex(item => item.pos === ele)!= -1 ? {background:"#a7a7a7"}:{}} className={posName === ele ? "pos":""}>{ele}</PartDeco></Part>:null);
                     }) : null}  
                 </PartBox> : null}
             </PartContainer>
@@ -258,23 +280,24 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
                                 let newArr = [...posArr];
 
                                 if(idx === -1){
+                                    
                                     if(posName === "pos6"){
-                                        pArr = [8,7.4,0];
+                                        pArr = [8,(11-hd*0.4/2),0];
                                     }
                                     if(posName === "pos1"){
-                                        pArr = [8,-7.4,0];
+                                        pArr = [8,-(11-hd*0.4/2),0];
                                     }
                                     if(posName === "pos2"){
-                                        pArr = [0,-7.4,0];
+                                        pArr = [0,-(11-hd*0.4/2),0];
                                     }
                                     if(posName === "pos3"){
-                                        pArr = [-8,-7.4,0];
+                                        pArr = [-8,-(11-hd*0.4/2),0];
                                     }
                                     if(posName === "pos4"){
-                                        pArr = [-8,7.4,0];
+                                        pArr = [-8,(11-hd*0.4/2),0];
                                     }
                                     if(posName === "pos5"){
-                                        pArr = [0,7.4,0];
+                                        pArr = [0,(11-hd*0.4/2),0];
                                     }
                                     let mesh = new MeshData(false, false, false, 2, 4, 4,0,0,50,5,5,'',null,"","Ellipse", false, [0,0,0]);
                                     let data:posProps= {

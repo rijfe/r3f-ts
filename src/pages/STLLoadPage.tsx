@@ -174,6 +174,7 @@ function STLLoadPage(){
                 {isDrop ? 
                     <>
                         <Canvas
+                            // gl={{logarithmicDepthBuffer:true}}
                             ref={ref}
                             onDragEnter={(event:React.DragEvent)=>{
                                 event.preventDefault();
@@ -272,10 +273,10 @@ function STLLoadPage(){
                                                 <boxGeometry args={[ele.w,ele.h,ele.d]}/>
                                                 <meshStandardMaterial transparent={true} opacity={0.3} color="#1188f1" side={THREE.DoubleSide} />
                                                 {ele.data.file != null ?<LoadMesh setX={setArrowX} setY={setArrowY} billRef={billRef} posName={posName} posArr={posArr} position={state} showConnect={ele.data.showConnect} boxRef={boxRef.current[Number(ele.pos.split("s")[1])]} setPosArr={setPosArr} idx={idx} connecStart={ele.data.conStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY5} setNum={setSettingNum} type={ele.data.type}  connectOn={ele.data.connectOn} offset={ele.data.offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={ele.data.file} setHoverd={setHovered} visible={visible} setVisible={setVisible} useStore={useStore} width={ele.data.conWid} height={ele.data.conHei} angle={ele.data.conAngle} rotation={ele.data.conRotation} distance={ele.data.conDis} cutting={ele.data.conCut}/> :null}
-                                                {ele.w != 0 ? Number(ele.pos.split("s")[1]) >= 4 ? <AxesHelper axesRef={axesRef} position={new THREE.Vector3(0,8.9,0)} visible={false} size={3}/> : <AxesHelper axesRef={axesRef} position={new THREE.Vector3(0,-8.9,0)} visible={false} size={3}/> : null}
-                                                <mesh ref={planeRef}>
+                                                {ele.w != 0 ? Number(ele.pos.split("s")[1]) >= 4 ? <AxesHelper axesRef={axesRef} position={new THREE.Vector3(0,(ele.h/2-0.1),0)} visible={false} size={3}/> : <AxesHelper axesRef={axesRef} position={new THREE.Vector3(0,-(ele.h/2-0.1),0)} visible={false} size={3}/> : null}
+                                                <mesh ref={planeRef} renderOrder={3}>
                                                     <Plane args={[ele.w,ele.d]} rotation-x={-Math.PI/2} position={ele.position[1]< 0 ? [0,-ele.data.planeY-0.01,0] :[0,ele.data.planeY+0.01,0]}>
-                                                        <meshStandardMaterial transparent side={THREE.DoubleSide} opacity={0.4} color="#a8a8a8" depthTest={false}/>
+                                                        <meshStandardMaterial transparent side={THREE.DoubleSide} opacity={0.4} color="#a8a8a8" depthWrite={false} polygonOffset polygonOffsetFactor={-100} polygonOffsetUnits={1} toneMapped={false}/>
                                                         <Edges />
                                                     </Plane>
                                                 </mesh>
@@ -290,7 +291,7 @@ function STLLoadPage(){
                             <GizmoHelper alignment="bottom-right" margin={[120, 100]}>
                                 <GizmoViewport labelColor="white" axisHeadScale={1} />
                             </GizmoHelper>
-                            <OrbitControls ref={controlRef}   makeDefault dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.8} maxZoom={50} minZoom={6} mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
+                            <OrbitControls ref={controlRef} makeDefault dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.8} maxZoom={50} minZoom={6} mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
                             {target && visible &&
                                 <TransformControls 
                                     object={target}
