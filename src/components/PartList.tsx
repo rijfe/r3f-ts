@@ -348,6 +348,7 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
                                     }
                                     newArr[idx].position = pArr;
                                     setPosArr(newArr);
+                                    setState(1);
                                 }
                             }
                             else{

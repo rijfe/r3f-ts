@@ -73,6 +73,7 @@ function STLLoadPage(){
     const [showConnect, setShowConnect] = useState<boolean>(false);
     const [connStart, setConnStart] = useState<boolean>(false);
     const [lightMove, setLightMove] = useState<boolean>(false);
+    const [dragState, setDragState] = useState<boolean>(false);
 
     const [visible, setVisible] = useState<boolean>(false);
     const [hovered, setHovered] = useState<boolean>(false);
@@ -84,7 +85,7 @@ function STLLoadPage(){
     const [type, setType] = useState<String>("Ellipse");
     const [type5, setType5] = useState<String>("Ellipse");
 
-    const [geometry, setGeometry] = useState<Array<BufferGeometry>>([]);
+    const [geometry, setGeometry] = useState<BufferGeometry>(null!);
     const [jigGeometry, setJigGeometry] = useState<BufferGeometry>(null!);
     const [jigOpen, setJigOpen] = useState<boolean>(false);
 
@@ -112,6 +113,34 @@ function STLLoadPage(){
 
     const [posArr, setPosArr] = useState<Array<posProps>>([]);
 
+    const [dumyVisible, setDumyVisible] = useState<string>("");
+    const dumyBlank = [
+        {
+            pos: "pos1",
+            position: [8,-7.4,0]
+        },
+        {
+            pos: "pos2",
+            position: [0,-7.4,0]
+        },
+        {
+            pos: "pos3",
+            position: [-8,-7.4,0]
+        },
+        {
+            pos: "pos4",
+            position: [-8,7.4,0]
+        },
+        {
+            pos: "pos5",
+            position: [0,7.4,0]
+        },
+        {
+            pos: "pos6",
+            position: [8,7.4,0]
+        }
+    ];
+
     const handleDrop = (event : React.DragEvent) =>{
         event.preventDefault();
         const file = event.dataTransfer.files[0];
@@ -126,19 +155,28 @@ function STLLoadPage(){
 
     const loading = (file:File) =>{
         const loader = new STLLoader();
+        console.log(file);
         if(file){
             if(!file.name.includes("stl")){
                 window.alert("잘못된 파일 형식입니다.");
             }
             else{
                 loader.load(URL.createObjectURL(file), geo=>{
-                    setGeometry(prev => [...prev, geo]);
+                    setGeometry(geo);
                 });
                 setIsDrop(true);
             }
         }
-        
+        for(let i=0; i<6; i++){
+            if(posArr.findIndex(item => item.pos === dumyBlank[i].pos) === -1){
+                setDumyVisible(dumyBlank[i].pos);
+                break;
+            }
+        }
     };
+    
+
+    
 
     const { target, setTarget } = useStore();
 
@@ -149,13 +187,9 @@ function STLLoadPage(){
         setDirectionset(false);
     },[jigOpen]);
 
-    // useEffect(()=>{
-    //     console.log(test);
-    // },[test]);
-
     useEffect(()=>{
 
-        setGeometry([]);
+        setGeometry(null!);
     },[]);
 
     const num = useRecoilValue(getPosNum);
@@ -178,9 +212,17 @@ function STLLoadPage(){
                             ref={ref}
                             onDragEnter={(event:React.DragEvent)=>{
                                 event.preventDefault();
+                                setDragState(true);
+                                console.log("drag in"+dragState);
                             }}
                             onDragLeave={(event:React.DragEvent)=>{
                                 event.preventDefault();
+                                setDragState(false);
+                                console.log("drag out"+dragState);
+                            }}
+                            onDragEnd={(event:React.DragEvent)=>{
+                                event.preventDefault();
+                                setDragState(false);
                             }}
                             onDragOver={(event:React.DragEvent)=>{
                                 event.preventDefault();
@@ -190,7 +232,7 @@ function STLLoadPage(){
                             }}
                             onMouseDown={(e)=>{
                                 if(e.button === 1){
-                                    setLightMove(false);
+                                    setLightMove(true);
                                 }
                             }}
                             onDrop={(e)=>{e.preventDefault(); handleDrop(e);}}
@@ -205,12 +247,13 @@ function STLLoadPage(){
                                 near:-8000,
                                 far:2000,
                             }}
+                            
                         >     
                             {jigGeometry ?<ViewList state={lightMove} jigRef={groupRef} htmlRef={htmlRef} lightRef2={lightHelper2} lightRef={lightHelper1} cameraRef={cameraRef} controlRef={controlRef}/>:null}
 
                             <directionalLight ref={lightHelper1} intensity={0.8}  />
                             <directionalLight ref={lightHelper2} intensity={0.8}  />
-                            {/* <directionalLight position={[0,10,0]} intensity={0.8}  rotation-x={Math.PI/4}/> */}
+                            
                   
                             <group ref={groupRef}>
                                 {jigOpen  ?
@@ -263,12 +306,12 @@ function STLLoadPage(){
                                                     }
                                                     
                                                 }}
-                                                onPointerMove={(e)=>{
-                                                    if(connStart && geometry.length > 0){
+                                                // onPointerMove={(e)=>{
+                                                //     if(connStart && geometry.length > 0){
                                                         
-                                                        setState(e.clientX / window.innerWidth *2 -1);
-                                                    }
-                                                }}
+                                                //         setState(e.clientX / window.innerWidth *2 -1);
+                                                //     }
+                                                // }}
                                             >
                                                 <boxGeometry args={[ele.w,ele.h,ele.d]}/>
                                                 <meshStandardMaterial transparent={true} opacity={0.3} color="#1188f1" side={THREE.DoubleSide} />
@@ -285,6 +328,37 @@ function STLLoadPage(){
                                         );
                                     })
                                 :null}
+                                {dumyBlank.map((ele)=>{
+                                    if(dragState && posArr.findIndex(item => item.pos === ele.pos) === -1 ){
+                                        return(
+                                            <mesh 
+                                                onPointerEnter={(e)=>{
+                                                
+                                                    setDumyVisible(ele.pos);
+                                                    
+                                                }}
+                                                // onPointerOut={()=>{
+                                                //     setDumyVisible("");
+                                                // }}
+                                                
+                                                scale={0.4} 
+                                                position={[ele.position[0],ele.position[1],ele.position[2]]}
+                                                visible={ele.pos === dumyVisible}
+                                            >
+                                                <boxGeometry args={[15,18,15]}/>
+                                                <meshStandardMaterial transparent={true} opacity={0.3} color="#ffffff" side={THREE.DoubleSide} />
+                                                {geometry != null ? <mesh 
+                                                    geometry={geometry} 
+                                                    
+                                                    position={[0,0,0]}                    
+                                                >
+                                                    <meshStandardMaterial side={THREE.DoubleSide}/>
+                                                    
+                                                </mesh>:null}
+                                            </mesh>
+                                        );
+                                    }
+                                })}
                             </group>
                             {/* {jigOpen ? <StaticAxes/> : null} */}
                             

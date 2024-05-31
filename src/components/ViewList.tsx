@@ -43,7 +43,7 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                 className="viewlist"
                 style={{zIndex:10}}
                 fullscreen
-                onClick={(e)=>{e.stopPropagation(); console.log("click");}}            
+                onClick={(e)=>{e.stopPropagation(); console.log("click");}}       
             >
                 <ViewListContainer>
                     <ViewBtn onClick={(e)=>{
