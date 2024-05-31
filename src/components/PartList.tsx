@@ -241,18 +241,7 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
                                 e.preventDefault();
                                 setPosName(ele); 
                                 setStaPosName(ele);
-                                // if(window.confirm("정말 삭제하시겠습니까?")){
-                                //     let index = posArr.findIndex(item => item.pos === ele);
-                                //     let newArr = [...posArr];
-                                //     newArr[index].w = 0;
-                                //     newArr[index].h = 0;
-                                //     newArr[index].d = 0;
-                                //     newArr[index].pos = "";
-                                //     newArr[index].data.file = null;
-                                //     newArr[index].data.fileName = '';
-                                //     newArr[index].data.connectOn = false;
-                                //     setPosArr(newArr);
-                                // }
+                                
                                 if(ele === open) setOpen("");
                                 else setOpen(ele);
                             }}
@@ -339,6 +328,25 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
                                     newArr[idx].d = dd;
                                     newArr[idx].h = hd;
 
+                                    if(posName === "pos6"){
+                                        pArr = [8,(11-hd*0.4/2),0];
+                                    }
+                                    if(posName === "pos1"){
+                                        pArr = [8,-(11-hd*0.4/2),0];
+                                    }
+                                    if(posName === "pos2"){
+                                        pArr = [0,-(11-hd*0.4/2),0];
+                                    }
+                                    if(posName === "pos3"){
+                                        pArr = [-8,-(11-hd*0.4/2),0];
+                                    }
+                                    if(posName === "pos4"){
+                                        pArr = [-8,(11-hd*0.4/2),0];
+                                    }
+                                    if(posName === "pos5"){
+                                        pArr = [0,(11-hd*0.4/2),0];
+                                    }
+                                    newArr[idx].position = pArr;
                                     setPosArr(newArr);
                                 }
                             }
