@@ -126,7 +126,7 @@ function LoadMesh({ geometry, type,connectOn,setX,setPosArr,posName, position, b
             
             setBox3(boundingBox);
         }
-        
+        console.log(camera.up);
     }, [geometry]);
 
     useEffect(() => {

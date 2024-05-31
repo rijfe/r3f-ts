@@ -7,6 +7,7 @@ import { getPosNum } from "../store/PosNum";
 
 import Arrow from '../img/free-icon-direction-arrow-4939761.png';
 import PartDetail from "./PartDetail";
+import DropDown from "./DropDown";
 
 interface posProps{
     pos: String,
@@ -31,6 +32,7 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
     const [ready, setReady] = useState<boolean>(false);
     const [state, setState] = useState<number>(1);
     const [click, setClick] = useState<string>("Dumy1");
+    const [open, setOpen] = useState<string>("");
     const [wd, setW] = useState<number>(15);
     const [hd, setH] = useState<number>(18);
     const [dd, setD] = useState<number>(15);
@@ -178,39 +180,54 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
     },[num])
     useEffect(()=>{
         MakePart();
-    },[isPartOpen])
+    },[isPartOpen]);
+
+    const DeleteCallback = (name:string) =>{
+        let index = posArr.findIndex(item => item.pos === name);
+        let newArr = [...posArr];
+        newArr[index].w = 0;
+        newArr[index].h = 0;
+        newArr[index].d = 0;
+        newArr[index].pos = "";
+        newArr[index].data.file = null;
+        newArr[index].data.fileName = '';
+        newArr[index].data.connectOn = false;
+        setPosArr(newArr);
+    };
+
     return (
         <PartListContainer className = {isPartOpen ? "part":""}>
             <PartContainer
                 style={{height:`${lineNum*4.5}%`}}
+                onClick={()=>{
+                        setOpen("");
+                        
+                    }}
             >
-                <PartBox style={{height:`${100/lineNum}%`}}>
+                <PartBox 
+                    style={{height:`${100/lineNum}%`}}
+                    
+                >
                     {ready ? arr.map((ele,idx)=>{
+                        
                         return (idx<5 ? <Part 
                             onClick={(e)=>{setPosName(ele); setStaPosName(ele);}}
                             onContextMenu={(e)=>{
                                 e.preventDefault();
                                 setPosName(ele); 
                                 setStaPosName(ele);
-                                if(window.confirm("정말 삭제하시겠습니까?")){
-                                    let index = posArr.findIndex(item => item.pos === ele);
-                                    let newArr = [...posArr];
-                                    newArr[index].w = 0;
-                                    newArr[index].h = 0;
-                                    newArr[index].d = 0;
-                                    newArr[index].pos = "";
-                                    newArr[index].data.file = null;
-                                    newArr[index].data.fileName = '';
-                                    newArr[index].data.connectOn = false;
-                                    setPosArr(newArr);
-                                } 
+                                
+                                if(ele === open) setOpen("");
+                                else setOpen(ele);
                             }}
                             
                             >
+                                
                                 <PartDeco 
                                     className={posName === ele ? "pos":""}
                                     style={posArr.findIndex(item => item.pos === ele)!= -1 ? {background:"#a7a7a7"}:{}}
                                 >
+                                    {open === ele ? <DropDown delete={async () => DeleteCallback(ele)}/>:null}
                                         {ele}
                                 </PartDeco>
                                 </Part>:null);
@@ -224,21 +241,27 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
                                 e.preventDefault();
                                 setPosName(ele); 
                                 setStaPosName(ele);
-                                if(window.confirm("정말 삭제하시겠습니까?")){
-                                    let index = posArr.findIndex(item => item.pos === ele);
-                                    let newArr = [...posArr];
-                                    newArr[index].w = 0;
-                                    newArr[index].h = 0;
-                                    newArr[index].d = 0;
-                                    newArr[index].pos = "";
-                                    newArr[index].data.file = null;
-                                    newArr[index].data.fileName = '';
-                                    newArr[index].data.connectOn = false;
-                                    setPosArr(newArr);
-                                } 
+                                // if(window.confirm("정말 삭제하시겠습니까?")){
+                                //     let index = posArr.findIndex(item => item.pos === ele);
+                                //     let newArr = [...posArr];
+                                //     newArr[index].w = 0;
+                                //     newArr[index].h = 0;
+                                //     newArr[index].d = 0;
+                                //     newArr[index].pos = "";
+                                //     newArr[index].data.file = null;
+                                //     newArr[index].data.fileName = '';
+                                //     newArr[index].data.connectOn = false;
+                                //     setPosArr(newArr);
+                                // }
+                                if(ele === open) setOpen("");
+                                else setOpen(ele);
                             }}
                             >
-                                <PartDeco style={posArr.findIndex(item => item.pos === ele)!= -1 ? {background:"#a7a7a7"}:{}} className={posName === ele ? "pos":""}>{ele}</PartDeco></Part>:null);
+                                <PartDeco style={posArr.findIndex(item => item.pos === ele)!= -1 ? {background:"#a7a7a7"}:{}} className={posName === ele ? "pos":""}>
+                                    {open === ele ? <DropDown delete={async () => DeleteCallback(ele)}/>:null}
+                                    {ele}
+                                </PartDeco>
+                            </Part>:null);
                     }) : null}  
                 </PartBox> : null}
             </PartContainer>
@@ -393,7 +416,7 @@ const Part = styled.div`
 const PartDeco = styled.div`
     width:85%;
     height: 85%;
-    
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
