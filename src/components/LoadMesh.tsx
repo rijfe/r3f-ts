@@ -71,43 +71,46 @@ function LoadMesh({ geometry, type,connectOn,setX,setPosArr,posName, position, b
     const vector3 : THREE.Vector3[] = [];
     const world = useMemo(()=> new THREE.Vector3(), []);
 
-
+    
     useFrame(()=>{
-        const boxCenter = boxRef.getWorldPosition(world);
+        if(boxRef != undefined){
+            const boxCenter = boxRef.getWorldPosition(world);
         
-        const boundary = {
-            minX : boxCenter.x-4.5, maxX:boxCenter.x+4.5, minY:boxCenter.y-9, maxY: boxCenter.y+9, minZ: boxCenter.z-6, maxZ: boxCenter.z+6
-        };
-        if(meshAllRef.current){
-            const allBoundingBox = new THREE.Box3().setFromObject(meshAllRef.current);
-            const box = new THREE.Box3().setFromObject(boxRef);
-            const boundingBox = new THREE.Box3().setFromObject(meshRef.current);
-            const center = meshRef.current.getWorldPosition(world);
-            if(center.x -3 < boundary.minX || center.x+3 > boundary.maxX 
-            || center.y -7 < boundary.minY || center.y +7 > boundary.maxY 
-            || center.z -5.5 < boundary.minZ || center.z +5.5 > boundary.maxZ ){           
-                mateRef.current.color = new THREE.Color("#ff0000");
-            }
-            else{
-                mateRef.current.color = focus ? new THREE.Color("#fcf000") : new THREE.Color("#ffffff");
+            const boundary = {
+                minX : boxCenter.x-4.5, maxX:boxCenter.x+4.5, minY:boxCenter.y-9, maxY: boxCenter.y+9, minZ: boxCenter.z-6, maxZ: boxCenter.z+6
+            };
+            if(meshAllRef.current){
+                const allBoundingBox = new THREE.Box3().setFromObject(meshAllRef.current);
+                const box = new THREE.Box3().setFromObject(boxRef);
+                const boundingBox = new THREE.Box3().setFromObject(meshRef.current);
+                const center = meshRef.current.getWorldPosition(world);
+                if(center.x -3 < boundary.minX || center.x+3 > boundary.maxX 
+                || center.y -7 < boundary.minY || center.y +7 > boundary.maxY 
+                || center.z -5.5 < boundary.minZ || center.z +5.5 > boundary.maxZ ){           
+                    mateRef.current.color = new THREE.Color("#ff0000");
+                }
+                else{
+                    mateRef.current.color = focus ? new THREE.Color("#fcf000") : new THREE.Color("#ffffff");
 
-            }
-             if(curY !== meshAllRef.current.position.y){
+                }
+                if(curY != meshAllRef.current.position.y){
+                    
+                    setCurY(meshAllRef.current.position.y);
+                    
+                }
                 
-                setCurY(meshAllRef.current.position.y);
-
             }
-            
+            setX(meshAllRef.current.position.x);
+            setY(meshAllRef.current.position.y);
+            if(dircetion == 'yes' && posArr[idx].pos === posName){
+                let newArr = [...posArr];
+                newArr[idx].data.dirPoint = [camera.rotation.x,camera.rotation.y,camera.rotation.z];
+                newArr[idx].data.dirState=true;
+                setPosArr(newArr);
+                setDirectionState("no");
+            }
         }
-        setX(meshAllRef.current.position.x);
-        setY(meshAllRef.current.position.y);
-        if(dircetion == 'yes' && posArr[idx].pos === posName){
-            let newArr = [...posArr];
-            newArr[idx].data.dirPoint = [camera.rotation.x,camera.rotation.y,camera.rotation.z];
-            newArr[idx].data.dirState=true;
-            setPosArr(newArr);
-            setDirectionState("no");
-        }
+        
         // billRef.current.quaternion.copy(camera.quaternion);
     })
     useEffect(() => {
