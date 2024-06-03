@@ -3,32 +3,81 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import styled from "styled-components";
 import *  as THREE from "three";
 import StaticAxes from "./StaticAxes";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { MeshData } from "./MeshData";
+import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
+
+interface geoProps{
+    pos: String,
+    w: number,
+    h: number,
+    d: number,
+    position: [number, number, number],
+    data: MeshData,
+};
 
 interface ModalProps{
     setModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    setDragState: React.Dispatch<React.SetStateAction<boolean>>,
+    setDumyVisible: React.Dispatch<React.SetStateAction<string>>,
+    dumyVisible: string,
     geometry: any,
+    setPosObj: React.Dispatch<React.SetStateAction<Array<geoProps>>>,
+    posObj:geoProps[],
 }
 
 function STLModal(props : ModalProps){
     const lightRef = useRef<THREE.DirectionalLight>(null!);
+    const selectRef = useRef<HTMLSelectElement>(null!);
+
+    const [posName,setPosName] = useState<string>(props.dumyVisible);
+    const [wd, setW] = useState<number>(15);
+    const [hd, setH] = useState<number>(18);
+    const [dd, setD] = useState<number>(15);
+
+    useEffect(()=>{
+        selectRef.current.value = props.dumyVisible;
+    },[props.dumyVisible]);
+
+    const handleUpload = ({ target }:any) => {
+        const file = target.files[0]
+        loading(file);
+    };
+
+    const loading = (file:File) =>{
+        const loader = new STLLoader();
+        console.log(file);
+        // if(file){
+        //     if(!file.name.includes("stl")){
+        //         window.alert("잘못된 파일 형식입니다.");
+        //     }
+        //     else{
+        //         loader.load(URL.createObjectURL(file), geo=>{
+        //             setGeometry(geo);
+        //         });
+        //         setIsDrop(true);
+        //     }
+        // }
+    
+    };
+
     return(
         <ModalContainer>
             <BtnContainer>
                 <p style={{fontSize:"2rem", marginLeft:10}}>STL Viewer</p>
-                <Button
+                <CloseButton
                     onClick={()=>{
                         props.setModalOpen(false);
                     }}
                 >
-                    <p style={{fontSize:"2rem",}}>X</p>
-                </Button>
+                    <p style={{fontSize:"2rem", cursor:"default"}}>X</p>
+                </CloseButton>
             </BtnContainer>
             <InfoContainer>
                 <PartTypeContainer>
                     <PartDetailContainer>
                         <PartSettingBox>
-                                <select name="Part" style={{ marginLeft:10, width: "80%"}}>
+                            <select name="Part" style={{ marginLeft:10, width: "80%"}}>
                                 <option style={{textAlignLast: "center"}} defaultValue="Crown">Crown</option>
                                 <option style={{textAlignLast: "center"}} defaultValue="Coping">Coping</option>
                                 <option style={{textAlignLast: "center"}} defaultValue="CrownBridge">CrownBridge</option>
@@ -48,7 +97,7 @@ function STLModal(props : ModalProps){
                 <PartTypeContainer>
                     <PartDetailContainer>
                         <PartSettingBox>
-                                <select name="Blank" style={{ marginLeft:10, width: "80%"}}>
+                            <select name="Blank" style={{ marginLeft:10, width: "80%"}}>
                                 <option style={{textAlignLast: "center"}} defaultValue="Blank1">Blank1</option>
                                 <option style={{textAlignLast: "center"}} defaultValue="Blank2">Blank2</option>
                                 <option style={{textAlignLast: "center"}} defaultValue="Blank3">Blank3</option>
@@ -60,11 +109,26 @@ function STLModal(props : ModalProps){
                         </PartSettingBox>
                         <PartInfoContainer>
                             <p style={{fontSize:"1.4rem"}}>W:</p>
-                            <OffsetInput/>
+                            <OffsetInput 
+                                onChange={(e)=>{
+                                    setW(Number(e.target.value));
+                                }}
+                                value={wd}
+                            />
                             <p style={{fontSize:"1.4rem"}}>H:</p>
-                            <OffsetInput/>
+                            <OffsetInput 
+                                onChange={(e)=>{
+                                    setH(Number(e.target.value));
+                                }}
+                                value={hd}
+                            />
                             <p style={{fontSize:"1.4rem"}}>D:</p>
-                            <OffsetInput/>
+                            <OffsetInput 
+                                onChange={(e)=>{
+                                    setD(Number(e.target.value));
+                                }}
+                                value={dd}
+                            />
                         </PartInfoContainer>
                     </PartDetailContainer>
                 </PartTypeContainer>
@@ -72,17 +136,20 @@ function STLModal(props : ModalProps){
                     <PartDetailContainer>
                         <PartSettingBox>
                                 <select 
-                                    name="Pos" style={{ marginLeft:10, width: "80%"}}
+                                    ref={selectRef}
+                                    name="Pos" 
+                                    style={{ marginLeft:10, width: "80%"}}
                                     onChange={(e)=>{
-                                        console.log(e.target.value);
+                                        setPosName(e.target.value);
+                                        props.setDumyVisible(e.target.value);
                                     }}
                                 >
-                                    <option style={{textAlignLast: "center"}} defaultValue="pos1">pos1</option>
-                                    <option style={{textAlignLast: "center"}} defaultValue="pos2">pos2</option>
-                                    <option style={{textAlignLast: "center"}} defaultValue="pos3">pos3</option>
-                                    <option style={{textAlignLast: "center"}} defaultValue="pos4">pos4</option>
-                                    <option style={{textAlignLast: "center"}} defaultValue="pos5">pos5</option>
-                                    <option style={{textAlignLast: "center"}} defaultValue="pos6">pos6</option>
+                                    <option style={{textAlignLast: "center"}} value="pos1">pos1</option>
+                                    <option style={{textAlignLast: "center"}} value="pos2">pos2</option>
+                                    <option style={{textAlignLast: "center"}} value="pos3">pos3</option>
+                                    <option style={{textAlignLast: "center"}} value="pos4">pos4</option>
+                                    <option style={{textAlignLast: "center"}} value="pos5">pos5</option>
+                                    <option style={{textAlignLast: "center"}} value="pos6">pos6</option>
                                 </select>
                         </PartSettingBox>
                     </PartDetailContainer>
@@ -131,6 +198,66 @@ function STLModal(props : ModalProps){
                     <MessageContainer>
                         <p style={{marginLeft:10, fontSize:"1.4rem", fontWeight:"bold"}}>이대로 진행하시겠습니까?</p>
                     </MessageContainer>
+                    <ButtonContainer>
+                        <Button
+                            onClick={()=>{
+                                props.setModalOpen(false);
+                                let pArr : [number, number, number] = [0,0,0];
+                                let idx = props.posObj.findIndex(item => item.pos === posName);
+                                
+
+                                if(idx === -1){
+                                    
+                                    if(posName === "pos6"){
+                                        pArr = [8,(11-hd*0.4/2),0];
+                                    }
+                                    if(posName === "pos1"){
+                                        pArr = [8,-(11-hd*0.4/2),0];
+                                    }
+                                    if(posName === "pos2"){
+                                        pArr = [0,-(11-hd*0.4/2),0];
+                                    }
+                                    if(posName === "pos3"){
+                                        pArr = [-8,-(11-hd*0.4/2),0];
+                                    }
+                                    if(posName === "pos4"){
+                                        pArr = [-8,(11-hd*0.4/2),0];
+                                    }
+                                    if(posName === "pos5"){
+                                        pArr = [0,(11-hd*0.4/2),0];
+                                    }
+                                    let mesh = new MeshData(false, false, false, 2, 4, 4,0,0,50,5,5,'',props.geometry,"","Ellipse", false, [0,0,0]);
+                                    let data:geoProps= {
+                                        pos: posName,
+                                        w: wd,
+                                        h: hd,
+                                        d: dd,
+                                        position: pArr,
+                                        data: mesh
+                                    };
+                                    props.setPosObj(prev=>[...prev, data]);
+                                    props.setDragState(false);
+                                }        
+                            }}
+                        >
+                            Ok
+                        </Button>
+                        <Button
+                            onClick={()=>{
+                                document.getElementById("files")?.click();
+                            }}
+                        >
+                            ADD
+                            <FileInput type="file" id="files" onChange={handleUpload} accept=".stl, .xml, .pts, .constructionInfo" multiple/>
+                        </Button>
+                        <Button
+                            onClick={()=>{
+                                props.setModalOpen(false);
+                            }}
+                        >
+                            Cancle
+                        </Button>
+                    </ButtonContainer>
                 </MeshInfoContainer>
             </InfoContainer>
         </ModalContainer>
@@ -176,7 +303,7 @@ const BtnContainer = styled.div`
     align-items:center;
 `;
 
-const Button = styled.div`
+const CloseButton = styled.div`
     height: 100%;
     width: 10%;
     display: flex;
@@ -257,4 +384,28 @@ const MessageContainer = styled.div`
     height: 25%;
     display:flex;
     align-items: center;
+`;
+
+const ButtonContainer = styled.div`
+    width: 100%;
+    height: 35%;
+    display:flex;
+    align-items:center;
+    justify-content:space-around;
+`;
+
+const Button = styled.div`
+    height: 80%;
+    width: 20%;
+    border-radius: 8px;
+    border: solid 1px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size: 1.4rem;
+    font-weight:bold;
+`;
+
+const FileInput = styled.input`
+    display:none;
 `;

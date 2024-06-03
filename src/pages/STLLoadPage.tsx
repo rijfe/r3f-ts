@@ -385,7 +385,7 @@ function STLLoadPage(){
                             
                         </Canvas>
                     <Loader/>
-                    {modalOpen ? <STLModal setModalOpen={setModalOpen} geometry={geometry}/> : null}
+                    {modalOpen ? <STLModal setDragState={setDragState} setPosObj={setPosArr} posObj={posArr} dumyVisible={dumyVisible} setModalOpen={setModalOpen} geometry={geometry} setDumyVisible={setDumyVisible}/> : null}
                     <LineBtn onClick={()=>{
                         setJigVisible(!jigVisible);
                     }}>
