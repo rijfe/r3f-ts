@@ -158,12 +158,12 @@ function STLModal(props : ModalProps){
                                         props.setDumyVisible(e.target.value);
                                     }}
                                 >
-                                    <option style={{textAlignLast: "center"}} value="pos1">pos1</option>
-                                    <option style={{textAlignLast: "center"}} value="pos2">pos2</option>
-                                    <option style={{textAlignLast: "center"}} value="pos3">pos3</option>
-                                    <option style={{textAlignLast: "center"}} value="pos4">pos4</option>
-                                    <option style={{textAlignLast: "center"}} value="pos5">pos5</option>
-                                    <option style={{textAlignLast: "center"}} value="pos6">pos6</option>
+                                    {props.posObj.findIndex(item => item.pos === "pos1") === -1 ? <option style={{textAlignLast: "center"}} value="pos1">pos1</option>: null}
+                                    {props.posObj.findIndex(item => item.pos === "pos2") === -1 ? <option style={{textAlignLast: "center"}} value="pos2">pos2</option> : null}
+                                    {props.posObj.findIndex(item => item.pos === "pos3") === -1 ? <option style={{textAlignLast: "center"}} value="pos3">pos3</option>: null}
+                                    {props.posObj.findIndex(item => item.pos === "pos4") === -1 ? <option style={{textAlignLast: "center"}} value="pos4">pos4</option>: null}
+                                    {props.posObj.findIndex(item => item.pos === "pos5") === -1 ? <option style={{textAlignLast: "center"}} value="pos5">pos5</option>: null}
+                                    {props.posObj.findIndex(item => item.pos === "pos6") === -1 ? <option style={{textAlignLast: "center"}} value="pos6">pos6</option>: null}
                                 </select>
                         </PartSettingBox>
                     </PartDetailContainer>
