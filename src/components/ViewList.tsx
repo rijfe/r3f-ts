@@ -45,6 +45,7 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                 fullscreen
                 onClick={(e)=>{e.stopPropagation(); console.log("click");}}       
             >
+
                 <ViewListContainer>
                     <ViewBtn onClick={(e)=>{
                         e.stopPropagation();
@@ -585,6 +586,7 @@ function ViewList({cameraRef, controlRef, lightRef, lightRef2, htmlRef, jigRef, 
                     </ViewBtn>
                 </ViewListContainer>
             </Html>
+            
         </group>
         
         

@@ -47,6 +47,7 @@ const Axes = forwardRef(({position}:any,fref)=>{
         <mesh
             ref={ref}
             position={position}
+            scale={0.5}
         >
             <Line
                 points={[new THREE.Vector3(0,0,0),new THREE.Vector3(30,0,0)]}

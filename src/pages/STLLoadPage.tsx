@@ -32,6 +32,7 @@ import DirectionArrow from "../components/DirectionArrow";
 import { MeshData } from "../components/MeshData";
 import StaticAxes from "../components/StaticAxes";
 import { getPosNum } from "../store/PosNum";
+import STLModal from "../components/STLModal";
 
 const useStore = create((set:any)=>({target: null, setTarget: (target : any)=>set({target}) }));
 const test = useLoader.preload(STLLoader, ["/models/5X500L V2-CAD BLOCK JIG_형상추가.stl"]);
@@ -74,6 +75,7 @@ function STLLoadPage(){
     const [connStart, setConnStart] = useState<boolean>(false);
     const [lightMove, setLightMove] = useState<boolean>(false);
     const [dragState, setDragState] = useState<boolean>(false);
+    const [modalOpen, setModalOpen] = useState<boolean>(false);
 
     const [visible, setVisible] = useState<boolean>(false);
     const [hovered, setHovered] = useState<boolean>(false);
@@ -337,9 +339,11 @@ function STLLoadPage(){
                                                     setDumyVisible(ele.pos);
                                                     
                                                 }}
-                                                // onPointerOut={()=>{
-                                                //     setDumyVisible("");
-                                                // }}
+                                                onClick={(e)=>{
+                                                    if(dumyVisible === ele.pos){
+                                                        setModalOpen(true);
+                                                    }
+                                                }}
                                                 
                                                 scale={0.4} 
                                                 position={[ele.position[0],ele.position[1],ele.position[2]]}
@@ -381,6 +385,7 @@ function STLLoadPage(){
                             
                         </Canvas>
                     <Loader/>
+                    {modalOpen ? <STLModal setModalOpen={setModalOpen} geometry={geometry}/> : null}
                     <LineBtn onClick={()=>{
                         setJigVisible(!jigVisible);
                     }}>
