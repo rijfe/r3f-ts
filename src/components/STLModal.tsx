@@ -35,9 +35,23 @@ function STLModal(props : ModalProps){
     const [hd, setH] = useState<number>(18);
     const [dd, setD] = useState<number>(15);
 
+    const [x, setX] = useState<number>(0);
+    const [y, setY] = useState<number>(0);
+    const [z, setZ] = useState<number>(0);
+
+    const [marginCheck, setMarginCheck] = useState<string>("false");
+    const [directionCheck, setDirectionCheck] = useState<string>("false");
+
     useEffect(()=>{
         selectRef.current.value = props.dumyVisible;
     },[props.dumyVisible]);
+
+    useEffect(()=>{
+        const box = new THREE.Box3().setFromBufferAttribute(props.geometry.attributes.position);
+        setX(Number(box.max.x.toFixed(2)) - Number(box.min.x.toFixed(2)));
+        setY(Number(box.max.y.toFixed(2)) - Number(box.min.y.toFixed(2)));
+        setZ(Number(box.max.z.toFixed(2)) - Number(box.min.z.toFixed(2)));
+    },[props.geometry])
 
     const handleUpload = ({ target }:any) => {
         const file = target.files[0]
@@ -88,9 +102,9 @@ function STLModal(props : ModalProps){
                             </select>
                         </PartSettingBox>
                         <PartInfoContainer>
-                            <p style={{fontSize:"1.4rem"}}>W:{10.55}</p>
-                            <p style={{fontSize:"1.4rem"}}>H:{10.55}</p>
-                            <p style={{fontSize:"1.4rem"}}>D:{10.55}</p>
+                            <p style={{fontSize:"1.4rem"}}>W:{x}</p>
+                            <p style={{fontSize:"1.4rem"}}>H:{y}</p>
+                            <p style={{fontSize:"1.4rem"}}>D:{z}</p>
                         </PartInfoContainer>
                     </PartDetailContainer>
                 </PartTypeContainer>
@@ -183,6 +197,8 @@ function STLModal(props : ModalProps){
                         >
                             <input
                                 type="checkbox"
+                                onChange={(e)=>{console.log(e.target)}}
+                                
                             />
                             Margin
                         </label>

@@ -157,7 +157,7 @@ function STLLoadPage(){
 
     const loading = (file:File) =>{
         const loader = new STLLoader();
-        console.log(file);
+        
         if(file){
             if(!file.name.includes("stl")){
                 window.alert("잘못된 파일 형식입니다.");
