@@ -33,6 +33,7 @@ import { MeshData } from "../components/MeshData";
 import StaticAxes from "../components/StaticAxes";
 import { getPosNum } from "../store/PosNum";
 import STLModal from "../components/STLModal";
+import ProgressModal from "../components/ProgressModal";
 
 const useStore = create((set:any)=>({target: null, setTarget: (target : any)=>set({target}) }));
 const test = useLoader.preload(STLLoader, ["/models/5X500L V2-CAD BLOCK JIG_형상추가.stl"]);
@@ -55,7 +56,7 @@ function STLLoadPage(){
     const [settingNum, setSettingNum] = useState<number>(1);
 
     const [offset, setOffset] = useState<number>(5.0);
-    const [planeY, setPlaneY] = useState<number>(5.0);
+  
     const [planeY5, setPlaneY5] = useState<number>(5.0);
     const [conWid, setConWid] = useState<number>(2.0);
     const [conHei, setConHei] = useState<number>(4.0);
@@ -76,16 +77,15 @@ function STLLoadPage(){
     const [lightMove, setLightMove] = useState<boolean>(false);
     const [dragState, setDragState] = useState<boolean>(false);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
+    const [pmodalOpen, setPModalOpen] = useState<boolean>(false);
 
     const [visible, setVisible] = useState<boolean>(false);
     const [hovered, setHovered] = useState<boolean>(false);
     const [jigVisible, setJigVisible] = useState<boolean>(true);
     const planeRef = useRef<THREE.Mesh>(null!);
 
-    const [conPos, setConPos] = useState<string>("");
-
     const [type, setType] = useState<String>("Ellipse");
-    const [type5, setType5] = useState<String>("Ellipse");
+  
 
     const [geometry, setGeometry] = useState<BufferGeometry>(null!);
     const [jigGeometry, setJigGeometry] = useState<BufferGeometry>(null!);
@@ -308,6 +308,9 @@ function STLLoadPage(){
                                                     }
                                                     
                                                 }}
+                                                onContextMenu={()=>{
+                                                    setPModalOpen(true);
+                                                }}
                                                 // onPointerMove={(e)=>{
                                                 //     if(connStart && geometry.length > 0){
                                                         
@@ -386,6 +389,7 @@ function STLLoadPage(){
                         </Canvas>
                     <Loader/>
                     {modalOpen ? <STLModal setDragState={setDragState} setPosObj={setPosArr} posObj={posArr} dumyVisible={dumyVisible} setModalOpen={setModalOpen} geometry={geometry} setDumyVisible={setDumyVisible}/> : null}
+                    {pmodalOpen ? <ProgressModal setModalOpen={setPModalOpen} percent={80}/> : null}
                     <LineBtn onClick={()=>{
                         setJigVisible(!jigVisible);
                     }}>
@@ -443,7 +447,7 @@ const LineBtn = styled.div`
     width: 5rem;
     height: 5rem;
     right:8rem;
-    top:5rem;
+    top:6vh;
     z-index: 50;
     &:hover{
 
