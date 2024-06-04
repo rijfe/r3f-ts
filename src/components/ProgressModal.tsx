@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 interface ProgressProps{
     name: String,
@@ -12,12 +12,13 @@ interface ProgressModalProps{
     setArr: React.Dispatch<React.SetStateAction<Array<ProgressProps>>>,
     arr: Array<ProgressProps>,
     percent: number,
-    name: String
+    name: String,
+    open: boolean
 }
 
 function ProgressModal(props:ProgressModalProps){
     return(
-        <ModalContainer>
+        <ModalContainer className={props.open ? "open" :"close"}>
             <ModalTitleContainer>
                 <ModalBtnContainer/>
                 <ModalTitle>
@@ -40,7 +41,7 @@ function ProgressModal(props:ProgressModalProps){
             <ModalBodyContainer>
                 <ProgressContainer>
                     <ProgressBox>
-                        <ProgressBar style={props.percent < 100 ? {width:`${props.percent}%`, borderRight:"solid 3px"} : {width:`${props.percent}%`, borderRadius:"6px 6px 6px 6px"}}/>
+                        <ProgressBar style={props.percent < 100 ? {width:`${props.percent}%`} : {width:`${props.percent}%`, borderRadius:"6px 6px 6px 6px"}}/>
                     </ProgressBox>
                     <ProgressTextBox>
                             {props.percent}%
@@ -63,6 +64,30 @@ function ProgressModal(props:ProgressModalProps){
 
 export default ProgressModal;
 
+const OpenAnimation = keyframes`
+    0%{
+        transform: scale(0);
+    }
+    50%{
+        transform: scale(0.5);
+    }
+    100%{
+        transform: scale(1);
+    }
+`;
+
+const CloseAnimation = keyframes`
+    0%{
+        transform: scale(1);
+    }
+    50%{
+        transform: scale(0.5);
+    }
+    100%{
+        transform: scale(0);
+    }
+`;
+
 const ModalContainer = styled.div`
     display:flex;
     width: 50rem;
@@ -73,6 +98,14 @@ const ModalContainer = styled.div`
     left: 40vw;
     z-index:65;
     flex-direction:column;
+    &.open{
+        animation: ${OpenAnimation} 0.5s ease-in;
+        transform: scale(1);
+    }
+    &.close{
+        animation: ${CloseAnimation} 0.5s ease-in;
+        transform: scale(0);
+    }
 `;
 
 const ModalTitleContainer = styled.div`

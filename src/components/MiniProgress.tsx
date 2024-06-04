@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 interface ProgressProps{
     name: String,
@@ -12,6 +12,7 @@ interface MiniProps{
     arr: Array<ProgressProps>,
     setName: React.Dispatch<React.SetStateAction<String>>,
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    open: boolean
 }
 
 function MiniProgress(props:MiniProps){
@@ -28,16 +29,16 @@ function MiniProgress(props:MiniProps){
     },[props.arr]);
 
     return(
-        <MiniProgressContainer style={{height: `${number*6}rem`}}>
+        <MiniProgressContainer className={props.open ? "open":"close"} style={{height: `${number*6}rem`}}>
             {props.arr.map((ele,idx)=>{
                 if(ele.mini){
                     return(
                         <MiniProgressBox
                             onClick={()=>{
                                 props.setName(ele.name);
-                                let newArr =[...props.arr];
-                                newArr[idx].mini = false;
-                                props.setArr(newArr);
+                                // let newArr =[...props.arr];
+                                // newArr[idx].mini = false;
+                                // props.setArr(newArr);
                                 props.setOpen(true);
                             }}
                         >
@@ -62,21 +63,49 @@ function MiniProgress(props:MiniProps){
 
 export default MiniProgress;
 
+const OpenAnimation = keyframes`
+    0%{
+        bottom: -40%;
+    }
+    100%{
+        bottom: 0;
+    }
+`;
+
+const CloseAnimation = keyframes`
+    0%{
+        bottom: 0;
+    }
+    100%{
+        bottom: -40%;
+    }
+`;
+
 const MiniProgressContainer = styled.div`
     width: 35rem;
-    position:absolute;
+    position:fixed;
     bottom:0;
     right: 13vw;
     display: flex;
     flex-direction: column;
-    justify-content:space-between;
+    justify-content:space-around;
+    align-items:center;
     z-index:65;
+    cursor: move;
+    &.open{
+        animation: ${CloseAnimation} 0.5s ease-out;
+        bottom:-40%;
+    }
+    &.close{
+        animation: ${OpenAnimation} 0.5s ease-in;
+        bottom:0;
+    }
 `;
 
 const MiniProgressBox = styled.div`
-    width: 100%;
+    width: 95%;
     height: 5rem;
-    background: #aaffaa;
+    background: #99ff99;
     border-radius: 8px;
     display: flex;
     flex-direction: row;
@@ -109,7 +138,7 @@ const ProgressBox = styled.div`
 `;
 
 const ProgressBar = styled.div`
-    height:100%;
+    height:101%;
     border-radius: 6px 8px 8px 6px;
     background:#3388ff;
 `;

@@ -8,6 +8,7 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from "three";
 import { pointState, getPointState } from "../store/pointState";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { CSSTransition } from 'react-transition-group';
 
 import create from 'zustand';
 
@@ -35,6 +36,7 @@ import { getPosNum } from "../store/PosNum";
 import STLModal from "../components/STLModal";
 import ProgressModal from "../components/ProgressModal";
 import MiniProgress from "../components/MiniProgress";
+
 
 const useStore = create((set:any)=>({target: null, setTarget: (target : any)=>set({target}) }));
 const test = useLoader.preload(STLLoader, ["/models/5X500L V2-CAD BLOCK JIG_형상추가.stl"]);
@@ -87,6 +89,7 @@ function STLLoadPage(){
     const planeRef = useRef<THREE.Mesh>(null!);
 
     const [type, setType] = useState<String>("Ellipse");
+    const [file, setFile] = useState<string>("");
   
 
     const [geometry, setGeometry] = useState<BufferGeometry>(null!);
@@ -176,6 +179,7 @@ function STLLoadPage(){
                 loader.load(URL.createObjectURL(file), geo=>{
                     setGeometry(geo);
                 });
+                setFile(file.name);
                 setIsDrop(true);
             }
         }
@@ -216,7 +220,8 @@ function STLLoadPage(){
                 <DetailList isOpen={open} setGeo={setJigGeometry} setJig={setJigOpen} setIsDrop={setIsDrop} setIsOpen={setOpen}/>
                 <PartList posArr={posArr} setPosArr={setPosArr} isPartOpen={partOpen} lineNum={10/num >= 2 ? 1 : 2} setStaPosName={setPosName}/>
                 <SettingBox posObj={posArr} pos={posName} setPos={setPosName} setPosObj={setPosArr} setConnStart={setConnStart} num={settingNum} setNum={setSettingNum} type={type} setType={setType} isSettingOpen={settingOpen} boffset={offset} setBoffset={setOffset} width={conWid} setWidth={setConWid} height={conHei} setHeight={setConHei} angle={conAngle} setAngle={setConAngle} rotation={conRota} setRotation={setConRota} distance={conDis} setDistance={setConDis} cutting={conCut} setCutting={setConCut}/>
-    
+                {/* <BottomMessageBar/> */}
+
                 {isDrop ? 
                     <>
                         <Canvas
@@ -411,9 +416,9 @@ function STLLoadPage(){
                             
                         </Canvas>
                     <Loader/>
-                    {modalOpen ? <STLModal setDragState={setDragState} setPosObj={setPosArr} posObj={posArr} dumyVisible={dumyVisible} setModalOpen={setModalOpen} geometry={geometry} setDumyVisible={setDumyVisible}/> : null}
-                    {progressArr.findIndex(item => item.name === posName) != -1 && pmodalOpen ? <ProgressModal arr={progressArr} setArr={setProgressArr} name={posName} setMiniOpen={setMiniOpen} setModalOpen={setPModalOpen} percent={progressArr[progressArr.findIndex(item => item.name === posName)].percent}/> : null}
-                    {progressArr.length > 0 ? <MiniProgress setOpen={setPModalOpen} setName={setPosName} setArr={setProgressArr} arr={progressArr}/>:null}
+                    {modalOpen ? <STLModal file={file} setDragState={setDragState} setPosObj={setPosArr} posObj={posArr} dumyVisible={dumyVisible} setModalOpen={setModalOpen} geometry={geometry} setDumyVisible={setDumyVisible}/> : null}
+                    {progressArr.findIndex(item => item.name === posName) != -1 && pmodalOpen ? <ProgressModal open={pmodalOpen} arr={progressArr} setArr={setProgressArr} name={posName} setMiniOpen={setMiniOpen} setModalOpen={setPModalOpen} percent={progressArr[progressArr.findIndex(item => item.name === posName)].percent}/> : null}
+                    {progressArr.length > 0 ? <MiniProgress open={pmodalOpen} setOpen={setPModalOpen} setName={setPosName} setArr={setProgressArr} arr={progressArr}/>:null}
                     <LineBtn onClick={()=>{
                         setJigVisible(!jigVisible);
                     }}>
