@@ -1,8 +1,18 @@
 import styled from "styled-components";
 
+interface ProgressProps{
+    name: String,
+    percent: number,
+    mini: boolean
+}
+
 interface ProgressModalProps{
     setModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
-    percent: number
+    setMiniOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    setArr: React.Dispatch<React.SetStateAction<Array<ProgressProps>>>,
+    arr: Array<ProgressProps>,
+    percent: number,
+    name: String
 }
 
 function ProgressModal(props:ProgressModalProps){
@@ -17,6 +27,10 @@ function ProgressModal(props:ProgressModalProps){
                     <Button
                         onClick={()=>{
                             props.setModalOpen(false);
+                            let idx = props.arr.findIndex(item => item.name === props.name);
+                            let newArr = [...props.arr];
+                            newArr[idx].mini = true;
+                            props.setArr(newArr);
                         }}
                     >
                         ㅡ

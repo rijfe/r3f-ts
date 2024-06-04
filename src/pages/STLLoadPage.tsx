@@ -34,6 +34,7 @@ import StaticAxes from "../components/StaticAxes";
 import { getPosNum } from "../store/PosNum";
 import STLModal from "../components/STLModal";
 import ProgressModal from "../components/ProgressModal";
+import MiniProgress from "../components/MiniProgress";
 
 const useStore = create((set:any)=>({target: null, setTarget: (target : any)=>set({target}) }));
 const test = useLoader.preload(STLLoader, ["/models/5X500L V2-CAD BLOCK JIG_형상추가.stl"]);
@@ -78,6 +79,7 @@ function STLLoadPage(){
     const [dragState, setDragState] = useState<boolean>(false);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [pmodalOpen, setPModalOpen] = useState<boolean>(false);
+    const [miniOpen, setMiniOpen] = useState<boolean>(false);
 
     const [visible, setVisible] = useState<boolean>(false);
     const [hovered, setHovered] = useState<boolean>(false);
@@ -114,6 +116,14 @@ function STLLoadPage(){
     };
 
     const [posArr, setPosArr] = useState<Array<posProps>>([]);
+
+    interface ProgressProps{
+        name: String,
+        percent: number,
+        mini: boolean
+    }
+
+    const [progressArr, setProgressArr] = useState<Array<ProgressProps>>([]);
 
     const [dumyVisible, setDumyVisible] = useState<string>("");
     const dumyBlank = [
@@ -190,7 +200,7 @@ function STLLoadPage(){
     },[jigOpen]);
 
     useEffect(()=>{
-
+        setProgressArr([]);
         setGeometry(null!);
     },[]);
 
@@ -309,7 +319,21 @@ function STLLoadPage(){
                                                     
                                                 }}
                                                 onContextMenu={()=>{
-                                                    setPModalOpen(true);
+                                                    setPosName(ele.pos);
+                                                    if(progressArr.findIndex(item => item.name === ele.pos) === -1){
+                                                        let data : ProgressProps = {
+                                                            name : ele.pos,
+                                                            percent: Math.floor(Math.random()*(100-1)+1),
+                                                            mini: false
+                                                        };
+                                                        setProgressArr(pre => [...pre,data]);
+                                                        setPModalOpen(true);
+                                                        
+                                                    }
+                                                    else{
+                                                        console.log(progressArr)
+                                                        setPModalOpen(true);
+                                                    }
                                                 }}
                                                 // onPointerMove={(e)=>{
                                                 //     if(connStart && geometry.length > 0){
@@ -389,12 +413,13 @@ function STLLoadPage(){
                         </Canvas>
                     <Loader/>
                     {modalOpen ? <STLModal setDragState={setDragState} setPosObj={setPosArr} posObj={posArr} dumyVisible={dumyVisible} setModalOpen={setModalOpen} geometry={geometry} setDumyVisible={setDumyVisible}/> : null}
-                    {pmodalOpen ? <ProgressModal setModalOpen={setPModalOpen} percent={80}/> : null}
+                    {progressArr.findIndex(item => item.name === posName) != -1 && pmodalOpen ? <ProgressModal arr={progressArr} setArr={setProgressArr} name={posName} setMiniOpen={setMiniOpen} setModalOpen={setPModalOpen} percent={progressArr[progressArr.findIndex(item => item.name === posName)].percent}/> : null}
+                    {progressArr.length > 0 ? <MiniProgress setOpen={setPModalOpen} setName={setPosName} setArr={setProgressArr} arr={progressArr}/>:null}
                     <LineBtn onClick={()=>{
                         setJigVisible(!jigVisible);
                     }}>
                         {jigVisible ? <img src={inVisibleLogo} style={{width:"4rem", height:"4rem"}} alt="Save Line" title="Save Line"/> : <img src={visibleLogo} style={{width:"4rem", height:"4rem"}} alt="Add Line" title="Add Line"/>}
-                    </LineBtn>
+                    </LineBtn> 
                 </>
                 :
                 <FileUploadBox 
