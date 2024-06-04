@@ -41,7 +41,17 @@ function MiniProgress(props:MiniProps){
                                 props.setOpen(true);
                             }}
                         >
-                            test
+                            <ProgressTextCotainer>
+                               {ele.name}
+                            </ProgressTextCotainer>
+                            <ProgressBarCotainer>
+                                <ProgressBox>
+                                    <ProgressBar style={{width:`${ele.percent}%`}}/>
+                                </ProgressBox>
+                            </ProgressBarCotainer>
+                            <ProgressTextCotainer>
+                                {ele.percent}%
+                            </ProgressTextCotainer>
                         </MiniProgressBox>
                     );
                 }
@@ -70,4 +80,36 @@ const MiniProgressBox = styled.div`
     border-radius: 8px;
     display: flex;
     flex-direction: row;
+`;
+
+const ProgressTextCotainer = styled.div`
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    font-size: 2rem;
+`;
+
+const ProgressBarCotainer = styled.div`
+    width: 60%;
+    height: 100%;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+
+`;
+
+const ProgressBox = styled.div`
+    width:90%;
+    height:60%;
+    border: solid 2px;
+    border-radius: 8px;
+    background:#ffffff;
+`;
+
+const ProgressBar = styled.div`
+    height:100%;
+    border-radius: 6px 8px 8px 6px;
+    background:#3388ff;
 `;

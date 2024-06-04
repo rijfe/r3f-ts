@@ -331,8 +331,7 @@ function STLLoadPage(){
                                                         
                                                     }
                                                     else{
-                                                        console.log(progressArr)
-                                                        setPModalOpen(true);
+                                                        if(!progressArr[progressArr.findIndex(item => item.name === ele.pos)].mini)setPModalOpen(true);
                                                     }
                                                 }}
                                                 // onPointerMove={(e)=>{
