@@ -17,7 +17,8 @@ export class MeshData{
     fileName: string;
     type: string;
     dirState:boolean;
-    dirPoint : [number, number, number];    
+    dirPoint : [number, number, number];
+    caculating: boolean;    
 
     constructor(
         showConnect:boolean,
@@ -37,6 +38,7 @@ export class MeshData{
         type: string,
         dirState:boolean,
         dirPoint : [number, number, number], 
+        caculating: boolean
     ){
         this.showConnect = showConnect;
         this.connectOn = connectOn;
@@ -55,6 +57,14 @@ export class MeshData{
         this.type = type;
         this.dirState = dirState;
         this.dirPoint = dirPoint;
+        this.caculating = caculating;
+    }
+    set Caculating(v:boolean){
+        this.caculating = v;
+    }
+
+    get Caculating(){
+        return this.caculating;
     }
 
     set DirState(v:boolean){

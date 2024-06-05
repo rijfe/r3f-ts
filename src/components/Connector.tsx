@@ -3,6 +3,12 @@ import { Cylinder } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 
+interface ProgressProps{
+    name: String,
+    percent: number,
+    mini: boolean
+}
+
 interface ConnectorProps {
     top: number,
     bottom: number,
@@ -18,6 +24,7 @@ interface ConnectorProps {
     posName: String,
     conF: boolean,
     setConF : React.Dispatch<React.SetStateAction<boolean>>,
+    arr: Array<ProgressProps>
 }
 
 function Connector(props : ConnectorProps){
@@ -57,17 +64,23 @@ function Connector(props : ConnectorProps){
             rotation-x={y===-5 ? Math.PI : 0}
             onDoubleClick={(e)=>{
                 e.stopPropagation();
-                setting(cylinderRef);
-                props.setVisible(!props.visible);
-                props.setHoverd(true);
-                props.setConF(!props.conF);
-                props.setSetting(true);
+                if(props.arr.findIndex(item => item.name === props.posName) === -1){
+                    setting(cylinderRef);
+                    props.setVisible(!props.visible);
+                    props.setHoverd(true);
+                    props.setConF(!props.conF);
+                    props.setSetting(true);
+                }
+                
                 
             }}
             onClick={(e)=>{
                 e.stopPropagation();
-                setFocus(!focus);
-                props.setNum(5);
+                if(props.arr.findIndex(item => item.name === props.posName) === -1){
+                    setFocus(!focus);
+                    props.setNum(5);
+                }
+                
             }}  
         >
             <meshStandardMaterial ref={mateRef} color={focus ? "#fcf000":"#00ffff"}/>

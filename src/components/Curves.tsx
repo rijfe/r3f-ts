@@ -64,10 +64,13 @@ function Curves({boffset, setBoffset, posObj, setPosObj, idx}:CurvesProps){
                     <OffsetSettingBox>
                         <OffsetInput 
                             onChange={(e)=>{
-                                let newArr = [...posObj];
-                                newArr[idx].data.offset = Number(e.target.value);
-                                setPosObj(newArr);
-                                setBoffset(Number(e.target.value));
+                                if(!posObj[idx].data.caculating){
+                                    let newArr = [...posObj];
+                                    newArr[idx].data.offset = Number(e.target.value);
+                                    setPosObj(newArr);
+                                    setBoffset(Number(e.target.value));
+                                }
+                                
                                 e.preventDefault();
                             }}
                             type="number" value={boffset}

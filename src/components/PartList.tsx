@@ -311,7 +311,7 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
                                     if(posName === "pos5"){
                                         pArr = [0,(11-hd*0.4/2),0];
                                     }
-                                    let mesh = new MeshData(false, false, false, 2, 4, 4,0,0,50,5,5,'',null,"","Ellipse", false, [0,0,0]);
+                                    let mesh = new MeshData(false, false, false, 2, 4, 4,0,0,50,5,5,'',null,"","Ellipse", false, [0,0,0],false);
                                     let data:posProps= {
                                         pos: posName,
                                         w: wd,

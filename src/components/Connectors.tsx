@@ -96,10 +96,13 @@ function Connectors(props : ConnectorsProps){
                 <TypeSelectContainer>
                     <select style={{width:"70%"}} name="connector" 
                         onChange={(e)=>{
-                            let newArr = [...props.posObj];
-                            newArr[props.idx].data.type = e.target.value;
-                            props.setPosObj(newArr);
-                            props.setType(e.target.value);
+                            if(!props.posObj[props.idx].data.caculating){
+                                let newArr = [...props.posObj];
+                                newArr[props.idx].data.type = e.target.value;
+                                props.setPosObj(newArr);
+                                props.setType(e.target.value);
+                            }
+                            
                         }}
                     >
                         <option value="Ellipse">Ellipse</option>
@@ -128,10 +131,13 @@ function Connectors(props : ConnectorsProps){
                         <ValueInput 
                             type="number"
                             onChange={(e)=>{
-                                let newArr = [...props.posObj];
-                                newArr[props.idx].data.conWid =Number(e.target.value);
-                                props.setPosObj(newArr);
-                                props.setWidth(Number(e.target.value))
+                                if(!props.posObj[props.idx].data.caculating){
+                                    let newArr = [...props.posObj];
+                                    newArr[props.idx].data.conWid =Number(e.target.value);
+                                    props.setPosObj(newArr);
+                                    props.setWidth(Number(e.target.value));
+                                }
+                                
                             }}
                             value={props.posObj[props.idx].data.conWid}
                         />
@@ -145,10 +151,13 @@ function Connectors(props : ConnectorsProps){
                         <ValueInput 
                             type="number"
                             onChange={(e)=>{
-                                let newArr = [...props.posObj];
-                                newArr[props.idx].data.conHei =Number(e.target.value);
-                                props.setPosObj(newArr);
-                                props.setHeight(Number(e.target.value))
+                                if(!props.posObj[props.idx].data.caculating){
+                                    let newArr = [...props.posObj];
+                                    newArr[props.idx].data.conHei =Number(e.target.value);
+                                    props.setPosObj(newArr);
+                                    props.setHeight(Number(e.target.value));
+                                }
+                                
                             }}
                             value={props.posObj[props.idx].data.conHei}
                         />
@@ -162,10 +171,13 @@ function Connectors(props : ConnectorsProps){
                         <ValueInput 
                             type="number"
                             onChange={(e)=>{
-                                let newArr = [...props.posObj];
-                                newArr[props.idx].data.conAngle =Number(e.target.value);
-                                props.setPosObj(newArr);
-                                props.setAngle(Number(e.target.value))
+                                if(!props.posObj[props.idx].data.caculating){
+                                    let newArr = [...props.posObj];
+                                    newArr[props.idx].data.conAngle =Number(e.target.value);
+                                    props.setPosObj(newArr);
+                                    props.setAngle(Number(e.target.value));
+                                }
+                            
                             }}
                             value={props.posObj[props.idx].data.conAngle}
                         />
@@ -179,10 +191,13 @@ function Connectors(props : ConnectorsProps){
                         <ValueInput 
                             type="number"
                             onChange={(e)=>{
-                                let newArr = [...props.posObj];
-                                newArr[props.idx].data.conRotation =Number(e.target.value);
-                                props.setPosObj(newArr);
-                                props.setRotation(Number(e.target.value))
+                                if(!props.posObj[props.idx].data.caculating){
+                                    let newArr = [...props.posObj];
+                                    newArr[props.idx].data.conRotation =Number(e.target.value);
+                                    props.setPosObj(newArr);
+                                    props.setRotation(Number(e.target.value));
+                                }
+                                
                             }}
                             value={props.posObj[props.idx].data.conRotation}
                         />
@@ -196,10 +211,13 @@ function Connectors(props : ConnectorsProps){
                         <ValueInput 
                             type="number"
                             onChange={(e)=>{
-                                let newArr = [...props.posObj];
-                                newArr[props.idx].data.conDis =Number(e.target.value);
-                                props.setPosObj(newArr);
-                                props.setDistance(Number(e.target.value))
+                                if(!props.posObj[props.idx].data.caculating){
+                                    let newArr = [...props.posObj];
+                                    newArr[props.idx].data.conDis =Number(e.target.value);
+                                    props.setPosObj(newArr);
+                                    props.setDistance(Number(e.target.value));
+                                }
+                                
                             }}
                             value={props.posObj[props.idx].data.conDis}
                         />
@@ -213,10 +231,13 @@ function Connectors(props : ConnectorsProps){
                         <ValueInput 
                             type="number"
                             onChange={(e)=>{
-                                let newArr = [...props.posObj];
-                                newArr[props.idx].data.conCut =Number(e.target.value);
-                                props.setPosObj(newArr);
-                                props.setCutting(Number(e.target.value))
+                                if(!props.posObj[props.idx].data.caculating){
+                                    let newArr = [...props.posObj];
+                                    newArr[props.idx].data.conCut =Number(e.target.value);
+                                    props.setPosObj(newArr);
+                                    props.setCutting(Number(e.target.value));
+                                }
+                                
                             }}
                             value={props.posObj[props.idx].data.conCut}
                         />
@@ -262,7 +283,7 @@ function Connectors(props : ConnectorsProps){
                             style={{width: "2rem", height:"2rem"}}
                             onClick={()=>{
                                 
-                                if(props.posObj[props.idx].data.file == null) return;
+                                if(props.posObj[props.idx].data.file == null && props.posObj[props.idx].data.caculating) return;
                                 let newArr = [...props.posObj];
 
                                 newArr[props.idx].data.conStart = true;

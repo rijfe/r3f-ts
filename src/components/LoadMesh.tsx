@@ -17,6 +17,12 @@ interface posProps{
     data: MeshData,
 };
 
+interface ProgressProps{
+    name: String,
+    percent: number,
+    mini: boolean
+}
+
 interface loadMesh{
     geometry: any,
     visible : boolean,
@@ -49,9 +55,10 @@ interface loadMesh{
     billRef: React.MutableRefObject<THREE.Group<THREE.Object3DEventMap>>,
     setX: React.Dispatch<React.SetStateAction<number>>,
     setY: React.Dispatch<React.SetStateAction<number>>,
+    arr: Array<ProgressProps>
 }
 
-function LoadMesh({ geometry, type,connectOn,setX,setPosArr,posName, position, boxRef,idx,posArr, showConnect, visible, setVisible, setHoverd, offset, setOffset,useStore, setSetting, isSettingOpen, width, height, connecStart, setY, angle, setNum} : loadMesh){
+function LoadMesh({ geometry, arr ,type,connectOn,setX,setPosArr,posName, position, boxRef,idx,posArr, showConnect, visible, setVisible, setHoverd, offset, setOffset,useStore, setSetting, isSettingOpen, width, height, connecStart, setY, angle, setNum} : loadMesh){
     const meshRef = useRef<THREE.Mesh>(null!);
     const meshAllRef = useRef<THREE.Mesh>(null!);
     const edgeRef = useRef<THREE.Mesh>(null!);
@@ -102,7 +109,7 @@ function LoadMesh({ geometry, type,connectOn,setX,setPosArr,posName, position, b
             }
             setX(meshAllRef.current.position.x);
             setY(meshAllRef.current.position.y);
-            if(dircetion == 'yes' && posArr[idx].pos === posName){
+            if(dircetion == 'yes' && posArr[idx].pos === posName &&  !posArr[idx].data.caculating){
                 let newArr = [...posArr];
                 newArr[idx].data.dirPoint = [camera.rotation.x,camera.rotation.y,camera.rotation.z];
                 newArr[idx].data.dirState=true;
@@ -155,10 +162,13 @@ function LoadMesh({ geometry, type,connectOn,setX,setPosArr,posName, position, b
                 ref={meshRef}
                 onDoubleClick={(event)=>{
                     event.stopPropagation();
-                    setting(meshAllRef);
-                    setVisible(!visible);
-                    setFocus(!focus);
-                    setSetting(!isSettingOpen);
+                    if(arr.findIndex(item => item.name === posName) === -1){
+                        setting(meshAllRef);
+                        setVisible(!visible);
+                        setFocus(!focus);
+                        setSetting(!isSettingOpen);
+                    }
+                    
                 }}
                 onPointerOver={()=>{
                     if(focus && !conF){
@@ -181,8 +191,8 @@ function LoadMesh({ geometry, type,connectOn,setX,setPosArr,posName, position, b
                 <meshStandardMaterial ref={mateRef} color={focus ? "#fcf000" : "#ffffff"} side={THREE.DoubleSide}/>
                 
             </mesh>
-            {connectOn ? type === "Ellipse" ? <Connector conF={conF} setConF={setConF} posName={posName} angle={angle} x={position} setNum={setNum} setSetting={setSetting} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}
-            {connecStart &&showConnect  ? type === "Ellipse" ? <Connector conF={conF} setConF={setConF} posName={posName} angle={angle}  x={position} setNum={setNum} setSetting={setSetting} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}
+            {connectOn ? type === "Ellipse" ? <Connector arr={arr} conF={conF} setConF={setConF} posName={posName} angle={angle} x={position} setNum={setNum} setSetting={setSetting} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}
+            {connecStart &&showConnect  ? type === "Ellipse" ? <Connector arr={arr} conF={conF} setConF={setConF} posName={posName} angle={angle}  x={position} setNum={setNum} setSetting={setSetting} top={width} bottom={width} height={height} useStore={useStore} visible={visible} setVisible={setVisible} setHoverd={setHoverd} /> : <RectangleConnector angle={angle} useStore={useStore} x={position} width={width}  height={width} depth={height} visible={visible} setVisible={setVisible}/> : null}
             
         </mesh>
     );

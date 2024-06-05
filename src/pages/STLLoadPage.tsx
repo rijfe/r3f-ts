@@ -311,7 +311,7 @@ function STLLoadPage(){
                                                     // e.stopPropagation();
                                                     setPosName(ele.pos);
                                                     
-                                                    if(ele.data.conStart){
+                                                    if(ele.data.conStart && progressArr.findIndex(item => item.name === ele.pos)=== -1){
                                                         let newArr = [...posArr];
                                                         newArr[idx].data.showConnect=false;
                                                         newArr[idx].data.connectOn = true;
@@ -333,7 +333,9 @@ function STLLoadPage(){
                                                         };
                                                         setProgressArr(pre => [...pre,data]);
                                                         setPModalOpen(true);
-                                                        
+                                                        let newArr = [...posArr];
+                                                        newArr[idx].data.caculating=true;
+                                                        setPosArr(newArr);
                                                     }
                                                     else{
                                                         if(!progressArr[progressArr.findIndex(item => item.name === ele.pos)].mini)setPModalOpen(true);
@@ -347,8 +349,8 @@ function STLLoadPage(){
                                                 // }}
                                             >
                                                 <boxGeometry args={[ele.w,ele.h,ele.d]}/>
-                                                <meshStandardMaterial transparent={true} opacity={0.3} color="#1188f1" side={THREE.DoubleSide} />
-                                                {ele.data.file != null ?<LoadMesh setX={setArrowX} setY={setArrowY} billRef={billRef} posName={posName} posArr={posArr} position={state} showConnect={ele.data.showConnect} boxRef={boxRef.current[Number(ele.pos.split("s")[1])]} setPosArr={setPosArr} idx={idx} connecStart={ele.data.conStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY5} setNum={setSettingNum} type={ele.data.type}  connectOn={ele.data.connectOn} offset={ele.data.offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={ele.data.file} setHoverd={setHovered} visible={visible} setVisible={setVisible} useStore={useStore} width={ele.data.conWid} height={ele.data.conHei} angle={ele.data.conAngle} rotation={ele.data.conRotation} distance={ele.data.conDis} cutting={ele.data.conCut}/> :null}
+                                                <meshStandardMaterial transparent={true} opacity={0.3} color={"#1188f1"} side={THREE.DoubleSide} />
+                                                {ele.data.file != null ?<LoadMesh arr={progressArr} setX={setArrowX} setY={setArrowY} billRef={billRef} posName={posName} posArr={posArr} position={state} showConnect={ele.data.showConnect} boxRef={boxRef.current[Number(ele.pos.split("s")[1])]} setPosArr={setPosArr} idx={idx} connecStart={ele.data.conStart} setConnecOn={setConnectOn} setConnecStart={setConnStart} setOffset={setPlaneY5} setNum={setSettingNum} type={ele.data.type}  connectOn={ele.data.connectOn} offset={ele.data.offset} isSettingOpen={settingOpen}  setSetting={setSettingOpen} geometry={ele.data.file} setHoverd={setHovered} visible={visible} setVisible={setVisible} useStore={useStore} width={ele.data.conWid} height={ele.data.conHei} angle={ele.data.conAngle} rotation={ele.data.conRotation} distance={ele.data.conDis} cutting={ele.data.conCut}/> :null}
                                                 {ele.w != 0 ? Number(ele.pos.split("s")[1]) >= 4 ? <AxesHelper axesRef={axesRef} position={new THREE.Vector3(0,(ele.h/2-0.1),0)} visible={false} size={3}/> : <AxesHelper axesRef={axesRef} position={new THREE.Vector3(0,-(ele.h/2-0.1),0)} visible={false} size={3}/> : null}
                                                 <mesh ref={planeRef} renderOrder={3}>
                                                     <Plane args={[ele.w,ele.d]} rotation-x={-Math.PI/2} position={ele.position[1]< 0 ? [0,-ele.data.planeY-0.01,0] :[0,ele.data.planeY+0.01,0]}>
@@ -397,9 +399,9 @@ function STLLoadPage(){
                             </group>
                             {/* {jigOpen ? <StaticAxes/> : null} */}
                             
-                            <GizmoHelper alignment="bottom-right" margin={[120, 100]}>
+                            {jigOpen ? <GizmoHelper alignment="bottom-right" margin={[120, 100]}>
                                 <GizmoViewport labelColor="white" axisHeadScale={1} />
-                            </GizmoHelper>
+                            </GizmoHelper> : null}
                             <OrbitControls ref={controlRef} makeDefault dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.8} maxZoom={50} minZoom={6} mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
                             {target && visible &&
                                 <TransformControls 
