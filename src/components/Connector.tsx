@@ -2,12 +2,16 @@ import * as THREE from "three";
 import { Cylinder } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
+import { MeshData } from "./MeshData";
 
-interface ProgressProps{
-    name: String,
-    percent: number,
-    mini: boolean
-}
+interface posProps{
+    pos: String,
+    w: number,
+    h: number,
+    d: number,
+    position: [number, number, number],
+    data: MeshData,
+};
 
 interface ConnectorProps {
     top: number,
@@ -24,7 +28,8 @@ interface ConnectorProps {
     posName: String,
     conF: boolean,
     setConF : React.Dispatch<React.SetStateAction<boolean>>,
-    arr: Array<ProgressProps>
+    arr: Array<posProps>,
+    idx: number
 }
 
 function Connector(props : ConnectorProps){
@@ -64,7 +69,7 @@ function Connector(props : ConnectorProps){
             rotation-x={y===-5 ? Math.PI : 0}
             onDoubleClick={(e)=>{
                 e.stopPropagation();
-                if(props.arr.findIndex(item => item.name === props.posName) === -1){
+                if(!props.arr[props.idx].data.caculating){
                     setting(cylinderRef);
                     props.setVisible(!props.visible);
                     props.setHoverd(true);
@@ -76,7 +81,7 @@ function Connector(props : ConnectorProps){
             }}
             onClick={(e)=>{
                 e.stopPropagation();
-                if(props.arr.findIndex(item => item.name === props.posName) === -1){
+                if(!props.arr[props.idx].data.caculating){
                     setFocus(!focus);
                     props.setNum(5);
                 }
