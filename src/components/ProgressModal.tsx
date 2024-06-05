@@ -1,10 +1,21 @@
 import styled, { keyframes } from "styled-components";
+import { MeshData } from "./MeshData";
 
 interface ProgressProps{
     name: String,
     percent: number,
     mini: boolean
 }
+
+interface posProps{
+    pos: String,
+    w: number,
+    h: number,
+    d: number,
+    position: [number, number, number],
+    data: MeshData,
+};
+
 
 interface ProgressModalProps{
     setModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
@@ -13,7 +24,9 @@ interface ProgressModalProps{
     arr: Array<ProgressProps>,
     percent: number,
     name: String,
-    open: boolean
+    open: boolean,
+    posArr: Array<posProps>,
+    setPosArr: React.Dispatch<React.SetStateAction<posProps[]>>,
 }
 
 function ProgressModal(props:ProgressModalProps){
@@ -53,7 +66,20 @@ function ProgressModal(props:ProgressModalProps){
                         </TaskTextConainer>
                 </TaskContainer>
                 <ButtonContainer>
-                    <CancleButton>
+                    <CancleButton
+                        onClick={()=>{
+                            props.setModalOpen(false);
+                            let idx = props.arr.findIndex(item => item.name === props.name);
+                            let newArr = [...props.arr];
+                            newArr[idx].mini = false;
+                            props.setArr(newArr);
+
+                            let index = props.posArr.findIndex(item => item.pos === props.name);
+                            let newPos = [...props.posArr];
+                            newPos[index].data.caculating = false;
+                            props.setPosArr(newPos);
+                        }}
+                    >
                         Cancle
                     </CancleButton>
                 </ButtonContainer>

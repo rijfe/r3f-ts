@@ -162,7 +162,7 @@ function LoadMesh({ geometry, arr ,type,connectOn,setX,setPosArr,posName, positi
                 ref={meshRef}
                 onDoubleClick={(event)=>{
                     event.stopPropagation();
-                    if(arr.findIndex(item => item.name === posName) === -1){
+                    if(!posArr[idx].data.caculating){
                         setting(meshAllRef);
                         setVisible(!visible);
                         setFocus(!focus);

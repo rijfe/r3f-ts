@@ -90,7 +90,7 @@ function STLLoadPage(){
 
     const [type, setType] = useState<String>("Ellipse");
     const [file, setFile] = useState<string>("");
-  
+    const [cursor, setCursor] = useState<boolean>(false);
 
     const [geometry, setGeometry] = useState<BufferGeometry>(null!);
     const [jigGeometry, setJigGeometry] = useState<BufferGeometry>(null!);
@@ -215,7 +215,7 @@ function STLLoadPage(){
             <HeadContainer>
             </HeadContainer>
 
-            <Bodycontainer >
+            <Bodycontainer className={cursor ? "cursor":""}>
                 <ListItem setIsSetOpen={setSettingOpen} isSetOpen={settingOpen} handleUpload={handleUpload} setIsOpen={setOpen} setIsPartOpen={setPartOpen} isOpen={open} isPartOpen={partOpen}/>
                 <DetailList isOpen={open} setGeo={setJigGeometry} setJig={setJigOpen} setIsDrop={setIsDrop} setIsOpen={setOpen}/>
                 <PartList posArr={posArr} setPosArr={setPosArr} isPartOpen={partOpen} lineNum={10/num >= 2 ? 1 : 2} setStaPosName={setPosName}/>
@@ -292,6 +292,7 @@ function STLLoadPage(){
                                     posArr.map((ele,idx)=>{
                                         return(
                                             <mesh 
+                                                key={idx}
                                                 ref={elem=>(boxRef.current[Number(ele.pos.split("s")[1])] = elem)}
                                                 position={ele.position} 
                                                 scale={0.4}
@@ -300,12 +301,16 @@ function STLLoadPage(){
                                                     newArr[idx].data.showConnect=true;
                                                     setPosArr(newArr);
                                                     setShowConnect(true);
+                                                    if(posArr[idx].data.caculating){
+                                                        setCursor(true);
+                                                    }
                                                 }}
                                                 onPointerOut={()=>{
                                                     let newArr = [...posArr];
                                                     newArr[idx].data.showConnect=false;
                                                     setPosArr(newArr);
                                                     setShowConnect(false);
+                                                    setCursor(false);
                                                 }}
                                                 onClick={(e)=>{
                                                     // e.stopPropagation();
@@ -325,20 +330,28 @@ function STLLoadPage(){
                                                 }}
                                                 onContextMenu={()=>{
                                                     setPosName(ele.pos);
-                                                    if(progressArr.findIndex(item => item.name === ele.pos) === -1){
-                                                        let data : ProgressProps = {
-                                                            name : ele.pos,
-                                                            percent: Math.floor(Math.random()*(100-1)+1),
-                                                            mini: false
-                                                        };
-                                                        setProgressArr(pre => [...pre,data]);
-                                                        setPModalOpen(true);
-                                                        let newArr = [...posArr];
-                                                        newArr[idx].data.caculating=true;
-                                                        setPosArr(newArr);
+                                                    if(ele.data.connectOn && ele.data.dirState){
+                                                        if(progressArr.findIndex(item => item.name === ele.pos) === -1){
+                                                            let data : ProgressProps = {
+                                                                name : ele.pos,
+                                                                percent: Math.floor(Math.random()*(100-1)+1),
+                                                                mini: false
+                                                            };
+                                                            setProgressArr(pre => [...pre,data]);
+                                                            setPModalOpen(true);
+                                                            let newArr = [...posArr];
+                                                            newArr[idx].data.caculating=true;
+                                                            setPosArr(newArr);
+                                                        }
+                                                        else{
+                                                            if(!progressArr[progressArr.findIndex(item => item.name === ele.pos)].mini)setPModalOpen(true);
+                                                            let newArr = [...posArr];
+                                                            newArr[idx].data.caculating=true;
+                                                            setPosArr(newArr);
+                                                        }
                                                     }
                                                     else{
-                                                        if(!progressArr[progressArr.findIndex(item => item.name === ele.pos)].mini)setPModalOpen(true);
+                                                        window.alert("설정을 완료해주세요.");
                                                     }
                                                 }}
                                                 // onPointerMove={(e)=>{
@@ -419,7 +432,7 @@ function STLLoadPage(){
                         </Canvas>
                     <Loader/>
                     {modalOpen ? <STLModal file={file} setDragState={setDragState} setPosObj={setPosArr} posObj={posArr} dumyVisible={dumyVisible} setModalOpen={setModalOpen} geometry={geometry} setDumyVisible={setDumyVisible}/> : null}
-                    {progressArr.findIndex(item => item.name === posName) != -1 && pmodalOpen ? <ProgressModal open={pmodalOpen} arr={progressArr} setArr={setProgressArr} name={posName} setMiniOpen={setMiniOpen} setModalOpen={setPModalOpen} percent={progressArr[progressArr.findIndex(item => item.name === posName)].percent}/> : null}
+                    {progressArr.findIndex(item => item.name === posName) != -1 && pmodalOpen ? <ProgressModal posArr={posArr} setPosArr={setPosArr} open={pmodalOpen} arr={progressArr} setArr={setProgressArr} name={posName} setMiniOpen={setMiniOpen} setModalOpen={setPModalOpen} percent={progressArr[progressArr.findIndex(item => item.name === posName)].percent}/> : null}
                     {progressArr.length > 0 ? <MiniProgress open={pmodalOpen} setOpen={setPModalOpen} setName={setPosName} setArr={setProgressArr} arr={progressArr}/>:null}
                     <LineBtn onClick={()=>{
                         setJigVisible(!jigVisible);
@@ -468,6 +481,9 @@ const Bodycontainer = styled.div`
     width:100vw;
     display:flex;
     flex-direction:row;
+    &.cursor{
+        cursor:not-allowed;
+    }
 `;
 
 const LineBtn = styled.div`

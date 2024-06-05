@@ -34,6 +34,7 @@ function MiniProgress(props:MiniProps){
                 if(ele.mini){
                     return(
                         <MiniProgressBox
+                            key={idx}
                             onClick={()=>{
                                 props.setName(ele.name);
                                 // let newArr =[...props.arr];
