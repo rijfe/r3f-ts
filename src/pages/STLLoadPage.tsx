@@ -36,6 +36,7 @@ import { getPosNum } from "../store/PosNum";
 import STLModal from "../components/STLModal";
 import ProgressModal from "../components/ProgressModal";
 import MiniProgress from "../components/MiniProgress";
+import StartCheckModal from "../components/StartCheckModal";
 
 
 const useStore = create((set:any)=>({target: null, setTarget: (target : any)=>set({target}) }));
@@ -82,6 +83,7 @@ function STLLoadPage(){
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [pmodalOpen, setPModalOpen] = useState<boolean>(false);
     const [miniOpen, setMiniOpen] = useState<boolean>(false);
+    const [startModal, setStartModal] = useState<boolean>(false);
 
     const [visible, setVisible] = useState<boolean>(false);
     const [hovered, setHovered] = useState<boolean>(false);
@@ -230,12 +232,12 @@ function STLLoadPage(){
                             onDragEnter={(event:React.DragEvent)=>{
                                 event.preventDefault();
                                 setDragState(true);
-                                console.log("drag in"+dragState);
+                                
                             }}
                             onDragLeave={(event:React.DragEvent)=>{
                                 event.preventDefault();
                                 setDragState(false);
-                                console.log("drag out"+dragState);
+                                
                             }}
                             onDragEnd={(event:React.DragEvent)=>{
                                 event.preventDefault();
@@ -332,22 +334,7 @@ function STLLoadPage(){
                                                     setPosName(ele.pos);
                                                     if(ele.data.connectOn && ele.data.dirState){
                                                         if(progressArr.findIndex(item => item.name === ele.pos) === -1){
-                                                            let data : ProgressProps = {
-                                                                name : ele.pos,
-                                                                percent: Math.floor(Math.random()*(100-1)+1),
-                                                                mini: false
-                                                            };
-                                                            setProgressArr(pre => [...pre,data]);
-                                                            setPModalOpen(true);
-                                                            let newArr = [...posArr];
-                                                            newArr[idx].data.caculating=true;
-                                                            setPosArr(newArr);
-                                                        }
-                                                        else{
-                                                            if(!progressArr[progressArr.findIndex(item => item.name === ele.pos)].mini)setPModalOpen(true);
-                                                            let newArr = [...posArr];
-                                                            newArr[idx].data.caculating=true;
-                                                            setPosArr(newArr);
+                                                            setStartModal(true);
                                                         }
                                                     }
                                                     else{
@@ -431,9 +418,10 @@ function STLLoadPage(){
                             
                         </Canvas>
                     <Loader/>
-                    {modalOpen ? <STLModal file={file} setDragState={setDragState} setPosObj={setPosArr} posObj={posArr} dumyVisible={dumyVisible} setModalOpen={setModalOpen} geometry={geometry} setDumyVisible={setDumyVisible}/> : null}
+                    {modalOpen ? <STLModal setName={setPosName} file={file} setDragState={setDragState} setPosObj={setPosArr} posObj={posArr} dumyVisible={dumyVisible} setModalOpen={setModalOpen} geometry={geometry} setDumyVisible={setDumyVisible}/> : null}
                     {progressArr.findIndex(item => item.name === posName) != -1 && pmodalOpen ? <ProgressModal posArr={posArr} setPosArr={setPosArr} open={pmodalOpen} arr={progressArr} setArr={setProgressArr} name={posName} setMiniOpen={setMiniOpen} setModalOpen={setPModalOpen} percent={progressArr[progressArr.findIndex(item => item.name === posName)].percent}/> : null}
                     {progressArr.length > 0 ? <MiniProgress open={pmodalOpen} setOpen={setPModalOpen} setName={setPosName} setArr={setProgressArr} arr={progressArr}/>:null}
+                    {startModal ? <StartCheckModal setPModalOpen={setPModalOpen} posName={posName} setArr={setProgressArr} arr={progressArr} setPosArr={setPosArr} posArr={posArr} setModalOpen={setStartModal}/> : null}
                     <LineBtn onClick={()=>{
                         setJigVisible(!jigVisible);
                     }}>

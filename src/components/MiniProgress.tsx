@@ -92,7 +92,7 @@ const MiniProgressContainer = styled.div`
     justify-content:space-around;
     align-items:center;
     z-index:65;
-    cursor: move;
+    cursor: default;
     &.open{
         animation: ${CloseAnimation} 0.5s ease-out;
         bottom:-40%;

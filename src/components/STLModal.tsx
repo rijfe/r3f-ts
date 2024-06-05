@@ -24,7 +24,8 @@ interface ModalProps{
     geometry: any,
     setPosObj: React.Dispatch<React.SetStateAction<Array<geoProps>>>,
     posObj:geoProps[],
-    file: string
+    file: string,
+    setName: React.Dispatch<React.SetStateAction<String>>,
 }
 
 function STLModal(props : ModalProps){
@@ -254,6 +255,7 @@ function STLModal(props : ModalProps){
                                     };
                                     props.setPosObj(prev=>[...prev, data]);
                                     props.setDragState(false);
+                                    props.setName(posName);
                                 }        
                             }}
                         >

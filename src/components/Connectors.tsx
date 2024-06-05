@@ -139,7 +139,7 @@ function Connectors(props : ConnectorsProps){
                                 }
                                 
                             }}
-                            value={props.posObj[props.idx].data.conWid}
+                            value={props.posObj.length < 1 ? 2 :props.posObj[props.idx].data.conWid}
                         />
                     </DetailValueBox>
                 </DetailSettingBox>
@@ -159,7 +159,7 @@ function Connectors(props : ConnectorsProps){
                                 }
                                 
                             }}
-                            value={props.posObj[props.idx].data.conHei}
+                            value={props.posObj.length < 1 ? 4 :props.posObj[props.idx].data.conHei}
                         />
                     </DetailValueBox>
                 </DetailSettingBox>
@@ -179,7 +179,7 @@ function Connectors(props : ConnectorsProps){
                                 }
                             
                             }}
-                            value={props.posObj[props.idx].data.conAngle}
+                            value={props.posObj.length < 1 ? 4 :props.posObj[props.idx].data.conAngle}
                         />
                     </DetailValueBox>
                 </DetailSettingBox>
@@ -199,7 +199,7 @@ function Connectors(props : ConnectorsProps){
                                 }
                                 
                             }}
-                            value={props.posObj[props.idx].data.conRotation}
+                            value={props.posObj.length < 1 ? 0 :props.posObj[props.idx].data.conRotation}
                         />
                     </DetailValueBox>
                 </DetailSettingBox>
@@ -219,7 +219,7 @@ function Connectors(props : ConnectorsProps){
                                 }
                                 
                             }}
-                            value={props.posObj[props.idx].data.conDis}
+                            value={props.posObj.length < 1 ? 0 :props.posObj[props.idx].data.conDis}
                         />
                     </DetailValueBox>
                 </DetailSettingBox>
@@ -239,7 +239,7 @@ function Connectors(props : ConnectorsProps){
                                 }
                                 
                             }}
-                            value={props.posObj[props.idx].data.conCut}
+                            value={props.posObj.length < 1 ? 50 :props.posObj[props.idx].data.conCut}
                         />
                     </DetailValueBox>
                 </DetailSettingBox>

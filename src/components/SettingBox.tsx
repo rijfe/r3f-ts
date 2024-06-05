@@ -124,7 +124,7 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
             >
                 <PosBox style={{height:`${100/(10/pn >= 2 ? 1:2)}%`}}>
                     {ready ? arr.map((ele,idx)=>{
-                        return (idx<5 ? <Pos onClick={(e)=>{setPos(ele);}}>
+                        return (idx<5 ? <Pos key={idx} onClick={(e)=>{setPos(ele);}}>
                             <PosDeco 
                                 className={pos === ele ? "pos" : ""}
                                 style={posObj.findIndex(item => item.pos === ele)!= -1 ? {background:"#a7a7a7"}:{}}
@@ -137,7 +137,7 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
                 </PosBox>
                {10/pn < 2 ?  <PosBox style={{height:`${100/2}%`}}>
                     {ready ? arr.map((ele,idx)=>{
-                        return (idx>=5 ? <Pos onClick={(e)=>{setPos(ele);}}><PosDeco style={posObj.findIndex(item => item.pos === ele)!= -1 ? {background:"#a7a7a7"}:{}} className={pos === ele ? "pos" : ""}>{ele}</PosDeco></Pos>:null);
+                        return (idx>=5 ? <Pos key={idx} onClick={(e)=>{setPos(ele);}}><PosDeco style={posObj.findIndex(item => item.pos === ele)!= -1 ? {background:"#a7a7a7"}:{}} className={pos === ele ? "pos" : ""}>{ele}</PosDeco></Pos>:null);
                     }) : null}
                 </PosBox>:null}
             </PosContainer>

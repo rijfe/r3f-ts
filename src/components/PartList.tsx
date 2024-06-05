@@ -220,7 +220,7 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
                                 if(ele === open) setOpen("");
                                 else setOpen(ele);
                             }}
-                            
+                            key={idx}
                             >
                                 
                                 <PartDeco 
@@ -245,6 +245,7 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
                                 if(ele === open) setOpen("");
                                 else setOpen(ele);
                             }}
+                            key={idx}
                             >
                                 <PartDeco style={posArr.findIndex(item => item.pos === ele)!= -1 ? {background:"#a7a7a7"}:{}} className={posName === ele ? "pos":""}>
                                     {open === ele ? <DropDown delete={async () => DeleteCallback(ele)}/>:null}
