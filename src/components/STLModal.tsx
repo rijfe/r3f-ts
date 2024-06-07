@@ -43,6 +43,7 @@ function STLModal(props : ModalProps){
 
     const [marginCheck, setMarginCheck] = useState<string>("false");
     const [directionCheck, setDirectionCheck] = useState<string>("false");
+    const [tpye, setType] = useState<string>("Crown");
 
     useEffect(()=>{
         selectRef.current.value = props.dumyVisible;
@@ -93,7 +94,13 @@ function STLModal(props : ModalProps){
                 <PartTypeContainer>
                     <PartDetailContainer>
                         <PartSettingBox>
-                            <select name="Part" style={{ marginLeft:10, width: "80%"}}>
+                            <select 
+                                name="Part" 
+                                style={{ marginLeft:10, width: "80%"}}
+                                onChange={(e)=>{
+                                    setType(e.target.value);
+                                }}
+                            >
                                 <option style={{textAlignLast: "center"}} defaultValue="Crown">Crown</option>
                                 <option style={{textAlignLast: "center"}} defaultValue="Coping">Coping</option>
                                 <option style={{textAlignLast: "center"}} defaultValue="CrownBridge">CrownBridge</option>
@@ -244,7 +251,7 @@ function STLModal(props : ModalProps){
                                     if(posName === "pos5"){
                                         pArr = [0,(11-hd*0.4/2),0];
                                     }
-                                    let mesh = new MeshData(false, false, false, 2, 4, 4,0,0,50,5,5,'',props.geometry,props.file,"Ellipse", false, [0,0,0],false);
+                                    let mesh = new MeshData(false, false, false, 2, 4, 4,0,0,50,5,5,tpye,props.geometry,props.file,"Ellipse", false, [0,0,0],false);
                                     let data:geoProps= {
                                         pos: posName,
                                         w: wd,

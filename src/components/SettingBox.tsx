@@ -52,6 +52,7 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
     const pn = useRecoilValue(getPosNum);
     const [arr, setArr] = useState<Array<string>>([]);
     const [ready, setReady] = useState<boolean>(false);
+    
     const handleUpload = ({ target }:any) => {
         const file = target.files[0]
        
@@ -88,15 +89,66 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
     },[pos]);
 
     const PosFileInfo = () =>{
+        const [typeOpen, setTypeOpen] = useState<boolean>(false);
+        const [selectOpen, setSelectOpen] = useState<boolean>(false);
 
         return idx === -1 ? null : posObj[idx].data.fileName != ""? (
-            <PosFileInfoContainer>
+            <PosFileInfoContainer
+                onClick={(e)=>{
+                    e.preventDefault();
+                    setTypeOpen(false);
+                    setSelectOpen(false);
+                }}
+                onContextMenu={(e)=>{
+                    e.preventDefault();
+                    setTypeOpen(true);
+                }}
+            >
                 <PosFileImgContainer>
                     img
                 </PosFileImgContainer>
                 <PosFileNameContainer>
                     <h1 style={{fontSize:"1.3rem", overflow:"hidden", fontWeight:"bold"}}>{posObj[idx].data.FileName}</h1>
                 </PosFileNameContainer>
+                {typeOpen ? <FileTypeSelecContainer>
+                    <TypeContainer>
+                        <p style={{fontSize:"2rem", marginLeft:4}}>{posObj[idx].data.pos}</p>
+                    </TypeContainer>
+                    <DownButtonContainer
+                         onClick={(e)=>{
+                            e.stopPropagation();
+                            setSelectOpen(!selectOpen);
+                        }}
+                    >
+                        ▼
+                    </DownButtonContainer>
+                    {selectOpen ? <SelectDataContainer>
+                        <ListOverflow>
+                            <Datacontainer
+                                onClick={(e)=>{
+                                    let newArr = [...posObj];
+                                    newArr[idx].data.pos = "Crown";
+                                    
+                                    setPosObj(newArr);
+                                }} 
+                            >
+                                Crown
+                            </Datacontainer >
+                            <Datacontainer onClick={(e)=>{
+                                    let newArr = [...posObj];
+                                    newArr[idx].data.pos = "Coping";
+                                    
+                                    setPosObj(newArr);
+                                }} >Coping</Datacontainer>
+                            <Datacontainer>CrownBridge</Datacontainer>
+                            <Datacontainer>CopingBridge</Datacontainer>
+                            <Datacontainer>InlayOnlay</Datacontainer>
+                            <Datacontainer>ScrpCrown</Datacontainer>
+                            <Datacontainer>Veneer</Datacontainer>
+                        </ListOverflow>
+                        
+                    </SelectDataContainer>:null}
+                </FileTypeSelecContainer>:null}
             </PosFileInfoContainer>
         ):null;
     };
@@ -255,6 +307,7 @@ const PartBox = styled.div`
     align-items:center;
     &:hover{
         background-color:#8D8D8D;
+        cursor:pointer;
     }
 `;
 
@@ -325,6 +378,7 @@ const PosFileInfoContainer = styled.div`
     border: 0.2rem solid #ff0000;
     display:flex;
     flex-direction:row;
+    position:relative;
 `;
 
 const PosFileImgContainer = styled.div`
@@ -354,4 +408,74 @@ const FileDeleteIcon = styled.div`
     width: 90%;
     height:50%;
     border-bottom: solid 0.3rem black;
+`;
+
+const FileTypeSelecContainer = styled.div`
+    width:70%;
+    height: 100%;
+    position:absolute;
+    background: #ffffff;
+    border:solid 1.5px;
+    opacity: 0.9;
+    bottom:-100%;
+    display:flex;
+    flex-dircetion: row;
+    justify-content:space-between;
+`;
+
+const TypeContainer = styled.div`
+    height: 100%;
+    width:60%;
+    display:flex;
+    flex-dircetion: row;
+    align-items: center;
+    z-index:65;
+`;
+
+const DownButtonContainer = styled.div`
+    height: 100%;
+    width:20%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    font-size:1.5rem;
+    &:hover{
+        background: #dddddd;
+    }
+`;
+
+const SelectDataContainer = styled.div`
+    width: 100%;
+    max-height:20rem;
+    height:15rem;
+    overflow-y:auto;
+    position:absolute;
+    background:#ffffff;
+    top:100%;
+    border: solid 1px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+`;
+
+const ListOverflow = styled.div`
+    width:100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    overflow-y:auto;
+`;
+
+const Datacontainer = styled.div`
+    width:95%;
+    height:3rem;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    font-size: 1.5rem;
+    margin-top:5px;
+    &:hover{
+        border: 3px solid #90d0f0;
+        background-color: rgba(150,180, 180, .5);
+    }
 `;
