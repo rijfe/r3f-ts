@@ -3,11 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { getUserInfo, userInfo } from "../store/UserInfo";
+import UserDropDown from "./UserDropDown";
 
 function HeadContainer(props:any){
     const navigate = useNavigate();
     const userId = useRecoilValue(getUserInfo);
     const [user, setUser] = useRecoilState(userInfo);
+
+    const [userOpen, setUserOpen] = useState<boolean>(false);
 
     useEffect(()=>{
  
@@ -36,9 +39,8 @@ function HeadContainer(props:any){
                 </PageBox> 
             </Content>
             <UserContent>
-                <UserInfo>
+                {/* <UserInfo>
                     {userId}님
-                    
                 </UserInfo>
                 <LogoutBtn
                     onClick={()=>{
@@ -47,7 +49,21 @@ function HeadContainer(props:any){
                     }}
                 >
                     Log Out
-                </LogoutBtn>
+                </LogoutBtn> */}
+                <Button
+                    onClick={()=>{
+                        setUserOpen(!userOpen);
+                    }}
+                >
+                    User
+                </Button>
+                {userOpen ? <UserDropDown userID={userId}/> : null}
+                <Button>
+                    setting
+                </Button>
+                <Button>
+                    Help
+                </Button>
             </UserContent>
         </Header>
     );
@@ -102,9 +118,11 @@ const Content = styled.div`
 
 const UserContent = styled.div`
     height: 100%;
-    width:auto;
+    width:10%;
     display: flex;
     align-items:center;
+    justify-content:space-around;
+
 `;
 
 const UserInfo = styled.p`
@@ -125,4 +143,13 @@ const LogoutBtn = styled.div`
     color:white;
     font-size:1.5rem;
     margin-right: 2rem;
+`;
+
+const Button = styled.div`
+    height: 80%;
+    width: 25%;
+    border: solid 1px;
+    display:flex;
+    justify-content:center;
+    align-items: center;
 `;

@@ -69,10 +69,10 @@ function ProgressModal(props:ProgressModalProps){
                     <CancleButton
                         onClick={()=>{
                             props.setModalOpen(false);
-                            let idx = props.arr.findIndex(item => item.name === props.name);
-                            let newArr = [...props.arr];
-                            newArr[idx].mini = false;
-                            props.setArr(newArr);
+                            // let idx = props.arr.findIndex(item => item.name === props.name);
+                            // let newArr = [...props.arr];
+                            // newArr[idx].mini = false;
+                            props.setArr([]);
 
                             let index = props.posArr.findIndex(item => item.pos === props.name);
                             let newPos = [...props.posArr];

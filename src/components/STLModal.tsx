@@ -199,7 +199,7 @@ function STLModal(props : ModalProps){
                         >
                             <input
                                 type="checkbox"
-                                onChange={(e)=>{console.log(e.target)}}
+                                onChange={(e)=>{}}
                                 
                             />
                             Margin

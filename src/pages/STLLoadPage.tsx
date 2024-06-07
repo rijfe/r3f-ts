@@ -318,7 +318,7 @@ function STLLoadPage(){
                                                     // e.stopPropagation();
                                                     setPosName(ele.pos);
                                                     
-                                                    if(ele.data.conStart && progressArr.findIndex(item => item.name === ele.pos)=== -1){
+                                                    if(ele.data.conStart){
                                                         let newArr = [...posArr];
                                                         newArr[idx].data.showConnect=false;
                                                         newArr[idx].data.connectOn = true;
@@ -333,7 +333,7 @@ function STLLoadPage(){
                                                 onContextMenu={()=>{
                                                     setPosName(ele.pos);
                                                     if(ele.data.connectOn && ele.data.dirState){
-                                                        if(progressArr.findIndex(item => item.name === ele.pos) === -1){
+                                                        if(!ele.data.caculating){
                                                             setStartModal(true);
                                                         }
                                                     }
@@ -399,7 +399,7 @@ function STLLoadPage(){
                             </group>
                             {/* {jigOpen ? <StaticAxes/> : null} */}
                             
-                            {jigOpen ? <GizmoHelper alignment="bottom-right" margin={[120, 100]}>
+                            {jigOpen && jigGeometry ? <GizmoHelper alignment="bottom-right" margin={[120, 100]}>
                                 <GizmoViewport labelColor="white" axisHeadScale={1} />
                             </GizmoHelper> : null}
                             <OrbitControls ref={controlRef} makeDefault dampingFactor={0.3} rotateSpeed={0.8} panSpeed={0.8} maxZoom={50} minZoom={6} mouseButtons={{RIGHT: THREE.MOUSE.ROTATE, MIDDLE:THREE.MOUSE.PAN}}/>
@@ -419,7 +419,7 @@ function STLLoadPage(){
                         </Canvas>
                     <Loader/>
                     {modalOpen ? <STLModal setName={setPosName} file={file} setDragState={setDragState} setPosObj={setPosArr} posObj={posArr} dumyVisible={dumyVisible} setModalOpen={setModalOpen} geometry={geometry} setDumyVisible={setDumyVisible}/> : null}
-                    {progressArr.findIndex(item => item.name === posName) != -1 && pmodalOpen ? <ProgressModal posArr={posArr} setPosArr={setPosArr} open={pmodalOpen} arr={progressArr} setArr={setProgressArr} name={posName} setMiniOpen={setMiniOpen} setModalOpen={setPModalOpen} percent={progressArr[progressArr.findIndex(item => item.name === posName)].percent}/> : null}
+                    <ProgressModal posArr={posArr} setPosArr={setPosArr} open={pmodalOpen} arr={progressArr} setArr={setProgressArr} name={posName} setMiniOpen={setMiniOpen} setModalOpen={setPModalOpen} percent={progressArr.length > 0 ?progressArr[progressArr.findIndex(item => item.name === posName)].percent:0}/>
                     {progressArr.length > 0 ? <MiniProgress open={pmodalOpen} setOpen={setPModalOpen} setName={setPosName} setArr={setProgressArr} arr={progressArr}/>:null}
                     {startModal ? <StartCheckModal setPModalOpen={setPModalOpen} posName={posName} setArr={setProgressArr} arr={progressArr} setPosArr={setPosArr} posArr={posArr} setModalOpen={setStartModal}/> : null}
                     <LineBtn onClick={()=>{

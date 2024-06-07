@@ -192,6 +192,14 @@ function PartList({isPartOpen, lineNum, setPosArr, posArr,setStaPosName} : PartL
         newArr[index].data.file = null;
         newArr[index].data.fileName = '';
         newArr[index].data.connectOn = false;
+        newArr[index].data.conAngle = 4;
+        newArr[index].data.conWid = 2;
+        newArr[index].data.conHei = 4;
+        newArr[index].data.conCut = 50;
+        newArr[index].data.offset = 5;
+        newArr[index].data.planeY = 5;
+        newArr[index].data.dirState = false;
+        newArr[index].data.dirPoint = [0,0,0];
         setPosArr(newArr);
     };
 

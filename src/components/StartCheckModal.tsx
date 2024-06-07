@@ -35,7 +35,7 @@ function StartCheckModal(props : StartCheckModalProps){
             <ModalBodyContainer>
                 <FileInfoContainer>
                     <FileInfoBox>
-                        <p style={{fontSize:"2rem"}}>P2</p>
+                        <p style={{fontSize:"2rem"}}>{props.posName}</p>
                         <p style={{fontSize:"2rem"}}>veneer1</p>
                         <p style={{fontSize:"2rem"}}>A7_lithium_dicilicate_veneer_(3+2X)_single</p>
                     </FileInfoBox>

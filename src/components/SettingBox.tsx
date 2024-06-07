@@ -124,7 +124,11 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
             >
                 <PosBox style={{height:`${100/(10/pn >= 2 ? 1:2)}%`}}>
                     {ready ? arr.map((ele,idx)=>{
-                        return (idx<5 ? <Pos key={idx} onClick={(e)=>{setPos(ele);}}>
+                        return (idx<5 ? <Pos 
+                        key={idx} 
+                        onClick={(e)=>{setPos(ele);}}
+                        
+                        >
                             <PosDeco 
                                 className={pos === ele ? "pos" : ""}
                                 style={posObj.findIndex(item => item.pos === ele)!= -1 ? {background:"#a7a7a7"}:{}}
@@ -170,6 +174,8 @@ function SettingBox({isSettingOpen, type,posObj, setPosObj, pos,setPos, setConnS
                                     newArr[idx].data.file = null;
                                     newArr[idx].data.fileName = '';
                                     newArr[idx].data.connectOn = false;
+                                    newArr[idx].data.dirState = false;
+                                    newArr[idx].data.dirPoint = [0,0,0];
                                     setPosObj(newArr);
                                 } 
                             }

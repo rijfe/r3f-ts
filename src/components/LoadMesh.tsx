@@ -137,7 +137,7 @@ function LoadMesh({ geometry, arr ,type,connectOn,setX,setPosArr,posName, positi
             setBox3(boundingBox);
         }
         
-    }, [geometry]);
+    }, [geometry, offset]);
 
     useEffect(() => {
         const boundingBox = new THREE.Box3().setFromObject(meshRef.current);
