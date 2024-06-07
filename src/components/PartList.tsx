@@ -443,6 +443,7 @@ const PartDeco = styled.div`
     }
     &:hover{
         border-bottom: 0.2rem solid #ff0000;
+        cursor:pointer
     }
 `; 
 

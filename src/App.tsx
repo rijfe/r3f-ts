@@ -41,6 +41,7 @@ const GlobalStyle = createGlobalStyle`
   }
   body{
     display: flex;
+    cursor:default;
   }
 `
 

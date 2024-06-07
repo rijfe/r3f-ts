@@ -291,6 +291,7 @@ const PosDeco = styled.div`
     align-items: center;
     &:hover{
         border-bottom: 0.2rem solid #ff0000;
+        cursor:pointer;
     }
     &.pos{
         border-bottom: 0.2rem solid #ff0000;
